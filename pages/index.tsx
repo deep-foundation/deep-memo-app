@@ -18,6 +18,7 @@ export default function Index() {
             <div><Link href="/all">all subscribe</Link></div>
             <div><Link href="/messanger">messanger</Link></div>
             <div><Link href="/device">device</Link></div>
+            <div><Link href="/geolocation">geolocation</Link></div>
           </DeepProvider>
         </Provider>
       </ChakraProvider>
