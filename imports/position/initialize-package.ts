@@ -31,19 +31,19 @@ export async function initializePackage(deep: DeepClient) {
     ] },
   });
 
-  const { data: [{ id: spaceTypeLinkId }] } = await deep.insert({
+  const { data: [{ id: coordinateTypeLinkId }] } = await deep.insert({
     type_id: typeTypeLinkId,
     from_id: deviceTypeLinkId,
     to_id: geolocationSpaceTypeLinkId,
     in: { data: {
       type_id: containTypeLinkId,
       from_id: packageLinkId,
-      string: { data: { value: 'Space' } },
+      string: { data: { value: 'Coordinate' } },
     } },
   });
 
   const { data: [{ id: xTypeLinkId }] } = await deep.insert({
-    type_id: spaceTypeLinkId,
+    type_id: coordinateTypeLinkId,
     from_id: deviceTypeLinkId,
     to_id: geolocationSpaceTypeLinkId,
     in: { data: {
@@ -54,7 +54,7 @@ export async function initializePackage(deep: DeepClient) {
   });
 
   const { data: [{ id: yTypeLinkId }] } = await deep.insert({
-    type_id: spaceTypeLinkId,
+    type_id: coordinateTypeLinkId,
     from_id: deviceTypeLinkId,
     to_id: geolocationSpaceTypeLinkId,
     in: { data: {
@@ -65,7 +65,7 @@ export async function initializePackage(deep: DeepClient) {
   });
 
   const { data: [{ id: zTypeLinkId }] } = await deep.insert({
-    type_id: spaceTypeLinkId,
+    type_id: coordinateTypeLinkId,
     from_id: deviceTypeLinkId,
     to_id: geolocationSpaceTypeLinkId,
     in: { data: {

@@ -5,13 +5,11 @@ import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local'
 import { DeepProvider, useDeep, useDeepSubscription } from '@deep-foundation/deeplinks/imports/client';
 
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import { saveGeneralInfo } from '../imports/device/save-general-info';
 import { initializePackage as initializePackageGeolocation } from '../imports/geolocation/initialize-package';
 import { initializePackage as initializePackagePosition } from '../imports/position/initialize-package';
+import { initializePackage as initializePackageDevice } from '../imports/device/initialize-package';
 import { PACKAGE_NAME } from '../imports/device/package-name';
-import { getBatteryInfo as saveBatteryInfo } from '../imports/device/save-battery-info';
-import { getLanguageId as saveLanguageId } from '../imports/device/save-language-id';
-import { getLanguageTag as saveLanguageTag } from '../imports/device/save-language-tag';
+import { savePosition } from '../imports/position/save-position';
 import { Provider } from '../imports/provider';
 import { Geolocation } from '@capacitor/geolocation';
 
@@ -38,6 +36,7 @@ function Page() {
       }
       const coordinates: any = await Geolocation.getCurrentPosition();
       setLoc(coordinates);
+      savePosition(deep, deviceLinkId, {x: coordinates.coords.longitude, y: coordinates.coords.latitude, z: coordinates.coords.altitude});
       // Geolocation.checkPermissions(); // TODO: does not update permissionStatus state
     } catch (error) {
       console.log(error);
@@ -57,7 +56,8 @@ function Page() {
           return;
         }
         setLoc(position);
-        setLocHistory([...locHistory, position]); // TODO: перепровить
+        savePosition(deep, deviceLinkId, {x: position.coords.longitude, y: position.coords.latitude, z: position.coords.altitude});
+        setLocHistory(oldLocHistory => [...oldLocHistory, position]);
       });
       setWatchId(watchId);
       return watchId;
@@ -92,7 +92,7 @@ function Page() {
 
   const initializePackage = async (deep) => {
     console.log('initializePackage');
-    console.log({deep});
+    await initializePackageDevice(deep);
     await initializePackageGeolocation(deep);
     await initializePackagePosition(deep);
   };
