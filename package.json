@@ -24,6 +24,7 @@
     "@capacitor/core": "^4.6.1",
     "@capacitor/device": "^4.1.0",
     "@capacitor/geolocation": "^4.1.0",
+    "@capacitor/ios": "^4.6.1",
     "@chakra-ui/react": "^1.8.7",
     "@deep-foundation/deeplinks": "^0.0.70",
     "@emotion/react": "^11.8.2",

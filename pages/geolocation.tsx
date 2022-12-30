@@ -6,7 +6,8 @@ import { DeepProvider, useDeep, useDeepSubscription } from '@deep-foundation/dee
 
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { saveGeneralInfo } from '../imports/device/save-general-info';
-import { initializePackage } from '../imports/device/initialize-package';
+import { initializePackage as initializePackageGeolocation } from '../imports/geolocation/initialize-package';
+import { initializePackage as initializePackagePosition } from '../imports/position/initialize-package';
 import { PACKAGE_NAME } from '../imports/device/package-name';
 import { getBatteryInfo as saveBatteryInfo } from '../imports/device/save-battery-info';
 import { getLanguageId as saveLanguageId } from '../imports/device/save-language-id';
@@ -56,7 +57,7 @@ function Page() {
           return;
         }
         setLoc(position);
-        setLocHistory([...locHistory, position]);
+        setLocHistory([...locHistory, position]); // TODO: перепровить
       });
       setWatchId(watchId);
       return watchId;
@@ -87,6 +88,13 @@ function Page() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const initializePackage = async (deep) => {
+    console.log('initializePackage');
+    console.log({deep});
+    await initializePackageGeolocation(deep);
+    await initializePackagePosition(deep);
   };
 
   return <Stack>
