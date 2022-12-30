@@ -7,6 +7,7 @@ import { DeepProvider, useDeep, useDeepSubscription } from '@deep-foundation/dee
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { initializePackage as initializePackageGeolocation } from '../imports/geolocation/initialize-package';
 import { initializePackage as initializePackagePosition } from '../imports/position/initialize-package';
+import { getPositions } from '../imports/position/get-positions';
 import { initializePackage as initializePackageDevice } from '../imports/device/initialize-package';
 import { PACKAGE_NAME } from '../imports/device/package-name';
 import { savePosition } from '../imports/position/save-position';
@@ -100,6 +101,13 @@ function Page() {
     await initializePackagePosition(deep);
   };
 
+  const getPositionsFromDeep = async () => {
+    console.log('getPositionsFromDeep');
+    const positions = await getPositions(deep, deviceLinkId);
+    console.log({positions});
+    // TODO: compute coordinates from positions to capacitor format
+  };
+
   return <Stack>
     <Button onClick={async () => {
       await deep.guest();
@@ -128,6 +136,7 @@ function Page() {
     <Button onClick={getCurrentPosition}>Get Current Location</Button>
     <Button onClick={watchPosition}>Watch Location</Button>
     <Button onClick={clearWatch}>Clear Watch</Button>
+    <Button onClick={getPositionsFromDeep}>Get positions from deep</Button>
     <p>Permission status: {permissionStatus || '-'}</p>
     <p>Status: {status || '-'}</p>
     <p>Latitude: {loc?.coords?.latitude || '-'}</p>
