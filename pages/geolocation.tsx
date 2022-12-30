@@ -92,8 +92,11 @@ function Page() {
 
   const initializePackage = async (deep) => {
     console.log('initializePackage');
+    console.log('initializePackageDevice');
     await initializePackageDevice(deep);
+    console.log('initializePackageGeolocation');
     await initializePackageGeolocation(deep);
+    console.log('initializePackagePosition');
     await initializePackagePosition(deep);
   };
 
