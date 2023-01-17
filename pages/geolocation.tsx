@@ -69,12 +69,48 @@ function Page() {
 
   const clearWatch = async () => {
     try {
+      console.log('clearWatch called');
+      console.log({watchId});
       await Geolocation.clearWatch({id: watchId});
       setWatchId(undefined);
     } catch (error) {
+      console.log('clearWatch error');
+      console.log({watchId});
       console.log(error);
     }
   };
+
+  const watchPositionAndUnwatch = useCallback(async () => {
+    try {
+      if (await checkPermissions() === 'denied') {
+        setLoc(null);
+        await Geolocation.requestPermissions();
+      }
+      const _watchId = await Geolocation.watchPosition(options, (position, err) => {
+        if (err) {
+          console.log(err);
+          setStatus(err.message);
+          return;
+        }
+        setLoc(position);
+        savePosition(deep, deviceLinkId, {x: position.coords.longitude, y: position.coords.latitude, z: position.coords.altitude});
+        setLocHistory(oldLocHistory => [...oldLocHistory, position]);
+      });
+      setWatchId(_watchId);
+      try {
+        console.log('clearWatch called');
+        console.log({watchId, _watchId});
+        await Geolocation.clearWatch({id: _watchId});
+        setWatchId(undefined);
+      } catch (error) {
+        console.log('clearWatch error');
+        console.log({watchId});
+        console.log(error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const checkPermissions = async () => {
     const permissionStatus: any = await Geolocation.checkPermissions();
@@ -137,6 +173,7 @@ function Page() {
     <Button onClick={getCurrentPosition}>Get Current Location</Button>
     <Button onClick={watchPosition}>Watch Location</Button>
     <Button onClick={clearWatch}>Clear Watch</Button>
+    <Button onClick={watchPositionAndUnwatch}>Watch Location and unwatch</Button>
     <Button onClick={getPositionsFromDeep}>Get positions from deep</Button>
     <p>Permission status: {permissionStatus || '-'}</p>
     <p>Status: {status || '-'}</p>
