@@ -1,5 +1,5 @@
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
 import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep, useDeepSubscription } from '@deep-foundation/deeplinks/imports/client';
@@ -20,14 +20,15 @@ function Page() {
   const [deviceLinkId, setDeviceLinkId] = useLocalStore("deviceLinkId", undefined);
   const [options, setOptions] = useState<any>({
     enableHighAccuracy: true,
-    timeout: 10000,
+    timeout: 30000,
     maximumAge: 0,
   });
   const [loc, setLoc] = useState<any>(null);
   const [locHistory, setLocHistory] = useState<any>([]);
+  const [posHistory, setPosHistory] = useState<any>([]);
   const [status, setStatus] = useState<any>(null);
   const [permissionStatus, setPermissionStatus] = useState<any>(null);
-  const [watchId, setWatchId] = useState<any>(null);
+  const [watchId, setWatchId] = useState<string>(null);
 
   const getCurrentPosition = async () => {
     try {
@@ -44,13 +45,13 @@ function Page() {
     }
   };
 
-  const watchPosition = async () => {
+  const watchPosition = useCallback(async () => {
     try {
       if (await checkPermissions() === 'denied') {
         setLoc(null);
         await Geolocation.requestPermissions();
       }
-      const watchId = Geolocation.watchPosition(options, (position, err) => {
+      const _watchId = await Geolocation.watchPosition(options, (position, err) => {
         if (err) {
           console.log(err);
           setStatus(err.message);
@@ -60,16 +61,16 @@ function Page() {
         savePosition(deep, deviceLinkId, {x: position.coords.longitude, y: position.coords.latitude, z: position.coords.altitude});
         setLocHistory(oldLocHistory => [...oldLocHistory, position]);
       });
-      setWatchId(watchId);
-      return watchId;
+      setWatchId(_watchId);
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
 
   const clearWatch = async () => {
     try {
       await Geolocation.clearWatch({id: watchId});
+      setWatchId(undefined);
     } catch (error) {
       console.log(error);
     }
@@ -105,7 +106,7 @@ function Page() {
     console.log('getPositionsFromDeep');
     const positions = await getPositions(deep, deviceLinkId);
     console.log({positions});
-    // TODO: compute coordinates from positions to capacitor format
+    setPosHistory(positions);
   };
 
   return <Stack>
@@ -143,6 +144,9 @@ function Page() {
     <p>Longitude: {loc?.coords?.longitude || '-'}</p>
     <p>History: {locHistory.map((loc: any) => `[${loc.coords.latitude}, ${loc.coords.longitude}]`).join(', ')}</p>
     <p>Options: {JSON.stringify(options)}</p>
+    <p>Positions length: {posHistory?.data?.length}</p>
+    <p>Position from deep: {JSON.stringify(posHistory?.data)}</p>
+    <p>Subscription id: {watchId || '-'}</p>
   </Stack>;
 }
 
