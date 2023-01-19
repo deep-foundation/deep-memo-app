@@ -1,8 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
-export const PACKAGE_NAME = "@deep-foundation/audiorecord"
-export const PACKAGE_TYPES =
-  ["DeviceSupport", "Permissions", "AudioRecords", "Record", "Duration", "StartTime", "EndTime", "AudioChunk", "Format"]
+export const PACKAGE_NAME = "@deep-foundation/sound-handler"
+export const PACKAGE_TYPES = ["SoundHandlerOutput"]
 
 export default async function initializePackage(deep: DeepClient) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")
@@ -49,6 +48,6 @@ export default async function initializePackage(deep: DeepClient) {
       }
     }
   })
-  console.log("audiorecord package installed");
+  console.log("sound-handler package installed");
   
 }

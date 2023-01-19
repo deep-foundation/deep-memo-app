@@ -5,13 +5,14 @@ import {
   useDeep,
 } from "@deep-foundation/deeplinks/imports/client";
 import { Provider } from "../imports/provider";
-import Link from "next/link";
+import initializePackage, { PACKAGE_NAME } from '../imports/sound-handler/initialize-package';
+import insertSoundHandler from "../imports/sound-handler/sound-handler";
 
 
 
 const styles = { height: 60, width: 140, background: "grey" }
 
-function Content() {
+function SoundHandler() {
   const deep = useDeep();
   const [isauth, setAuth] = useState(false);
 
@@ -26,9 +27,9 @@ function Content() {
   return (
     <>
       <Stack>
-        <Button style={{ background: isauth ? "green" : "red" }} onClick={() => authUser()}>Auth User</Button>
-        <Text>Packages</Text>
-        <Button><Link href="/audiorecord">AudioRec</Link></Button>
+        <Button style={{ background: isauth ? "green" : "red" }} onClick={() => authUser()}>ADMIN</Button>
+        <Button onClick={async () => await initializePackage(deep)}>INITIALIZE PACKAGE</Button>
+        <Button onClick={async () => await insertSoundHandler(deep)}>INITIALIZE PACKAGE</Button>
       </Stack>
     </>
   );
@@ -40,7 +41,7 @@ export default function Index() {
       <ChakraProvider>
         <Provider>
           <DeepProvider>
-            <Content />
+            <SoundHandler />
           </DeepProvider>
         </Provider>
       </ChakraProvider>
