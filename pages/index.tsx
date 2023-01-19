@@ -29,7 +29,7 @@ function SoundHandler() {
       <Stack>
         <Button style={{ background: isauth ? "green" : "red" }} onClick={() => authUser()}>ADMIN</Button>
         <Button onClick={async () => await initializePackage(deep)}>INITIALIZE PACKAGE</Button>
-        <Button onClick={async () => await insertSoundHandler(deep)}>INITIALIZE PACKAGE</Button>
+        <Button onClick={async () => await insertSoundHandler(deep)}>CREATE HANDLER</Button>
       </Stack>
     </>
   );

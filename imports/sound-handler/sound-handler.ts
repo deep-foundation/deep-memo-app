@@ -8,15 +8,28 @@ export default async function insertSoundHandler(deep: DeepClient) {
   const packageId = await deep.id("@deep-foundation/sound-handler");
   const handleOperationTypeLinkId = await deep.id("@deep-foundation/core", "HandleInsert")
   const triggerTypeLinkId = await deep.id("@deep-foundation/audiorecord", "AudioChunk")
-  
-  const code = /*javascript*/`({ deep, data: { newLink } }) => {
-    const { data: [{ id: handlerTestLinkId }] } = await deep.insert({
-      type_id: await deep.id("@deep-foundation/sound-handler", "SoundHandlerOutput"),
+
+  const x = ({ deep, data: { newLink } }) => {
+    const { data: [{ id: handlerTestLinkId }] } = deep.insert({
+      type_id: deep.id("@deep-foundation/sound-handler", "SoundHandlerOutput"),
+      string: { data: { value: newLink.value.value } },
       in: {
         data: {
-          type_id: containTypeLinkId,
+          type_id: deep.id("@deep-foundation/core", "Contain"),
           from_id: newLink.id
-          string: { data: { value: "YO" } },
+        }
+      }
+    })
+  }
+
+  const code = /*javascript*/`async ({ deep, data: { newLink } }) => {
+    await deep.insert({
+      type_id: await deep.id("@deep-foundation/sound-handler", "SoundHandlerOutput"), 
+      string: { data: { value: newLink.value.value } },
+      in: {
+        data: {
+          type_id: await deep.id("@deep-foundation/core", "Contain"),
+          from_id: newLink.id
         }
       }
     })
