@@ -1,7 +1,8 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
+import { Dispatch } from "react";
 
-export async function getPositions(deep: DeepClient, deviceLinkId: number) {
+export async function getPositions({deep, deviceLinkId, setPosHistory}: {deep: DeepClient, deviceLinkId: number, setPosHistory:  Dispatch<any>}) {
   console.log('getPositions');
   console.log({deep, deviceLinkId});
   const geolocationEarthTypeLinkId = await deep.id("@deep-foundation/geolocation", "earth"); // TODO: this should be in args
@@ -24,5 +25,6 @@ export async function getPositions(deep: DeepClient, deviceLinkId: number) {
     to_id: geolocationEarthTypeLinkId,
   });
   console.log({data});
+  setPosHistory(data)
   return data;
 }
