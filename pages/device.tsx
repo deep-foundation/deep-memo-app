@@ -1,70 +1,79 @@
-
 import React, { useCallback } from 'react';
 import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
-import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
-import { DeepProvider, useDeep, useDeepSubscription } from '@deep-foundation/deeplinks/imports/client';
+import {
+  LocalStoreProvider,
+  useLocalStore,
+} from '@deep-foundation/store/local';
+import {
+  DeepProvider,
+  useDeep,
+  useDeepSubscription,
+} from '@deep-foundation/deeplinks/imports/client';
 
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import { saveGeneralInfo } from '../imports/device/save-general-info';
-import { initializePackage } from '../imports/device/initialize-package';
+import { insertGeneralInfoToDeep } from '../imports/device/insert-general-info-to-deep';
+import { insertPackageLinksToDeep } from '../imports/device/insert-package-links-to-deep';
 import { PACKAGE_NAME } from '../imports/device/package-name';
-import { getBatteryInfo as saveBatteryInfo } from '../imports/device/save-battery-info';
-import { getLanguageId as saveLanguageId } from '../imports/device/save-language-id';
-import { getLanguageTag as saveLanguageTag } from '../imports/device/save-language-tag';
+import { insertBatteryInfoToDeep } from '../imports/device/insert-battery-info-to-deep';
+import { insertLanguageIdToDeep as insertLanguageCodeToDeep } from '../imports/device/insert-language-id-to-deep';
+import { insertLanguageTagToDeep } from '../imports/device/insert-language-tag-to-deep';
 import { Provider } from '../imports/provider';
+import { Device } from '@capacitor/device';
 
-
-function Page() {
-
+function Content() {
   const deep = useDeep();
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore("deviceLinkId", undefined);
+  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
+    'deviceLinkId',
+    undefined
+  );
 
-  return <Stack>
-    <Button onClick={async () => {
-      await deep.guest();
-      await deep.login({
-        linkId: await deep.id("deep", "admin")
-      });
-    }}>Login as admin</Button>
-        <Text>{deviceLinkId}</Text>
-    <Button onClick={async () => {
-      console.log({deviceLinkId});
-      await initializePackage(deep);
-      if(!deviceLinkId) {
-        const deviceTypeLinkId = await deep.id(PACKAGE_NAME, "Device");
-        const {data: [{id: newDeviceLinkId}]} = await deep.insert({
-          type_id: deviceTypeLinkId
-        })
-        console.log({newDeviceLinkId});
-        setDeviceLinkId(newDeviceLinkId);
-      }
-      console.log({deviceLinkId});
-      
-    }}>Initialize package</Button>
-    
-    <Button onClick={useCallback(() => {
-      saveGeneralInfo(deep, deviceLinkId)
-    }, [deep, deviceLinkId])}>Save general info</Button>
-    <Button onClick={useCallback(() => {
-      saveBatteryInfo(deep, deviceLinkId)
-    }, [deep, deviceLinkId])}>Save battery info</Button>
-    <Button onClick={useCallback(() => {
-      saveLanguageId(deep, deviceLinkId)
-    }, [deep, deviceLinkId])}>Save language id</Button>
-    <Button onClick={useCallback(() => {
-      saveLanguageTag(deep, deviceLinkId)
-    }, [deep, deviceLinkId])}>Save language tag</Button>
-  </Stack>;
+  return (
+    <Stack>
+      <Text>{deviceLinkId}</Text>
+      <Button
+        onClick={async () => {
+          const deviceGeneralInfo = await Device.getInfo();
+          await insertGeneralInfoToDeep({deep, deviceLinkId, deviceGeneralInfo});
+        }}
+      >
+        Save general info
+      </Button>
+      <Button
+        onClick={async () => {
+          const deviceBatteryInfo = await Device.getBatteryInfo();
+          await insertBatteryInfoToDeep({deep, deviceLinkId, deviceBatteryInfo});
+        }}
+      >
+        Save battery info
+      </Button>
+      <Button
+        onClick={async () => {
+          const deviceLanguageCode = await Device.getLanguageCode();
+          await insertLanguageCodeToDeep({deep, deviceLinkId, deviceLanguageCode});
+        }}
+      >
+        Save language id
+      </Button>
+      <Button
+        onClick={async () => {
+          const deviceLanguageTag = await Device.getLanguageTag();
+          await insertLanguageTagToDeep({deep, deviceLinkId, deviceLanguageTag});
+        }}
+      >
+        Save language tag
+      </Button>
+    </Stack>
+  );
 }
 
-export default function Device() {
+export default function DevicePage() {
   return (
-		<ChakraProvider>
-			<Provider>
-				<DeepProvider>
-					<Page />
-				</DeepProvider>
-			</Provider>
-		</ChakraProvider>
-	);
+    <ChakraProvider>
+      <Provider>
+        <DeepProvider>
+          <Content />
+        </DeepProvider>
+      </Provider>
+    </ChakraProvider>
+  );
 }

@@ -12,6 +12,16 @@ dependencies {
     implementation project(':capacitor-community-contacts')
     implementation project(':capacitor-device')
     implementation project(':capacitor-geolocation')
+    implementation project(':capacitor-action-sheet')
+    implementation project(':capacitor-camera')
+    implementation project(':capacitor-clipboard')
+    implementation project(':capacitor-dialog')
+    implementation project(':capacitor-geolocation')
+    implementation project(':capacitor-haptics')
+    implementation project(':capacitor-local-notifications')
+    implementation project(':capacitor-network')
+    implementation project(':capacitor-push-notifications')
+    implementation project(':capacitor-screen-reader')
 
 }
 
