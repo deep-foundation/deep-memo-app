@@ -1,15 +1,14 @@
-import { Geolocation } from '@capacitor/geolocation';
+import { Geolocation, PermissionStatus } from '@capacitor/geolocation';
+import { PermissionState } from '@capacitor/core';
 
-export const checkPermissions = async ({callback}: {callback?: ({newPermissionStatus}: {newPermissionStatus: any}) => any}) => {
+export const checkPermissions = async ({callback}: {callback?: ({newPermissionState}: {newPermissionState: PermissionState}) => any}) => {
   try {
-    const permissionStatus: any = await Geolocation.checkPermissions();
+    const permissionStatus: PermissionStatus = await Geolocation.checkPermissions();
     console.log({permissionStatus});
-    // setPermissionStatus(permissionStatus?.location);
-    callback && callback({newPermissionStatus: permissionStatus?.location});
+    callback?.({newPermissionState: permissionStatus?.location});
     return permissionStatus?.location;
   } catch {
-    // setPermissionStatus('error');
-    callback && callback({newPermissionStatus: null});
+    callback?.({newPermissionState: null});
     return null;
   }
 };

@@ -2,7 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 
 export async function savePosition(deep: DeepClient, deviceLinkId: number, coordinates: {x: number, y: number, z: number}) {
-  const geolocationEarthTypeLinkId = await deep.id("@deep-foundation/geolocation", "earth");
+  const geolocationEarthTypeLinkId = await deep.id("@deep-foundation/geolocation", "Earth");
 
   if(!deviceLinkId) {
 		throw new Error("deviceLinkId must not be 0")

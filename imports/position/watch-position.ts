@@ -7,16 +7,16 @@ export const watchPosition = async ({options, callback}: {options: object, callb
     const newWatchId = await Geolocation.watchPosition(options, (newPosition, error) => {
       if (error) {
         console.error(error);
-        callback && callback({error});
+        callback?.({error});
         return {error};
       }
-      callback && callback({newPosition});
+      callback?.({newPosition});
     });
-    callback && callback({newWatchId});
+    callback?.({newWatchId});
     return {newWatchId};
   } catch (error) {
     console.error(error);
-    callback && callback({error});
+    callback?.({error});
     return {error};
   }
 };

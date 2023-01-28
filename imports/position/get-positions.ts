@@ -3,7 +3,7 @@ import { PACKAGE_NAME } from "./package-name";
 
 export async function getPositions({deep, deviceLinkId, space, callback}: {deep: DeepClient, deviceLinkId: number, space?: string, callback?: (positions: DeepClientResult<any>) => any}) {
   try {
-    const geolocationSpaceTypeLinkId = await deep.id("@deep-foundation/geolocation", space || "earth");
+    const geolocationSpaceTypeLinkId = await deep.id("@deep-foundation/geolocation", space || "Earth");
 
     if(!deviceLinkId) {
       throw new Error("deviceLinkId must not be 0");
@@ -20,11 +20,11 @@ export async function getPositions({deep, deviceLinkId, space, callback}: {deep:
       from_id: deviceLinkId,
       to_id: geolocationSpaceTypeLinkId,
     });
-    callback(positions);
+    callback?.(positions);
   return positions;
   } catch (error) {
     console.error(error);
-    callback(null);
+    callback?.(null);
     return null;
   }
 }

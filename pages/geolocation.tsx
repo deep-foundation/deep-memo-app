@@ -32,7 +32,7 @@ function Page() {
   const [locHistory, setLocHistory] = useState<any>([]);
   const [posHistory, setPosHistory] = useState<any>([]);
   const [status, setStatus] = useState<any>(null);
-  const [permissionStatus, setPermissionStatus] = useState<any>(null);
+  const [permissionState, setPermissionState] = useState<any>(null);
   const [watchId, setWatchId] = useState<string>(null);
 
   return <Stack>
@@ -62,20 +62,20 @@ function Page() {
 
     <Button onClick={async () => {initializePackageGeolocation(deep)}}>Initialize package geolocation</Button>
 
-    <Button onClick={() => checkPermissions({callback: ({newPermissionStatus}) => setPermissionStatus(newPermissionStatus)})}>Check geolocation permission</Button>
+    <Button onClick={() => checkPermissions({callback: ({newPermissionState}) => setPermissionState(newPermissionState)})}>Check geolocation permission</Button>
 
     <Button onClick={() => requestPermissions({}) &&
-      checkPermissions({callback: ({newPermissionStatus}) => setPermissionStatus(newPermissionStatus)})
+      checkPermissions({callback: ({newPermissionState}) => setPermissionState(newPermissionState)})
     }>Request geolocation permission</Button>
 
-    <Button onClick={() => checkPermissions({callback: ({newPermissionStatus}) => setPermissionStatus(newPermissionStatus)}) &&
+    <Button onClick={() => checkPermissions({callback: ({newPermissionState}) => setPermissionState(newPermissionState)}) &&
       getCurrentPosition({callback: ({coordinates}) => {
         setLoc(coordinates);
         savePosition(deep, deviceLinkId, {x: coordinates.coords.longitude, y: coordinates.coords.latitude, z: coordinates.coords.altitude});
       }})
     }>Get Current Location</Button>
 
-    <Button onClick={() => checkPermissions({callback: ({newPermissionStatus}) => setPermissionStatus(newPermissionStatus)}) &&
+    <Button onClick={() => checkPermissions({callback: ({newPermissionState}) => setPermissionState(newPermissionState)}) &&
       watchPosition({options, callback: ({error, newWatchId, newPosition}) => {
         console.log({error, newWatchId, newPosition});
         if (error) { setStatus(error.message); return; }
@@ -92,7 +92,7 @@ function Page() {
     <Button onClick={() => getPositions({deep, deviceLinkId, callback: (positions) => setPosHistory(positions)})}>Get positions from deep</Button>
 
     <Text>DeviceLinkId: {deviceLinkId || '-'}</Text>
-    <Text>Permission status: {permissionStatus || '-'}</Text>
+    <Text>Permission status: {permissionState || '-'}</Text>
     <Text>Status: {status || '-'}</Text>
     <Text>Latitude: {loc?.coords?.latitude || '-'}</Text>
     <Text>Longitude: {loc?.coords?.longitude || '-'}</Text>

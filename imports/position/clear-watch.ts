@@ -5,9 +5,9 @@ import { Geolocation } from '@capacitor/geolocation';
 export const clearWatch = async ({watchId, callback}: { watchId: string, callback?: ({ result, error }: { result?: string,  error?: any }) => void} ) => {
   try {
     await Geolocation.clearWatch({id: watchId});
-    callback && callback({result: 'success'});
+    callback?.({result: 'success'});
   } catch (error) {
     console.error(error);
-    callback && callback({error})
+    callback?.({error})
   }
 };

@@ -51,7 +51,7 @@ export async function initializePackage(deep: DeepClient) {
     in: { data: {
       type_id: containTypeLinkId,
       from_id: packageLinkId,
-      string: { data: { value: 'earth' } },
+      string: { data: { value: 'Earth' } },
     } },
   });
 

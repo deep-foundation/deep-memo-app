@@ -33,17 +33,6 @@ export async function initializePackage(deep: DeepClient) {
     ] },
   });
 
-  // const { data: [{ id: coordinateTypeLinkId }] } = await deep.insert({
-  //   type_id: typeTypeLinkId,
-  //   from_id: deviceTypeLinkId,
-  //   to_id: geolocationSpaceTypeLinkId,
-  //   in: { data: {
-  //     type_id: containTypeLinkId,
-  //     from_id: packageLinkId,
-  //     string: { data: { value: 'Coordinate' } },
-  //   } },
-  // });
-
   const { data: [{ id: xTypeLinkId }] } = await deep.insert({
     type_id: typeTypeLinkId,
     from_id: deviceTypeLinkId,
