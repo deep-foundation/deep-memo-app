@@ -6,7 +6,6 @@ import { DeepProvider, useDeep, useDeepSubscription } from '@deep-foundation/dee
 
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { PACKAGE_NAME } from '../imports/device/package-name';
-import { initializePackage as initializePackageDevice } from '../imports/device/initialize-package';
 import { initializePackage as initializePackageGeolocation } from '../imports/geolocation/initialize-package';
 import { initializePackage as initializePackagePosition } from '../imports/position/initialize-package';
 import { getPositions } from '../imports/position/get-positions';
@@ -22,7 +21,7 @@ import { clearWatch } from '../imports/position/clear-watch';
 function Page() {
 
   const deep = useDeep();
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore("deviceLinkId", undefined);
+  const [deviceLinkId] = useLocalStore("deviceLinkId", undefined);
   const [options, setOptions] = useState<any>({
     enableHighAccuracy: true,
     timeout: 30000,
@@ -36,27 +35,6 @@ function Page() {
   const [watchId, setWatchId] = useState<string>(null);
 
   return <Stack>
-    <Button onClick={async () => {
-      await deep.guest();
-      await deep.login({
-        linkId: await deep.id("deep", "admin")
-      });
-    }}>Login as admin</Button>
-
-    <Button onClick={async () => {
-      console.log({deviceLinkId});
-      await initializePackageDevice(deep);
-      if(!deviceLinkId) {
-        const deviceTypeLinkId = await deep.id(PACKAGE_NAME, "Device");
-        const {data: [{id: newDeviceLinkId}]} = await deep.insert({
-          type_id: deviceTypeLinkId
-        })
-        console.log({newDeviceLinkId});
-        setDeviceLinkId(newDeviceLinkId);
-      }
-      console.log({deviceLinkId});
-      
-    }}>Initialize package device</Button>
 
     <Button onClick={async () => {initializePackagePosition(deep)}}>Initialize package position</Button>
 
