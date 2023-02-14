@@ -9,10 +9,11 @@ export default async function insertSoundHandler(deep: DeepClient) {
   const handleOperationTypeLinkId = await deep.id("@deep-foundation/core", "HandleInsert")
   const triggerTypeLinkId = await deep.id("@deep-foundation/audiorecord", "AudioChunk")
 
-  const code = /*javascript*/`async ({ deep, data: { newLink } }) => {
+  const code = /*javascript*/`async ({ require, deep, data: { newLink } }) => {
+    const speech = require('@google-cloud/speech');
     await deep.insert({
       type_id: await deep.id("@deep-foundation/sound-handler", "SoundHandlerOutput"), 
-      string: { data: { value: newLink.value.value } },
+      string: { data: { value: speech.toString()} },
       in: {
         data: {
           type_id: await deep.id("@deep-foundation/core", "Contain"),
@@ -28,7 +29,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
       data: [
         {
           type_id: containTypeLinkId,
-          from_id: packageId, // before created package
+          from_id: packageId,
           string: { data: { value: "SoundScript" } },
         },
         {
@@ -38,7 +39,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
             data: [
               {
                 type_id: containTypeLinkId,
-                from_id: packageId, // before created package
+                from_id: packageId,
                 string: { data: { value: "SoundHandler" } },
               },
               {
@@ -48,7 +49,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
                   data: [
                     {
                       type_id: containTypeLinkId,
-                      from_id: packageId, // before created package
+                      from_id: packageId,
                       string: { data: { value: "HandleSoundInsert" } },
                     },
                   ],
