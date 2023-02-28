@@ -7,8 +7,6 @@ const withNextEnv = nextEnv();
  
 module.exports = withNextEnv({
   distDir: 'app',
-  strictMode: false,
-  
   webpack: (config) => {
     config.resolve.fallback = {
       "buffer": require.resolve('buffer/'),
@@ -23,6 +21,7 @@ module.exports = withNextEnv({
       "https": false,
       "stream": false,
       "crypto": false,
+      "child_process": false,
     };
 
     return config;
