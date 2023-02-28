@@ -102,7 +102,10 @@ function Page() {
       </div>
       <div>
         <Link href="/device">device</Link>
-      </div> 
+      </div>
+      <div>
+        <Link href="/sound">sound</Link>
+      </div>
     </div>
   );
 }
