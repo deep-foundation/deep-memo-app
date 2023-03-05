@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
 export const PACKAGE_NAME = "@deep-foundation/sound-handler"
-export const PACKAGE_TYPES = ["SoundHandlerOutput"]
+export const PACKAGE_TYPES = ["GoogleSpeechTranscription", "GoogleCloudAuthFile"]
 
 export default async function initializePackage(deep: DeepClient) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")

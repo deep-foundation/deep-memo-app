@@ -21,6 +21,9 @@ return <Stack>
   <Button onClick={async () => await insertSoundHandler(deep)}>
     INSERT HANDLER
   </Button>
+  <Button onClick={async () => await insertSoundHandler(deep)}>
+    INSERT GCLOUD AUTH KEY LINK
+  </Button>
 </Stack>
 }
 
