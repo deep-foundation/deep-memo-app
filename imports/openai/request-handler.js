@@ -29,15 +29,9 @@ async ({data: {newLink:openAiRequestLink,triggeredByLinkId},deep,require}) => {
     });
     const openai = new OpenAIApi(configuration);
 
-    const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: openAiPrompt,
-        temperature: 0.9,
-        max_tokens: 1500,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0.6,
-        stop: [" Human:", " AI:"],
-    });
+    const response = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{role: "user", content: openAiPrompt}],
+    })
     return response.data;
 }
