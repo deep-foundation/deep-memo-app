@@ -9,7 +9,7 @@ export async function updateOrInsertAccelerationDataToDeep({
   deviceLinkId,
 }: {
   deep: DeepClient;
-  data: Omit<AccelListenerEvent, 'rotationRate'>;
+  data: AccelListenerEvent;
   deviceLinkId: number;
 }) {
   const accelerationTypeLinkId = await deep.id(PACKAGE_NAME, 'Acceleration');
@@ -21,6 +21,9 @@ export async function updateOrInsertAccelerationDataToDeep({
   const accelerationZIncludingGravityTypeLinkId = await deep.id(PACKAGE_NAME, 'AccelerationZIncludingGravity');
   const intervalTypeLinkId = await deep.id(PACKAGE_NAME, 'Interval');
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
+  const rotationAlphaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateAlpha');
+  const rotationBetaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateBeta');
+  const rotationGammaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateGamma');
 
   const { data: [accelerationLink] } = await deep.select({
     type_id: accelerationTypeLinkId,
@@ -29,6 +32,154 @@ export async function updateOrInsertAccelerationDataToDeep({
       from_id: deviceLinkId,
     }
   })
+
+  await deep.insert([
+    {
+      type_id: accelerationXTypeLinkId,
+      from_id: deviceLinkId,
+      to_id: deviceLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId
+        }
+      },
+      number: {
+        data: {
+          value: data.acceleration.x
+        }
+      }
+    },
+    {
+      type_id: accelerationYTypeLinkId,
+      from_id: deviceLinkId,
+      to_id: deviceLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId
+        }
+      },
+      number: {
+        data: {
+          value: data.acceleration.y
+        }
+      }
+    },
+    {
+      type_id: accelerationZTypeLinkId,
+      from_id: deviceLinkId,
+      to_id: deviceLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId
+        }
+      },
+      number: {
+        data: {
+          value: data.acceleration.z
+        }
+      }
+    },
+    {
+      type_id: accelerationXIncludingGravityTypeLinkId,
+      from_id: deviceLinkId,
+      to_id: deviceLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId
+        }
+      },
+      number: {
+        data: {
+          value: data.accelerationIncludingGravity.x
+        }
+      }
+    },
+    {
+      type_id: accelerationYIncludingGravityTypeLinkId,
+      from_id: deviceLinkId,
+      to_id: deviceLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId
+        }
+      },
+      number: {
+        data: {
+          value: data.accelerationIncludingGravity.y
+        }
+      }
+    },
+    {
+      type_id: accelerationZIncludingGravityTypeLinkId,
+      from_id: deviceLinkId,
+      to_id: deviceLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId
+        }
+      },
+      number: {
+        data: {
+          value: data.accelerationIncludingGravity.z
+        }
+      }
+    },
+    {
+      type_id: rotationAlphaTypeLinkId,
+      from_id: deviceLinkId,
+      to_id: deviceLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId
+        }
+      },
+      number: {
+        data: {
+          value: data.rotationRate.alpha
+        }
+      }
+    },
+    {
+      type_id: rotationAlphaTypeLinkId,
+      from_id: deviceLinkId,
+      to_id: deviceLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId
+        }
+      },
+      number: {
+        data: {
+          value: data.rotationRate.beta
+        }
+      }
+    },
+    {
+      type_id: rotationAlphaTypeLinkId,
+      from_id: deviceLinkId,
+      to_id: deviceLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId
+        }
+      },
+      number: {
+        data: {
+          value: data.rotationRate.gamma
+        }
+      }
+    },
+    
+  ])
 
   if (!accelerationLink) {
     await deep.insert([
