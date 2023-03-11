@@ -12,7 +12,6 @@ export async function updateOrInsertAccelerationDataToDeep({
   data: AccelListenerEvent;
   deviceLinkId: number;
 }) {
-  const accelerationTypeLinkId = await deep.id(PACKAGE_NAME, 'Acceleration');
   const accelerationXTypeLinkId = await deep.id(PACKAGE_NAME, 'AccelerationX');
   const accelerationYTypeLinkId = await deep.id(PACKAGE_NAME, 'AccelerationY');
   const accelerationZTypeLinkId = await deep.id(PACKAGE_NAME, 'AccelerationZ');
@@ -178,7 +177,22 @@ export async function updateOrInsertAccelerationDataToDeep({
           }
         }
       },
-      
+      {
+        type_id: intervalTypeLinkId,
+        from_id: deviceLinkId,
+        to_id: deviceLinkId,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId
+          }
+        },
+        number: {
+          data: {
+            value: data.interval
+          }
+        }
+      },
     ])
   } else if (linksUpToParentDeviceLink.length > 1) {
     const accelerationXLink = linksUpToParentDeviceLink.find(link => link.type_id === accelerationXTypeLinkId);
@@ -292,6 +306,19 @@ export async function updateOrInsertAccelerationDataToDeep({
       },
       {
         value: data.rotationRate.gamma
+      },
+      {
+        table: 'numbers'
+      }
+    )
+
+    const intervalLink = linksUpToParentDeviceLink.find(link => link.type_id === intervalTypeLinkId);
+    await deep.update(
+      {
+        link_id: intervalLink.id
+      },
+      {
+        value: data.interval
       },
       {
         table: 'numbers'
