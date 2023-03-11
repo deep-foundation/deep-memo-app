@@ -395,11 +395,21 @@ async function installPackage() {
     {
       type_id: typeTypeLinkId,
       in: {
-        data: {
+        data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: 'AccelerationInterval' } },
-        }
+          string: { data: { value: 'Interval' } },
+        },
+        {
+          type_id: treeIncludeDownTypeLinkId,
+          from_id: motionTreeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId
+            }
+          }
+        }]
       },
       out: {
         data: {
@@ -407,23 +417,8 @@ async function installPackage() {
           to_id: numberTypeLinkId
         }
       }
-    },
-    {
-      type_id: typeTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'OrientationInterval' } },
-        }
-      },
-      out: {
-        data: {
-          type_id: valueTypeLinkId,
-          to_id: numberTypeLinkId
-        }
-      }
-    }])
+    }
+])
 
 }
 
