@@ -26,8 +26,12 @@ export async function updateOrInsertAccelerationDataToDeep({
 
   const {data: linksUpToParentDeviceLink} = await deep.select({
     down: {
-      parent_id: deviceLinkId,
-      tree_id: await deep.id(PACKAGE_NAME, "MotionTree")
+      parent_id: {
+        _eq: deviceLinkId
+      },
+      tree_id: {
+        _eq: await deep.id(PACKAGE_NAME, "MotionTree")
+      }
     }
   });
 
