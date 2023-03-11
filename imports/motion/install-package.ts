@@ -109,6 +109,7 @@ async function installPackage() {
       out: {
         data: {
           type_id: treeIncludeNodeTypeLinkId,
+          to_id: deviceTypeLinkId,
           in: {
             data: {
               type_id: containTypeLinkId,
