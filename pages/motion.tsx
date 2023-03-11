@@ -10,7 +10,7 @@ import {
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
 
-import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
+import { Button, ChakraProvider, Code, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { PluginListenerHandle } from '@capacitor/core';
 import { Motion } from '@capacitor/motion';
@@ -23,21 +23,35 @@ function Content() {
   const deep = useDeep();
   const [deviceLinkId] = useLocalStore('deviceLinkId', undefined);
 
-  const [accelerationHandler, setAccelerationHandler] = useState();
+  const [accelerationHandler, setAccelerationHandler] = useState<PluginListenerHandle>();
 
   return (
     <Stack>
+      <Text>
+        Install package by using these commands in a terminal:
+      </Text>
+      <Code display={'block'} whiteSpace={'pre'}>
+        {`
+package_name="action-sheet" 
+npx ts-node "./imports/\${package_name}/install-package.ts"
+`}
+      </Code>
       <Button onClick={async () => {
-        Motion.addListener('accel', (accelData) => {
+        accelerationHandler?.remove();
+        const newAccelerationHandler = await Motion.addListener('accel', (accelData) => {
           updateOrInsertAccelerationDataToDeep({
             deep,
             deviceLinkId,
             data: accelData
           })
-        })       
+        });
+        setAccelerationHandler(newAccelerationHandler);
       }}>
         Subscritbe to Acceleration Changes
       </Button>
+      <Button onClick={async () => {
+        accelerationHandler?.remove();
+      }}>Unsubscribe</Button>
     </Stack>
   );
 }
