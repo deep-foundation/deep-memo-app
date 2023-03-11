@@ -33,298 +33,155 @@ export async function updateOrInsertAccelerationDataToDeep({
     }
   })
 
-  await deep.insert([
-    {
-      type_id: accelerationXTypeLinkId,
-      from_id: deviceLinkId,
-      to_id: deviceLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deep.linkId
-        }
-      },
-      number: {
-        data: {
-          value: data.acceleration.x
-        }
-      }
-    },
-    {
-      type_id: accelerationYTypeLinkId,
-      from_id: deviceLinkId,
-      to_id: deviceLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deep.linkId
-        }
-      },
-      number: {
-        data: {
-          value: data.acceleration.y
-        }
-      }
-    },
-    {
-      type_id: accelerationZTypeLinkId,
-      from_id: deviceLinkId,
-      to_id: deviceLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deep.linkId
-        }
-      },
-      number: {
-        data: {
-          value: data.acceleration.z
-        }
-      }
-    },
-    {
-      type_id: accelerationXIncludingGravityTypeLinkId,
-      from_id: deviceLinkId,
-      to_id: deviceLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deep.linkId
-        }
-      },
-      number: {
-        data: {
-          value: data.accelerationIncludingGravity.x
-        }
-      }
-    },
-    {
-      type_id: accelerationYIncludingGravityTypeLinkId,
-      from_id: deviceLinkId,
-      to_id: deviceLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deep.linkId
-        }
-      },
-      number: {
-        data: {
-          value: data.accelerationIncludingGravity.y
-        }
-      }
-    },
-    {
-      type_id: accelerationZIncludingGravityTypeLinkId,
-      from_id: deviceLinkId,
-      to_id: deviceLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deep.linkId
-        }
-      },
-      number: {
-        data: {
-          value: data.accelerationIncludingGravity.z
-        }
-      }
-    },
-    {
-      type_id: rotationAlphaTypeLinkId,
-      from_id: deviceLinkId,
-      to_id: deviceLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deep.linkId
-        }
-      },
-      number: {
-        data: {
-          value: data.rotationRate.alpha
-        }
-      }
-    },
-    {
-      type_id: rotationAlphaTypeLinkId,
-      from_id: deviceLinkId,
-      to_id: deviceLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deep.linkId
-        }
-      },
-      number: {
-        data: {
-          value: data.rotationRate.beta
-        }
-      }
-    },
-    {
-      type_id: rotationAlphaTypeLinkId,
-      from_id: deviceLinkId,
-      to_id: deviceLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deep.linkId
-        }
-      },
-      number: {
-        data: {
-          value: data.rotationRate.gamma
-        }
-      }
-    },
-    
-  ])
+  
 
   if (!accelerationLink) {
     await deep.insert([
       {
-        type_id: accelerationTypeLinkId,
+        type_id: accelerationXTypeLinkId,
+        from_id: deviceLinkId,
+        to_id: deviceLinkId,
         in: {
-          data: [
-            {
-              type_id: containTypeLinkId,
-              from_id: deviceLinkId,
-            },
-          ],
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId
+          }
         },
-        out: {
-          data: [
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: accelerationXTypeLinkId,
-                  number: {
-                    data: {
-                      value: data.acceleration.x,
-                    },
-                  },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
-                },
-              },
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: accelerationYTypeLinkId,
-                  number: {
-                    data: {
-                      value: data.acceleration.y,
-                    },
-                  },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
-                },
-              },
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: accelerationZTypeLinkId,
-                  number: {
-                    data: {
-                      value: data.acceleration.z,
-                    },
-                  },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
-                },
-              },
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: accelerationXIncludingGravityTypeLinkId,
-                  number: {
-                    data: {
-                      value: data.accelerationIncludingGravity.x,
-                    },
-                  },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
-                },
-              },
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: accelerationYIncludingGravityTypeLinkId,
-                  number: {
-                    data: {
-                      value: data.accelerationIncludingGravity.y,
-                    },
-                  },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
-                },
-              },
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: accelerationZIncludingGravityTypeLinkId,
-                  number: {
-                    data: {
-                      value: data.accelerationIncludingGravity.z,
-                    },
-                  },
-                  // in: {
-                  //   data: {
-                  //     type_id: containTypeLinkId,
-                  //     from_id: deviceLinkId,
-                  //   }
-                  // },
-                },
-              },
-            },
-            {
-              type_id: containTypeLinkId,
-              to: {
-                data: {
-                  type_id: intervalTypeLinkId,
-                  number: {
-                    data: {
-                      value: data.interval,
-                    },
-                  },
-                },
-              },
-            },
-          ],
-        },
+        number: {
+          data: {
+            value: data.acceleration.x
+          }
+        }
       },
+      {
+        type_id: accelerationYTypeLinkId,
+        from_id: deviceLinkId,
+        to_id: deviceLinkId,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId
+          }
+        },
+        number: {
+          data: {
+            value: data.acceleration.y
+          }
+        }
+      },
+      {
+        type_id: accelerationZTypeLinkId,
+        from_id: deviceLinkId,
+        to_id: deviceLinkId,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId
+          }
+        },
+        number: {
+          data: {
+            value: data.acceleration.z
+          }
+        }
+      },
+      {
+        type_id: accelerationXIncludingGravityTypeLinkId,
+        from_id: deviceLinkId,
+        to_id: deviceLinkId,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId
+          }
+        },
+        number: {
+          data: {
+            value: data.accelerationIncludingGravity.x
+          }
+        }
+      },
+      {
+        type_id: accelerationYIncludingGravityTypeLinkId,
+        from_id: deviceLinkId,
+        to_id: deviceLinkId,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId
+          }
+        },
+        number: {
+          data: {
+            value: data.accelerationIncludingGravity.y
+          }
+        }
+      },
+      {
+        type_id: accelerationZIncludingGravityTypeLinkId,
+        from_id: deviceLinkId,
+        to_id: deviceLinkId,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId
+          }
+        },
+        number: {
+          data: {
+            value: data.accelerationIncludingGravity.z
+          }
+        }
+      },
+      {
+        type_id: rotationAlphaTypeLinkId,
+        from_id: deviceLinkId,
+        to_id: deviceLinkId,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId
+          }
+        },
+        number: {
+          data: {
+            value: data.rotationRate.alpha
+          }
+        }
+      },
+      {
+        type_id: rotationAlphaTypeLinkId,
+        from_id: deviceLinkId,
+        to_id: deviceLinkId,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId
+          }
+        },
+        number: {
+          data: {
+            value: data.rotationRate.beta
+          }
+        }
+      },
+      {
+        type_id: rotationAlphaTypeLinkId,
+        from_id: deviceLinkId,
+        to_id: deviceLinkId,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId
+          }
+        },
+        number: {
+          data: {
+            value: data.rotationRate.gamma
+          }
+        }
+      },
+      
     ])
   } else {
     const accelerationXLinkLinkQuery: BoolExpLink = {
