@@ -96,16 +96,29 @@ async function installPackage() {
     },
   });
 
-  const { data: [{ id: actionSheetTreeLinkId }] } = await deep.insert({
-    type_id: treeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'MotionTree' } },
+  const { data: [{ id: motionTreeLinkId }] } = await deep.insert([
+    {
+      type_id: treeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'MotionTree' } },
+        },
       },
-    }
-  })
+      out: {
+        data: {
+          type_id: treeIncludeNodeTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId
+            }
+          }
+        }
+      }
+    },
+  ])
 
   await deep.insert([
     {
@@ -113,11 +126,53 @@ async function installPackage() {
       from_id: deviceTypeLinkId,
       to_id: deviceTypeLinkId,
       in: {
+        data: [
+          {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'AccelerationX' } },
+          },
+          {
+            type_id: treeIncludeDownTypeLinkId,
+            from_id: motionTreeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId
+              }
+            }
+          }
+        ]
+      },
+      out: {
         data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'AccelerationX' } },
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId
         }
+      },
+    },
+    {
+      type_id: typeTypeLinkId,
+      from_id: deviceTypeLinkId,
+      to_id: deviceTypeLinkId,
+      in: {
+        data: [
+          {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'AccelerationY' } },
+          },
+          {
+            type_id: treeIncludeDownTypeLinkId,
+            from_id: motionTreeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId
+              }
+            }
+          }
+        ]
       },
       out: {
         data: {
@@ -131,11 +186,23 @@ async function installPackage() {
       from_id: deviceTypeLinkId,
       to_id: deviceTypeLinkId,
       in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'AccelerationY' } },
-        }
+        data: [
+          {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'AccelerationZ' } },
+          },
+          {
+            type_id: treeIncludeDownTypeLinkId,
+            from_id: motionTreeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId
+              }
+            }
+          }
+        ]
       },
       out: {
         data: {
@@ -149,11 +216,23 @@ async function installPackage() {
       from_id: deviceTypeLinkId,
       to_id: deviceTypeLinkId,
       in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'AccelerationZ' } },
-        }
+        data: [
+          {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'AccelerationXIncludingGravity' } },
+          },
+          {
+            type_id: treeIncludeDownTypeLinkId,
+            from_id: motionTreeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId
+              }
+            }
+          }
+        ]
       },
       out: {
         data: {
@@ -167,11 +246,23 @@ async function installPackage() {
       from_id: deviceTypeLinkId,
       to_id: deviceTypeLinkId,
       in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'AccelerationXIncludingGravity' } },
-        }
+        data: [
+          {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'AccelerationYIncludingGravity' } },
+          },
+          {
+            type_id: treeIncludeDownTypeLinkId,
+            from_id: motionTreeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId
+              }
+            }
+          }
+        ]
       },
       out: {
         data: {
@@ -185,11 +276,23 @@ async function installPackage() {
       from_id: deviceTypeLinkId,
       to_id: deviceTypeLinkId,
       in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'AccelerationYIncludingGravity' } },
-        }
+        data: [
+          {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'AccelerationZIncludingGravity' } },
+          },
+          {
+            type_id: treeIncludeDownTypeLinkId,
+            from_id: motionTreeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId
+              }
+            }
+          }
+        ]
       },
       out: {
         data: {
@@ -203,11 +306,23 @@ async function installPackage() {
       from_id: deviceTypeLinkId,
       to_id: deviceTypeLinkId,
       in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'AccelerationZIncludingGravity' } },
-        }
+        data: [
+          {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'RotationRateAlpha' } },
+          },
+          {
+            type_id: treeIncludeDownTypeLinkId,
+            from_id: motionTreeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId
+              }
+            }
+          }
+        ]
       },
       out: {
         data: {
@@ -221,11 +336,23 @@ async function installPackage() {
       from_id: deviceTypeLinkId,
       to_id: deviceTypeLinkId,
       in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'RotationRateAlpha' } },
-        }
+        data: [
+          {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'RotationRateBeta' } },
+          },
+          {
+            type_id: treeIncludeDownTypeLinkId,
+            from_id: motionTreeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId
+              }
+            }
+          }
+        ]
       },
       out: {
         data: {
@@ -239,29 +366,23 @@ async function installPackage() {
       from_id: deviceTypeLinkId,
       to_id: deviceTypeLinkId,
       in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'RotationRateBeta' } },
-        }
-      },
-      out: {
-        data: {
-          type_id: valueTypeLinkId,
-          to_id: numberTypeLinkId
-        }
-      }
-    },
-    {
-      type_id: typeTypeLinkId,
-      from_id: deviceTypeLinkId,
-      to_id: deviceTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'RotationRateGamma' } },
-        }
+        data: [
+          {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'RotationRateGamma' } },
+          },
+          {
+            type_id: treeIncludeDownTypeLinkId,
+            from_id: motionTreeLinkId,
+            in: {
+              data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId
+              }
+            }
+          }
+        ]
       },
       out: {
         data: {
@@ -302,7 +423,7 @@ async function installPackage() {
         }
       }
     }])
-    
+
 }
 
 installPackage();
