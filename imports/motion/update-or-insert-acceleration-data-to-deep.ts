@@ -21,21 +21,18 @@ export async function updateOrInsertAccelerationDataToDeep({
   const accelerationZIncludingGravityTypeLinkId = await deep.id(PACKAGE_NAME, 'AccelerationZIncludingGravity');
   const intervalTypeLinkId = await deep.id(PACKAGE_NAME, 'Interval');
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
-  const rotationAlphaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateAlpha');
-  const rotationBetaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateBeta');
-  const rotationGammaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateGamma');
+  const rotationRateAlphaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateAlpha');
+  const rotationRateBetaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateBeta');
+  const rotationRateGammaTypeLinkId = await deep.id(PACKAGE_NAME, 'RotationRateGamma');
 
-  const { data: [accelerationLink] } = await deep.select({
-    type_id: accelerationTypeLinkId,
-    in: {
-      type_id: containTypeLinkId,
-      from_id: deviceLinkId,
+  const {data: linksUpToParentDeviceLink} = await deep.select({
+    down: {
+      parent_id: deviceLinkId,
+      tree_id: await deep.id(PACKAGE_NAME, "MotionTree")
     }
-  })
+  });
 
-  
-
-  if (!accelerationLink) {
+  if (linksUpToParentDeviceLink.length === 1) {
     await deep.insert([
       {
         type_id: accelerationXTypeLinkId,
@@ -134,7 +131,7 @@ export async function updateOrInsertAccelerationDataToDeep({
         }
       },
       {
-        type_id: rotationAlphaTypeLinkId,
+        type_id: rotationRateAlphaTypeLinkId,
         from_id: deviceLinkId,
         to_id: deviceLinkId,
         in: {
@@ -150,7 +147,7 @@ export async function updateOrInsertAccelerationDataToDeep({
         }
       },
       {
-        type_id: rotationAlphaTypeLinkId,
+        type_id: rotationRateBetaTypeLinkId,
         from_id: deviceLinkId,
         to_id: deviceLinkId,
         in: {
@@ -166,7 +163,7 @@ export async function updateOrInsertAccelerationDataToDeep({
         }
       },
       {
-        type_id: rotationAlphaTypeLinkId,
+        type_id: rotationRateGammaTypeLinkId,
         from_id: deviceLinkId,
         to_id: deviceLinkId,
         in: {
@@ -183,248 +180,121 @@ export async function updateOrInsertAccelerationDataToDeep({
       },
       
     ])
-  } else {
-    const accelerationXLinkLinkQuery: BoolExpLink = {
-      type_id: {
-        _eq: accelerationXTypeLinkId
-      },
-      in: {
-        type_id: {
-          _eq: containTypeLinkId
-        },
-        from_id: {
-          _eq: accelerationLink.id
-        }
-      }
-    }
-    const { data: [valueLinkOfAccelerationXLink] } = await deep.select({
-      link: accelerationXLinkLinkQuery,
-    },
-      {
-        table: 'numbers', returning: `
-        id
-        `
-      });
+  } else if (linksUpToParentDeviceLink.length > 1) {
+    const accelerationXLink = linksUpToParentDeviceLink.find(link => link.type_id === accelerationXTypeLinkId);
     await deep.update(
       {
-        id: { _eq: valueLinkOfAccelerationXLink.id }
+        link_id: accelerationXLink.id
       },
       {
         value: data.acceleration.x
       },
       {
-        table: "numbers", returning: `
-        id
-        `
+        table: 'numbers'
       }
     )
 
-    const accelerationYLinkLinkQuery: BoolExpLink = {
-      type_id: {
-        _eq: accelerationYTypeLinkId
-      },
-      in: {
-        type_id: {
-          _eq: containTypeLinkId
-        },
-        from_id: {
-          _eq: accelerationLink.id
-        }
-      }
-    }
-    const { data: [valueLinkOfAccelerationYLink] } = await deep.select({
-      link: accelerationYLinkLinkQuery,
-    },
-      {
-        table: 'numbers', returning: `
-        id
-        `
-      });
+    const accelerationYLink = linksUpToParentDeviceLink.find(link => link.type_id === accelerationYTypeLinkId);
     await deep.update(
       {
-        id: { _eq: valueLinkOfAccelerationYLink.id }
+        link_id: accelerationYLink.id
       },
       {
         value: data.acceleration.y
       },
       {
-        table: "numbers"
+        table: 'numbers'
       }
     )
 
-    const accelerationZLinkLinkQuery: BoolExpLink = {
-      type_id: {
-        _eq: accelerationZTypeLinkId
-      },
-      in: {
-        type_id: {
-          _eq: containTypeLinkId
-        },
-        from_id: {
-          _eq: accelerationLink.id
-        }
-      }
-    }
-    const { data: [valueLinkOfAccelerationZLink] } = await deep.select({
-      link: accelerationZLinkLinkQuery,
-    },
-      {
-        table: 'numbers', returning: `
-        id
-        `
-      });
+    const accelerationZLink = linksUpToParentDeviceLink.find(link => link.type_id === accelerationZTypeLinkId);
     await deep.update(
       {
-        id: { _eq: valueLinkOfAccelerationZLink.id }
+        link_id: accelerationZLink.id
       },
       {
         value: data.acceleration.z
       },
       {
-        table: "numbers", returning: `
-        id
-        `
+        table: 'numbers'
       }
     )
 
-    const accelerationXLinkIncludingGravityLinkQuery: BoolExpLink = {
-      type_id: {
-        _eq: accelerationXTypeLinkId
-      },
-      in: {
-        type_id: {
-          _eq: containTypeLinkId
-        },
-        from_id: {
-          _eq: accelerationLink.id
-        }
-      }
-    }
-    const { data: [valueLinkOfAccelerationXIncludingGravityLink] } = await deep.select({
-      link: accelerationXLinkIncludingGravityLinkQuery,
-    },
-      {
-        table: 'numbers', returning: `
-        id
-        `
-      });
+    const accelerationXIncludingGravityLink = linksUpToParentDeviceLink.find(link => link.type_id === accelerationXIncludingGravityTypeLinkId);
     await deep.update(
       {
-        id: { _eq: valueLinkOfAccelerationXIncludingGravityLink.id }
+        link_id: accelerationXIncludingGravityLink.id
       },
       {
-        value: data.acceleration.x
+        value: data.accelerationIncludingGravity.x
       },
       {
-        table: "numbers", returning: `
-        id
-        `
+        table: 'numbers'
       }
     )
 
-    const accelerationYLinkIncludingGravityLinkQuery: BoolExpLink = {
-      type_id: {
-        _eq: accelerationYTypeLinkId
-      },
-      in: {
-        type_id: {
-          _eq: containTypeLinkId
-        },
-        from_id: {
-          _eq: accelerationLink.id
-        }
-      }
-    }
-    const { data: [valueLinkOfAccelerationYIncludingGravityLink] } = await deep.select({
-      link: accelerationYLinkIncludingGravityLinkQuery,
-    },
-      {
-        table: 'numbers', returning: `
-        id
-        `
-      });
+    const accelerationYIncludingGravityLink = linksUpToParentDeviceLink.find(link => link.type_id === accelerationYIncludingGravityTypeLinkId);
     await deep.update(
       {
-        id: { _eq: valueLinkOfAccelerationYIncludingGravityLink.id }
+        link_id: accelerationYIncludingGravityLink.id
       },
       {
-        value: data.acceleration.y
+        value: data.accelerationIncludingGravity.y
       },
       {
-        table: "numbers", returning: `
-        id
-        `
+        table: 'numbers'
       }
     )
 
-
-    const accelerationZLinkIncludingGravityLinkQuery: BoolExpLink = {
-      type_id: {
-        _eq: accelerationZTypeLinkId
-      },
-      in: {
-        type_id: {
-          _eq: containTypeLinkId
-        },
-        from_id: {
-          _eq: accelerationLink.id
-        }
-      }
-    }
-    const { data: [valueLinkOfAccelerationZIncludingGravityLink] } = await deep.select({
-      link: accelerationZLinkIncludingGravityLinkQuery,
-    },
-      {
-        table: 'numbers', returning: `
-        id
-        `
-      });
+    const accelerationZIncludingGravityLink = linksUpToParentDeviceLink.find(link => link.type_id === accelerationZIncludingGravityTypeLinkId);
     await deep.update(
       {
-        id: { _eq: valueLinkOfAccelerationZIncludingGravityLink.id }
+        link_id: accelerationZIncludingGravityLink.id
       },
       {
-        value: data.acceleration.z
+        value: data.accelerationIncludingGravity.z
       },
       {
-        table: "numbers", returning: `
-        id
-        `
+        table: 'numbers'
       }
     )
 
-    const intervalLinkQuery: BoolExpLink = {
-      type_id: {
-        _eq: intervalTypeLinkId
-      },
-      in: {
-        type_id: {
-          _eq: containTypeLinkId
-        },
-        from_id: {
-          _eq: accelerationLink.id
-        }
-      }
-    }
-    const { data: [valueLinkOfIntervalLink] } = await deep.select({
-      link: intervalLinkQuery,
-    },
-      {
-        table: 'numbers', returning: `
-        id
-        `
-      });
+    const rotationRateAlphaLink = linksUpToParentDeviceLink.find(link => link.type_id === rotationRateAlphaTypeLinkId);
     await deep.update(
       {
-        id: { _eq: valueLinkOfIntervalLink.id }
+        link_id: rotationRateAlphaLink.id
       },
       {
-        value: data.interval
+        value: data.rotationRate.alpha
       },
       {
-        table: "numbers", returning: `
-        id
-        `
+        table: 'numbers'
+      }
+    )
+
+    const rotationRateBetaLink = linksUpToParentDeviceLink.find(link => link.type_id === rotationRateBetaTypeLinkId);
+    await deep.update(
+      {
+        link_id: rotationRateBetaLink.id
+      },
+      {
+        value: data.rotationRate.beta
+      },
+      {
+        table: 'numbers'
+      }
+    )
+
+    const rotationRateGammaLink = linksUpToParentDeviceLink.find(link => link.type_id === rotationRateGammaTypeLinkId);
+    await deep.update(
+      {
+        link_id: rotationRateGammaLink.id
+      },
+      {
+        value: data.rotationRate.gamma
+      },
+      {
+        table: 'numbers'
       }
     )
   }
