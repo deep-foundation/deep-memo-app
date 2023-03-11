@@ -32,7 +32,7 @@ function Content() {
       </Text>
       <Code display={'block'} whiteSpace={'pre'}>
         {`
-package_name="action-sheet" 
+package_name="motion" 
 npx ts-node "./imports/\${package_name}/install-package.ts"
 `}
       </Code>
