@@ -1,4 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
+import speech from "@google-cloud/speech"
+import { auth } from "google-auth-library"
+
 
 export default async function insertSoundHandler(deep: DeepClient) {
   const fileTypeLinkId = await deep.id("@deep-foundation/core", "SyncTextFile");
@@ -6,8 +9,8 @@ export default async function insertSoundHandler(deep: DeepClient) {
   const supportsId = await deep.id("@deep-foundation/core", "dockerSupportsJs");
   const handlerTypeLinkId = await deep.id("@deep-foundation/core", "Handler");
   const packageId = await deep.id("@deep-foundation/sound-handler");
-  const handleOperationTypeLinkId = await deep.id("@deep-foundation/core", "HandleInsert")
-  const triggerTypeLinkId = await deep.id("@deep-foundation/audiorecord", "Sound")
+  const handleOperationTypeLinkId = await deep.id("@deep-foundation/core", "HandleInsert");
+  const triggerTypeLinkId = await deep.id("@deep-foundation/audiorecord", "Sound");
 
   const code = /*javascript*/`async ({ require, deep, data: { newLink } }) => {
     const speech = require('@google-cloud/speech');
