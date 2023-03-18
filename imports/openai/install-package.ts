@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import fs from 'fs';
 const { generateApolloClient } = require('@deep-foundation/hasura/client');
-import {PACKAGE_NAME} from "./package-name";
+import { PACKAGE_NAME } from './package-name';
 require('dotenv').config();
 export async function installPackage () {
     const apolloClient = generateApolloClient({
@@ -54,17 +54,6 @@ export async function installPackage () {
         },
         ] },
     });
-  
-    const { data: [{ id: userInputLinkId }] } = await deep.insert({
-      type_id: syncTextFileTypeLinkId,
-      string: { data: { value: "user input" } },
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: deep.linkId,
-        },
-      },
-    });
 
     const { data: [{id:openAiRequestTypeLinkId}] } = await deep.insert({
         type_id: typeTypeLinkId,
@@ -88,21 +77,30 @@ export async function installPackage () {
                 string: {data: { value: "OpenAiApiKey"}}
             },
         },
-        out:{
+        out: {
             data: {
-                type_id: typeValueLinkId,
-                to_id: typeStringLinkId,
+              type_id: typeValueLinkId,
+              to_id: typeStringLinkId,
+              in: {
+                data: {
+                  from_id: packageLinkId,
+                  type_id: containTypeLinkId,
+                  string: { data: { value: 'OpenAiApiKeyValue' } },
+                }
+              }
             }
-        }
+          }
     });
 
-    const { data: [{ id: openAiApiKeyLinkId }] } = await deep.insert({
-        type_id: openAiApiKeyTypeLinkId,
-        string: { data: { value: process.env.OPENAI_API_KEY } },
+    const { data: [{ id: usesOpenAiApiKeyTypeLinkId, }] } = await deep.insert({
+        type_id: typeTypeLinkId,
+        from_id: userTypeLinkId,
+        to_id: openAiApiKeyTypeLinkId,
         in: {
             data: {
-                type_id: containTypeLinkId,
-                from_id: deep.linkId,
+                type_id:containTypeLinkId,
+                from_id: packageLinkId,
+                string: {data: { value: "UsesOpenAiApiKey"}}
             },
         }
     });
