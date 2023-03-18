@@ -1,1 +1,1 @@
-export const PACKAGE_NAME=`@flakeed/openai`
+export const PACKAGE_NAME=`@flakeed/chatgpt`
