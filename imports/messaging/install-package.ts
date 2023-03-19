@@ -63,7 +63,7 @@ export async function installPackage () {
           data: {
             from_id: packageLinkId,
             type_id: containTypeLinkId,
-            string: { data: { value: 'Message' } },
+            string: { data: { value: 'MessageValue' } },
           }
         }
       } },
