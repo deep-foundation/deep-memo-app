@@ -1,6 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 const { generateApolloClient } = require('@deep-foundation/hasura/client');
 import { PACKAGE_NAME } from './package-name';
+require('dotenv').config();
 export async function installPackage () {
     const apolloClient = generateApolloClient({
         path: process.env.NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE
