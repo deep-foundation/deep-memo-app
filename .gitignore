@@ -134,3 +134,4 @@ projects/app/electron/app
 extension/*.html
 /*.crx
 /*.pem
+

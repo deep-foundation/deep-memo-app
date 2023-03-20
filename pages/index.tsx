@@ -29,7 +29,6 @@ function Page() {
   const deep = useDeep();
   const router = useRouter();
 
-
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
     undefined
@@ -37,7 +36,6 @@ function Page() {
 
   useEffect(() => {
     if (deep.linkId === 0) {
-      deep.guest();
     }
   }, []);
 
@@ -64,6 +62,7 @@ function Page() {
       if (deep.linkId != adminLinkId) {
         return;
       }
+
 
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
