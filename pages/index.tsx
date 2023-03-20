@@ -14,7 +14,7 @@ import {
   MinilinksResult,
   useMinilinksConstruct,
 } from '@deep-foundation/deeplinks/imports/minilinks';
-import { ChakraProvider, Text } from '@chakra-ui/react';
+import { Button, ChakraProvider, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
   DeepProvider,
@@ -23,9 +23,12 @@ import {
 import Link from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
+import { useRouter } from 'next/router'
 
 function Page() {
   const deep = useDeep();
+  const router = useRouter();
+
 
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
@@ -33,7 +36,7 @@ function Page() {
   );
 
   useEffect(() => {
-    if(deep.linkId === 0) {
+    if (deep.linkId === 0) {
       deep.guest();
     }
   }, []);
@@ -53,7 +56,7 @@ function Page() {
   }, [deep]);
 
   useEffect(() => {
-    if(deep.linkId == 0) {
+    if (deep.linkId == 0) {
       return;
     }
     new Promise(async () => {
@@ -61,7 +64,7 @@ function Page() {
       if (deep.linkId != adminLinkId) {
         return;
       }
-      
+
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
@@ -91,25 +94,24 @@ function Page() {
 
   return (
     <div>
-      <h1>Deep.Foundation sdk examples</h1> 
-      <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text> 
+      <h1>Deep.Foundation sdk examples</h1>
+      <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
       <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
-      {deviceLinkId &&
-        <>
-          <div>
-            <Link href="/all">all subscribe</Link>
-          </div>
-          <div>
-            <Link href="/messanger">messanger</Link>
-          </div>
-          <div>
-            <Link href="/device">device</Link>
-          </div>
-          <div>
-            <Link href="/audiorecord">audiorecord</Link>
-          </div>
-        </>
-      }
+      <div>
+        <Link href="/all">all subscribe</Link>
+      </div>
+      <div>
+        <Link href="/messanger">messanger</Link>
+      </div>
+      <div>
+        <Link href="/device">device</Link>
+      </div>
+      <div>
+        <Link href="/audiorecord">audiorecord</Link>
+      </div>
+      <div>
+        <Link replace href="/browser-extension">browser-extension</Link>
+      </div>
     </div>
   );
 }

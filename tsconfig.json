@@ -19,6 +19,7 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
+  "types": ["chrome"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",

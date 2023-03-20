@@ -119,42 +119,17 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
               }]
             }
           },
-        ]
-      }
-    },
-    {
-      type_id: typeTypeLinkId,
-      in: {
-        data: [{
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'Record' } },
-        },
-        {
-          type_id: treeIncludeNodeTypeLinkId,
-          from_id: dialogTreeLinkId,
-          in: {
-            data: [
-              {
+          {
+            type_id: typeTypeLinkId,
+            to_id: anyTypeLinkId,
+            in: {
+              data: [{
                 type_id: containTypeLinkId,
                 from_id: packageLinkId,
+                string: { data: { value: 'Record' } },
               },
-            ],
-          },
-        }]
-      },
-      out: {
-        data: [
-          {
-            type_id: typeTypeLinkId,
-            to_id: anyTypeLinkId,
-            in: {
-              data: [{
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
-                string: { data: { value: 'Duration' } },
-              }, {
-                type_id: treeIncludeDownTypeLinkId,
+              {
+                type_id: treeIncludeNodeTypeLinkId,
                 from_id: dialogTreeLinkId,
                 in: {
                   data: [
@@ -165,104 +140,126 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
                   ],
                 },
               }]
-            }
-          },
-          {
-            type_id: typeTypeLinkId,
-            to_id: anyTypeLinkId,
-            in: {
-              data: [{
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
-                string: { data: { value: 'StartTime' } },
-              }, {
-                type_id: treeIncludeDownTypeLinkId,
-                from_id: dialogTreeLinkId,
-                in: {
-                  data: [
-                    {
+            },
+            out: {
+              data: [
+                {
+                  type_id: typeTypeLinkId,
+                  to_id: anyTypeLinkId,
+                  in: {
+                    data: [{
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
-                    },
-                  ],
+                      string: { data: { value: 'Duration' } },
+                    }, {
+                      type_id: treeIncludeDownTypeLinkId,
+                      from_id: dialogTreeLinkId,
+                      in: {
+                        data: [
+                          {
+                            type_id: containTypeLinkId,
+                            from_id: packageLinkId,
+                          },
+                        ],
+                      },
+                    }]
+                  }
                 },
-              }]
-            }
-          },
-          {
-            type_id: typeTypeLinkId,
-            to_id: anyTypeLinkId,
-            in: {
-              data: [{
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
-                string: { data: { value: 'EndTime' } },
-              }, {
-                type_id: treeIncludeDownTypeLinkId,
-                from_id: dialogTreeLinkId,
-                in: {
-                  data: [
-                    {
+                {
+                  type_id: typeTypeLinkId,
+                  to_id: anyTypeLinkId,
+                  in: {
+                    data: [{
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
-                    },
-                  ],
+                      string: { data: { value: 'StartTime' } },
+                    }, {
+                      type_id: treeIncludeDownTypeLinkId,
+                      from_id: dialogTreeLinkId,
+                      in: {
+                        data: [
+                          {
+                            type_id: containTypeLinkId,
+                            from_id: packageLinkId,
+                          },
+                        ],
+                      },
+                    }]
+                  }
                 },
-              }]
-            }
-          },
-          {
-            type_id: typeTypeLinkId,
-            to_id: anyTypeLinkId,
-            in: {
-              data: [{
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
-                string: { data: { value: 'Sound' } },
-              }, {
-                type_id: treeIncludeDownTypeLinkId,
-                from_id: dialogTreeLinkId,
-                in: {
-                  data: [
-                    {
+                {
+                  type_id: typeTypeLinkId,
+                  to_id: anyTypeLinkId,
+                  in: {
+                    data: [{
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
-                    },
-                  ],
+                      string: { data: { value: 'EndTime' } },
+                    }, {
+                      type_id: treeIncludeDownTypeLinkId,
+                      from_id: dialogTreeLinkId,
+                      in: {
+                        data: [
+                          {
+                            type_id: containTypeLinkId,
+                            from_id: packageLinkId,
+                          },
+                        ],
+                      },
+                    }]
+                  }
                 },
-              }]
-            }
-          },
-          {
-            type_id: typeTypeLinkId,
-            to_id: anyTypeLinkId,
-            in: {
-              data: [{
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
-                string: { data: { value: 'MIME/type' } },
-              }, {
-                type_id: treeIncludeDownTypeLinkId,
-                from_id: dialogTreeLinkId,
-                in: {
-                  data: [
-                    {
+                {
+                  type_id: typeTypeLinkId,
+                  to_id: anyTypeLinkId,
+                  in: {
+                    data: [{
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
-                    },
-                  ],
+                      string: { data: { value: 'Sound' } },
+                    }, {
+                      type_id: treeIncludeDownTypeLinkId,
+                      from_id: dialogTreeLinkId,
+                      in: {
+                        data: [
+                          {
+                            type_id: containTypeLinkId,
+                            from_id: packageLinkId,
+                          },
+                        ],
+                      },
+                    }]
+                  }
                 },
-              }]
+                {
+                  type_id: typeTypeLinkId,
+                  to_id: anyTypeLinkId,
+                  in: {
+                    data: [{
+                      type_id: containTypeLinkId,
+                      from_id: packageLinkId,
+                      string: { data: { value: 'MIME/type' } },
+                    }, {
+                      type_id: treeIncludeDownTypeLinkId,
+                      from_id: dialogTreeLinkId,
+                      in: {
+                        data: [
+                          {
+                            type_id: containTypeLinkId,
+                            from_id: packageLinkId,
+                          },
+                        ],
+                      },
+                    }]
+                  }
+                }
+              ]
             }
-          }
+          },
         ]
       }
     },
   ]);
-
-  // await deep.insert([
-    
-  // ]);
 
   const { data: [{ id: AudioRecordsLinkId }] } = await deep.insert({
     type_id: await deep.id(PACKAGE_NAME, "AudioRecords"),
@@ -277,4 +274,3 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
 
   console.log("audiorecord package installed");
 }
-
