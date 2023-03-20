@@ -92,6 +92,30 @@ export async function installPackage () {
           }
     });
 
+    const { data: [{ id: conversationTypeLinkId, }] } = await deep.insert({
+        type_id: typeTypeLinkId,
+        in: {
+            data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: {data: { value: "Conversation"}}
+            },
+        },
+        out: {
+            data: {
+              type_id: typeValueLinkId,
+              to_id: typeStringLinkId,
+              in: {
+                data: {
+                  from_id: packageLinkId,
+                  type_id: containTypeLinkId,
+                  string: { data: { value: 'ConversationValue' } },
+                }
+              }
+            }
+          }
+    });
+
     const { data: [{ id: usesOpenAiApiKeyTypeLinkId, }] } = await deep.insert({
         type_id: typeTypeLinkId,
         from_id: userTypeLinkId,
