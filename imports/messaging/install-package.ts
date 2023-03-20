@@ -1,6 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 const { generateApolloClient } = require('@deep-foundation/hasura/client');
-import { PACKAGE_NAME } from './package-name';
+const PACKAGE_NAME=`@flakeed/messaging`
 require('dotenv').config();
 export async function installPackage () {
     const apolloClient = generateApolloClient({
