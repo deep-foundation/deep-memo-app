@@ -24,6 +24,22 @@ function Content() {
       <Button
         onClick={async () => {
           await deep.insert({
+            type_id: await deep.id(PACKAGE_NAME, "Conversation"),
+            string: { data: { value: "New chat" } },
+            in: {
+                data: {
+                    type_id: await deep.id('@deep-foundation/core', "Contain"),
+                    from_id: deep.linkId,
+                },
+            }
+        });
+        }}
+      >
+        add conversation link
+      </Button>
+      <Button
+        onClick={async () => {
+          await deep.insert({
             type_id: await deep.id(PACKAGE_NAME, "OpenAiApiKey"),
             string: { data: { value: process.env.OPENAI_API_KEY } },
             in: {
