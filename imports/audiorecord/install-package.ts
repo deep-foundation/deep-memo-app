@@ -296,5 +296,5 @@ export default async function installPackage(deviceLinkId) {
       }
     })
     console.log("audiorecord package installed");
-  }
+  } else console.log("audiorecord package already exists");
 }

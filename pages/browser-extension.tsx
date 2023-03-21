@@ -3,8 +3,8 @@ import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep, } from "@deep-foundation/deeplinks/imports/client";
 import { Provider } from "../imports/provider";
-import initializePackage from "../imports/browser-extension/initialize-package";
-import { PACKAGE_NAME } from "../imports/browser-extension/initialize-package";
+import installPackage from "../imports/browser-extension/install-package";
+import { PACKAGE_NAME } from "../imports/browser-extension/install-package";
 import Tab from "./tab";
 import uploadHistory from "../imports/browser-extension/upload-history";
 import uploadTabs from "../imports/browser-extension/upload-tabs";
@@ -82,7 +82,7 @@ export function Extension() {
   return (
     <>
       <Stack>
-        <Button onClick={async () => await initializePackage(deep, deviceLinkId)} >INITIALIZE PACKAGE</Button>
+        <Button onClick={async () => await installPackage(deviceLinkId)} >INITIALIZE PACKAGE</Button>
         <Button onClick={async () => await createBrowserExtensionLink(deep)} >CREATE NEW CONTAINER LINK</Button>
         <Button onClick={async () => await getHistory()} >UPLOAD HISTORY</Button>
         <Button onClick={() => getTabs()}>UPLOAD TABS</Button>

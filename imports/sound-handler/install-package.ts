@@ -123,5 +123,5 @@ export default async function installPackage(deviceLinkId) {
       }
     }])
     console.log("sound-handler package installed");
-  }
+  } else console.log("sound-handler package already exists");
 }
