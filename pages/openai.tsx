@@ -47,8 +47,8 @@ function Content() {
 
           const { data: [{ id: replyLinkId }] } = await deep.insert({
             type_id: await deep.id('@flakeed/messaging', "Reply"),
-            from_id: newConversationLinkId,
-            to_id: newMessageInstanceId,
+            from_id: newMessageInstanceId,
+            to_id: newConversationLinkId,
             in: {
               data: {
                 type_id: await deep.id('@deep-foundation/core', "Contain"),
@@ -56,7 +56,6 @@ function Content() {
               },
             },
           });
-
         }
       }
       >

@@ -7,6 +7,7 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
     const { data: [linkWithStringValue] } = await deep.select({
       id: replyLink.from_id,
     });
+    console.log(replyLink.data)
     if (!linkWithStringValue.value?.value) {
       throw new Error(`##${linkWithStringValue.id} must have a value`);
     }
