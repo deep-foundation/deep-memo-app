@@ -23,17 +23,42 @@ function Content() {
       <Text suppressHydrationWarning>OpenAi link id: {openAiLinkId ?? " "}</Text>
       <Button
         onClick={async () => {
-          await deep.insert({
+          const { data: [{ id: newConversationLinkId }] } = await deep.insert({
             type_id: await deep.id(PACKAGE_NAME, "Conversation"),
             string: { data: { value: "New chat" } },
             in: {
-                data: {
-                    type_id: await deep.id('@deep-foundation/core', "Contain"),
-                    from_id: deep.linkId,
-                },
-            }
-        });
-        }}
+              data: {
+                type_id: await deep.id('@deep-foundation/core', "Contain"),
+                from_id: deep.linkId,
+              },
+            },
+          });
+
+          const { data: [{ id: newMessageInstanceId }] } = await deep.insert({
+            type_id: await deep.id('@flakeed/messaging', "Message"),
+            string: { data: { value: "Hello, this is a message!" } },
+            in: {
+              data: {
+                type_id: await deep.id('@deep-foundation/core', "Contain"),
+                from_id: deep.linkId,
+              },
+            },
+          });
+
+          const { data: [{ id: replyLinkId }] } = await deep.insert({
+            type_id: await deep.id('@flakeed/messaging', "Reply"),
+            from_id: newConversationLinkId,
+            to_id: newMessageInstanceId,
+            in: {
+              data: {
+                type_id: await deep.id('@deep-foundation/core', "Contain"),
+                from_id: deep.linkId,
+              },
+            },
+          });
+
+        }
+      }
       >
         add conversation link
       </Button>
