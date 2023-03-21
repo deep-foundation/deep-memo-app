@@ -27,7 +27,6 @@ import { useRouter } from 'next/router'
 
 function Page() {
   const deep = useDeep();
-  const router = useRouter();
 
   const [deviceLinkId, setDeviceLinkId] = useLocalStore(
     'deviceLinkId',
@@ -35,7 +34,8 @@ function Page() {
   );
 
   useEffect(() => {
-    if (deep.linkId === 0) {
+    if(deep.linkId === 0) {
+      deep.guest();
     }
   }, []);
 
@@ -54,7 +54,7 @@ function Page() {
   }, [deep]);
 
   useEffect(() => {
-    if (deep.linkId == 0) {
+    if(deep.linkId == 0) {
       return;
     }
     new Promise(async () => {
@@ -62,8 +62,7 @@ function Page() {
       if (deep.linkId != adminLinkId) {
         return;
       }
-
-
+      
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
