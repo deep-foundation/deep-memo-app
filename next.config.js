@@ -23,6 +23,7 @@ module.exports = withNextEnv({
       "https": false,
       "stream": false,
       "crypto": false,
+      "child_process": false,
     };
 
     return config;

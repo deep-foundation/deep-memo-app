@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "deep-sound-handler",
+  "private_key_id": "c03fd7ed391b0e82a666f6b88089e3b145c33879",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCljHCNaHpGK/AS\n4iE9+h+eAL93H3HKLchrz3hADZjHwNetquySoh71g3zcXhKqmQWbD6o3pw4+tAsJ\nHfecgjAlxvmZ8wNbycgfnT6u2iM2fCUhwuxy2WYURHAGTqupAkkZIGksLDSBYQqH\nrqx7l142JnaJdqeYm4YjRdNO8X3ROcQcSlJflK4yBozFq2QyNJLHZMpL+1bCY88Q\nhIKEqXWbVT2iWTAtJPwZqdbRyIr/vjnk63fNuEmNy1VFW1Q6hR2wA3WyY2Re5nKG\nxMQuBpJSfrZn5mJlodPkKpPUP4Jtkn9kfT0O5Fk5nxVA5XIa8kjVHEXzVmrQYbrv\n5VEsKF71AgMBAAECggEAGxYueESm9QJNZpmPPNfHApA2w6Pmd2EkUNeCYmCXJd/c\nqjK0QI28KQmZjWjq/vTIoQVgIXj48LN+tsArenUmsZer0U+cthD+6IVO80cHyeto\nG+0LyQLfG+PSvIV0utN/6FeQPcUB1kVtdqPS3un2ZT/H11gNtf+EZBMRrvH+VxQs\nGyNDQeO9tMhrOxeOyYrZg8KBa+1K9yucBKgQUvjOFTL7jSLXq7ODCs1joUNy17ZD\nOK2H40dp+ul5b9BeA58zwDygHhh1DKgfXef0KjhfzuKQG6wXs0DUXvdG/S6QTnX/\nmZ5qP06/FFlaIVppYJIOrdG5eCtyRfitSWhSgcmPJQKBgQDYC03dSS8gS26GWGgV\nlWnyh7XXVtMx2M/i9cx6/zkXp0p1y+aZoU20CumlTXPbGbIGy5JbRSGmeGCszrZo\nTWA75Yj4lkDR0NjkcfpdvdIe3zjsWuo9N6gNJV5zCSjib9O+YZ5BbcHUoChlaLYz\nG7Uzpszp1jB3xg9AyMfpf+1IcwKBgQDEKmcwLwjcjYRsnmyiveOxNWSsR9CsN/1q\np1WS5XTs9Tv3gtTt6WweGoi/dKTOMNeVRR1pxSxYHJ2e2/hFAAwLUjFUoFvj6htO\nShfqxGtQA+RWCrAxg59mD5I8JFDdm/NGbYP0czOaOhnUbSUVDQ0dNJpjflEsqXeF\n9+bOr6So9wKBgDf2NaUsX9itsWN7Yvq0SU1ZefDdvLccwjy4Ds+NbOyDmPYKayFA\ndzA742m+NlR6w3KfKLobnivQ4rngkb9Sy6q4OlKqGQBAaO5D1+aQVO1KRSR0KFjT\nIeTF2UFTDhQZg2+9OZEZLSw2kEA0b32tn7JRcqLfqI5d73WIjMAfMwehAoGAImv+\nZ2oZd/otPpIeJgCEL9harhB8AXxhr5FlZr104w+1Uh1XF9hZ7H5jeJUTRkszyTGz\nk5fRzDRZREL9Mb5sXqAxn9Pzy+6MlBRUVhHZctT8AE0n1chu9A3Pb1ZACmMPMVCO\nUxrT90AywB/W3fbIUlOks8i6nceu/YcerS4NCskCgYBCusqLkGStC9Tw7R1xX+ey\nDkA5sGNfHIV18PQH1l0R1MNf1cXjxkBvt4aVTO5iqcLfr/LCGwYQJn/CXuBkS2Tv\njKOAdmkFVGe1DdMLXDbhHKwduHnqgAkEyWu0Jw+lPHvziTmcJy2t3m9Lcm9srgEu\nKE9c9B+zjkFrG8NTrLAhbQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "deep-sound-handler@deep-sound-handler.iam.gserviceaccount.com",
+  "client_id": "100687498969961716359",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/deep-sound-handler%40deep-sound-handler.iam.gserviceaccount.com"
+}

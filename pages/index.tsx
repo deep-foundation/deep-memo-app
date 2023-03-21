@@ -109,6 +109,9 @@ function Page() {
         <Link href="/audiorecord">audiorecord</Link>
       </div>
       <div>
+        <Link href="/soundhandler">soundhandler</Link>
+      </div>
+      <div>
         <Link replace href="/browser-extension">browser-extension</Link>
       </div>
     </div>
