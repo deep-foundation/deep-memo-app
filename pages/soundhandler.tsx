@@ -3,8 +3,8 @@ import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import initializePackage, { PACKAGE_NAME } from '../imports/sound-handler/initialize-package';
-import insertSoundHandler from '../imports/sound-handler/sound-handler';
+import installPackage, { PACKAGE_NAME } from '../imports/sound-handler/install-package';
+import insertHandler from '../imports/sound-handler/insert-handler';
 import insertGcloudAuthFile from '../imports/sound-handler/insert-gcloud-auth-file';
 import fs from "fs";
 
@@ -28,10 +28,10 @@ function Page({credentials}) {
 
 
   return <Stack>
-    <Button onClick={async () => await initializePackage(deep)}>
+    <Button onClick={async () => await installPackage(deep)}>
       INITIALIZE PACKAGE
     </Button>
-    <Button onClick={async () => await insertSoundHandler(deep)}>
+    <Button onClick={async () => await insertHandler()}>
       INSERT HANDLER
     </Button>
     <Button onClick={async () => await insertGcloudAuthFile(deep, credentials)}>
