@@ -36,7 +36,7 @@ function Content() {
 
           const { data: [{ id: newMessageInstanceId }] } = await deep.insert({
             type_id: await deep.id('@flakeed/messaging', "Message"),
-            string: { data: { value: "Hello, this is a message!" } },
+            string: { data: { value: "message" } },
             in: {
               data: {
                 type_id: await deep.id('@deep-foundation/core', "Contain"),
