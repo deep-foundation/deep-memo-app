@@ -1,6 +1,6 @@
 {
-  "name": "DEEP",
-  "description": "deep-foundation extension package",
+  "name": "Deep",
+  "description": "deep-foundation/sdk",
   "version": "0.0.1",
   "manifest_version": 3,
   "permissions": ["tabs", "history", "scripting"],
