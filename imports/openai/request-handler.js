@@ -1,15 +1,16 @@
-async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
+async ({ data: { newLink: replyLinkId }, deep, require }) => {
   const PACKAGE_NAME = `@flakeed/chatgpt`;
   const { Configuration, OpenAIApi } = require("openai");
   const openAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, "OpenAiApiKey");
   const usesOpenAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, "UsesOpenAiApiKey");
   const messageTypeLinkId = await deep.id('@flakeed/messaging', "Message");
   const replyTypeLinkId = await deep.id('@flakeed/messaging', "Reply");
+  const authorTypeLinkId = await deep.id('@flakeed/messaging', "Author");
+  const chatgptTypeLinkId = await deep.id(PACKAGE_NAME, "Chatgpt");
 
   const { data: [linkWithStringValue] } = await deep.select({
-    id: replyLink.from_id,
+    id: replyLinkId.from_id,
   });
-  console.log(replyLink.data)
   if (!linkWithStringValue.value?.value) {
     throw new Error(`##${linkWithStringValue.id} must have a value`);
   }
@@ -19,9 +20,10 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
     type_id: openAiApiKeyTypeLinkId,
     in: {
       type_id: usesOpenAiApiKeyTypeLinkId,
-      from_id: triggeredByLinkId,
+      from_id: replyLinkId,
     },
   });
+
 
   if (!apiKeyLink) {
     throw new Error(`A link with type ##${openAiApiKeyTypeLinkId} is not found`);
@@ -40,24 +42,36 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
     messages: [{ role: "user", content: openAiPrompt }],
   });
 
-  const { data: [{ id: agentMessageId }] } = await deep.insert({
+  const { data: [{ id: chatgptMessageLinkId }] } = await deep.insert({
     type_id: messageTypeLinkId,
     string: { data: { value: response.data.choices[0].text.trim() } },
     in: {
       data: {
-        type_id: await deep.id('@deep-foundation/core', "Contain"),
+        type_id: containTypeLinkId,
         from_id: deep.linkId,
       },
     },
   });
 
-  const { data: [{ id: agentReplyLinkId }] } = await deep.insert({
+  const { data: [{ id: replyToMessageLinkId }] } = await deep.insert({
     type_id: replyTypeLinkId,
-    from_id: replyLink.from_id,
-    to_id: newAgentMessageInstanceId,
+    from_id: replyLinkId.from_id,
+    to_id: chatgptMessageLinkId,
     in: {
       data: {
-        type_id: await deep.id('@deep-foundation/core', "Contain"),
+        type_id: containTypeLinkId,
+        from_id: deep.linkId,
+      },
+    },
+  });
+
+  const { data: [{ id: chatgptAuthorLinkId }] } = await deep.insert({
+    type_id: authorTypeLinkId,
+    from_id: chatgptMessageLinkId,
+    to_id: chatgptTypeLinkId, 
+    in: {
+      data: {
+        type_id: containTypeLinkId,
         from_id: deep.linkId,
       },
     },
@@ -65,3 +79,4 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
 
   return response.data;
 };
+
