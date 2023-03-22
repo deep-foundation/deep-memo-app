@@ -10,7 +10,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
   const handlerTypeLinkId = await deep.id("@deep-foundation/core", "Handler");
   const packageId = await deep.id("@deep-foundation/sound-handler");
   const handleOperationTypeLinkId = await deep.id("@deep-foundation/core", "HandleInsert");
-  const triggerTypeLinkId = await deep.id("@deep-foundation/audiorecord", "Record");
+  const triggerTypeLinkId = await deep.id("@deep-foundation/sound-handler", "Transcribe");
 
   const code = /*javascript*/`async ({ require, deep, data: { newLink } }) => {
     const speech = require('@google-cloud/speech');
@@ -53,40 +53,43 @@ export default async function insertSoundHandler(deep: DeepClient) {
       if (error) throw error;
     })
   
-    process.env["GOOGLE_APPLICATION_CREDENTIALS"] = keyFilePath;
+    try {
+      process.env["GOOGLE_APPLICATION_CREDENTIALS"] = keyFilePath;
   
-    const client = new speech.SpeechClient();
-  
-    const audio = {
-      content: soundLink[0].value.value,
-    };
-    const config = {
-      encoding: mimetypeLink[0].value.value === 'audio/webm;codecs=opus' ? 'WEBM_OPUS' : 'LINEAR16',
-      sampleRateHertz: 48000,
-      languageCode: 'ru-RU',
-    };
-    const request = {
-      audio: audio,
-      config: config,
-    };
-  
-    const [response] = await client.recognize(request);
-    const transcription = response.results
-      .map(result => result.alternatives[0].transcript)
-      .join('\\n');
-  
-    await deep.insert({
-      type_id: await deep.id("@deep-foundation/sound-handler", "GoogleSpeechTranscription"),
-      string: { data: { value: transcription } },
-      in: {
-        data: {
-          type_id: await deep.id("@deep-foundation/core", "Contain"),
-          from_id: newLink.id
+      const client = new speech.SpeechClient();
+    
+      const audio = {
+        content: soundLink[0].value.value,
+      };
+      const config = {
+        encoding: mimetypeLink[0].value.value === 'audio/webm;codecs=opus' ? 'WEBM_OPUS' : 'LINEAR16',
+        sampleRateHertz: 48000,
+        languageCode: 'ru-RU',
+      };
+      const request = {
+        audio: audio,
+        config: config,
+      };
+    
+      const [response] = await client.recognize(request);
+      const transcription = response.results
+        .map(result => result.alternatives[0].transcript)
+        .join('\\n');
+    
+      await deep.insert({
+        type_id: await deep.id("@deep-foundation/sound-handler", "GoogleSpeechTranscription"),
+        string: { data: { value: transcription } },
+        in: {
+          data: {
+            type_id: await deep.id("@deep-foundation/core", "Contain"),
+            from_id: newLink.id
+          }
         }
-      }
-    })
-  
-    fs.rmSync(keyFilePath, { recursive: true, force: true });
+      })
+    } 
+    finally {
+      fs.rmSync(keyFilePath, { recursive: true, force: true });
+    }
   }`
 
   await deep.insert({
@@ -96,7 +99,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
         {
           type_id: containTypeLinkId,
           from_id: packageId,
-          string: { data: { value: "SoundScript" } },
+          string: { data: { value: "GcloudSpeechClientCode" } },
         },
         {
           from_id: supportsId,
@@ -106,7 +109,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
               {
                 type_id: containTypeLinkId,
                 from_id: packageId,
-                string: { data: { value: "SoundHandler" } },
+                string: { data: { value: "GcloudSpeechHandler" } },
               },
               {
                 type_id: handleOperationTypeLinkId,
@@ -116,7 +119,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageId,
-                      string: { data: { value: "HandleSoundInsert" } },
+                      string: { data: { value: "HandleTranscription" } },
                     },
                   ],
                 },
