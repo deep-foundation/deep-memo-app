@@ -129,6 +129,17 @@ export async function installPackage () {
         }
     });
 
+    const { data: [{ id: chatgptTypeLinkId }] } = await deep.insert({
+        type_id: typeTypeLinkId,
+        from_id: anyTypeLinkId,
+        to_id: anyTypeLinkId,
+        in: { data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId, 
+          string: { data: { value: 'Chatgpt' } },
+        } },
+      });
+
     await deep.insert({
         type_id: syncTextFileTypeLinkId,
         in: {
