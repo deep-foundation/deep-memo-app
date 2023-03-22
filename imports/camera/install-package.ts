@@ -5,7 +5,9 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 
-export const PACKAGE_NAME = "@deep-foundation/audiorecord"
+export const PACKAGE_NAME = "@deep-foundation/camera"
+export const PACKAGE_TYPES =
+  ["Camera", "CameraPermission", "PhotoPermission", "Photo", "Base64", "Path", "WebPath", "Exif", "Format", "TimeStamp"]
 
 export default async function installPackage(deviceLinkId) {
 
@@ -27,22 +29,21 @@ export default async function installPackage(deviceLinkId) {
   const deep = new DeepClient({ deep: guestDeep, ...admin });
 
   if (!await getIsPackageInstalled({ deep, packageName: PACKAGE_NAME })) {
-    const typeTypeLinkId = await deep.id('@deep-foundation/core', 'Type');
-    const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
-    const packageTypeLinkId = await deep.id('@deep-foundation/core', 'Package');
-    const joinTypeLinkId = await deep.id('@deep-foundation/core', 'Join');
-    const valueTypeLinkId = await deep.id('@deep-foundation/core', 'Value');
-    const stringTypeLinkId = await deep.id('@deep-foundation/core', 'String');
-    const numberTypeLinkId = await deep.id('@deep-foundation/core', 'Number');
-    const objectTypeLinkId = await deep.id('@deep-foundation/core', 'Object');
-    const anyTypeLinkId = await deep.id("@deep-foundation/core", "Any");
+    const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")
+    const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
+    const joinTypeLinkId = await deep.id("@deep-foundation/core", "Join")
+    const typeTypeLinkId = await deep.id("@deep-foundation/core", "Type")
     const treeTypeLinkId = await deep.id('@deep-foundation/core', 'Tree');
-    const treeIncludeNodeTypeLinkId = await deep.id('@deep-foundation/core', 'TreeIncludeNode');
+    const anyTypeLinkId = await deep.id("@deep-foundation/core", "Any");
+    const treeIncludeNodeTypeLinkId = await deep.id(
+      '@deep-foundation/core',
+      'TreeIncludeNode'
+    );
     const treeIncludeUpTypeLinkId = await deep.id('@deep-foundation/core', 'TreeIncludeUp');
-    const treeIncludeDownTypeLinkId = await deep.id('@deep-foundation/core', 'TreeIncludeDown');
-    const userTypeLinkId = await deep.id('@deep-foundation/core', 'User');
-
-
+    const treeIncludeDownTypeLinkId = await deep.id(
+      '@deep-foundation/core',
+      'TreeIncludeDown'
+    );
 
     const { data: [{ id: packageLinkId }] } = await deep.insert({
       type_id: packageTypeLinkId,
@@ -64,13 +65,13 @@ export default async function installPackage(deviceLinkId) {
       },
     })
 
-    const { data: [{ id: audiorecordTreeId }] } = await deep.insert({
+    const { data: [{ id: cameraTreeId }] } = await deep.insert({
       type_id: treeTypeLinkId,
       in: {
         data: {
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: 'AudioRecordTree' } },
+          string: { data: { value: 'CameraTree' } },
         },
       }
     })
@@ -82,11 +83,11 @@ export default async function installPackage(deviceLinkId) {
           data: [{
             type_id: containTypeLinkId,
             from_id: packageLinkId,
-            string: { data: { value: 'AudioRecords' } },
+            string: { data: { value: 'Camera' } },
           },
           {
             type_id: treeIncludeNodeTypeLinkId,
-            from_id: audiorecordTreeId,
+            from_id: cameraTreeId,
             in: {
               data: [
                 {
@@ -106,10 +107,10 @@ export default async function installPackage(deviceLinkId) {
                 data: [{
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
-                  string: { data: { value: 'Permissions' } },
+                  string: { data: { value: 'CameraPermissions' } },
                 }, {
                   type_id: treeIncludeDownTypeLinkId,
-                  from_id: audiorecordTreeId,
+                  from_id: cameraTreeId,
                   in: {
                     data: [
                       {
@@ -128,10 +129,10 @@ export default async function installPackage(deviceLinkId) {
                 data: [{
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
-                  string: { data: { value: 'DeviceSupport' } },
+                  string: { data: { value: 'PhotoPermissions' } },
                 }, {
                   type_id: treeIncludeDownTypeLinkId,
-                  from_id: audiorecordTreeId,
+                  from_id: cameraTreeId,
                   in: {
                     data: [
                       {
@@ -150,11 +151,11 @@ export default async function installPackage(deviceLinkId) {
                 data: [{
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
-                  string: { data: { value: 'Record' } },
+                  string: { data: { value: 'Photo' } },
                 },
                 {
                   type_id: treeIncludeNodeTypeLinkId,
-                  from_id: audiorecordTreeId,
+                  from_id: cameraTreeId,
                   in: {
                     data: [
                       {
@@ -174,10 +175,10 @@ export default async function installPackage(deviceLinkId) {
                       data: [{
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
-                        string: { data: { value: 'Duration' } },
+                        string: { data: { value: 'Base64' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: audiorecordTreeId,
+                        from_id: cameraTreeId,
                         in: {
                           data: [
                             {
@@ -196,10 +197,10 @@ export default async function installPackage(deviceLinkId) {
                       data: [{
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
-                        string: { data: { value: 'StartTime' } },
+                        string: { data: { value: 'Path' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: audiorecordTreeId,
+                        from_id: cameraTreeId,
                         in: {
                           data: [
                             {
@@ -218,10 +219,10 @@ export default async function installPackage(deviceLinkId) {
                       data: [{
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
-                        string: { data: { value: 'EndTime' } },
+                        string: { data: { value: 'WebPath' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: audiorecordTreeId,
+                        from_id: cameraTreeId,
                         in: {
                           data: [
                             {
@@ -240,10 +241,10 @@ export default async function installPackage(deviceLinkId) {
                       data: [{
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
-                        string: { data: { value: 'Sound' } },
+                        string: { data: { value: 'Exif' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: audiorecordTreeId,
+                        from_id: cameraTreeId,
                         in: {
                           data: [
                             {
@@ -262,10 +263,32 @@ export default async function installPackage(deviceLinkId) {
                       data: [{
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
-                        string: { data: { value: 'MIME/type' } },
+                        string: { data: { value: 'Format' } },
                       }, {
                         type_id: treeIncludeDownTypeLinkId,
-                        from_id: audiorecordTreeId,
+                        from_id: cameraTreeId,
+                        in: {
+                          data: [
+                            {
+                              type_id: containTypeLinkId,
+                              from_id: packageLinkId,
+                            },
+                          ],
+                        },
+                      }]
+                    }
+                  },
+                  {
+                    type_id: typeTypeLinkId,
+                    to_id: anyTypeLinkId,
+                    in: {
+                      data: [{
+                        type_id: containTypeLinkId,
+                        from_id: packageLinkId,
+                        string: { data: { value: 'TimeStamp' } },
+                      }, {
+                        type_id: treeIncludeDownTypeLinkId,
+                        from_id: cameraTreeId,
                         in: {
                           data: [
                             {
@@ -286,19 +309,19 @@ export default async function installPackage(deviceLinkId) {
     ]);
     
     if (deviceLinkId) {
-      if (!await deep.id(deviceLinkId, "AudioRecords")) {
-        const { data: [{ id: AudioRecordsLinkId }] } = await deep.insert({
-          type_id: await deep.id(PACKAGE_NAME, "AudioRecords"),
+      if (!await deep.id(deviceLinkId, "Camera")) {
+        const { data: [{ id: CameraLinkId }] } = await deep.insert({
+          type_id: await deep.id(PACKAGE_NAME, "Camera"),
           in: {
             data: {
               type_id: containTypeLinkId,
               from_id: deviceLinkId,
-              string: { data: { value: "AudioRecords" } },
+              string: { data: { value: "Camera" } },
             }
           }
         })
       }
     }
-    console.log("audiorecord package installed");
-  } else console.log("audiorecord package already exists");
+    console.log("camera package installed")
+  } else console.log("camera package already exists");
 }

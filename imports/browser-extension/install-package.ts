@@ -4,8 +4,7 @@ import { getIsPackageInstalled } from "../get-is-package-installed";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-
-export const PACKAGE_NAME = "@deep-foundation/audiorecord"
+export const PACKAGE_NAME = "@deep-foundation/browser-extension"
   
 export default async function installPackage(deviceLinkId) {
 
@@ -333,16 +332,20 @@ export default async function installPackage(deviceLinkId) {
       },
     ]);
 
-    const { data: [{ id: browserExtensionLinkId }] } = await deep.insert({
-      type_id: await deep.id(PACKAGE_NAME, "BrowserExtension"),
-      in: {
-        data: [{
-          type_id: containTypeLinkId,
-          from_id: deviceLinkId,
-          string: { data: { value: "BrowserExtension" } },
-        }]
+    if (deviceLinkId) {
+      if (!await deep.id(deviceLinkId, "BrowserExtension")) {
+        const { data: [{ id: BrowserExtensionLinkId }] } = await deep.insert({
+          type_id: await deep.id(PACKAGE_NAME, "BrowserExtension"),
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: deviceLinkId,
+              string: { data: { value: "BrowserExtension" } },
+            }
+          }
+        })
       }
-    })
+    }
     console.log("browser-history package installed")
   } else console.log("browser-history package already exists");
 }

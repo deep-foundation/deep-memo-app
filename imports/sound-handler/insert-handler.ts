@@ -115,11 +115,11 @@ export default async function insertHandler() {
   const syncTextFileInsertData: MutationInputLink = {
     id: reservedIds.pop(),
     type_id: syncTextFileTypeLinkId,
-    string: {
-      data: {
-        value: code // fs.readFileSync(path.join(__dirname, 'gcloudSpeechInsertHandler.js'), { encoding: 'utf-8' }), // Handler file must contain async function like this: async ({deep, data: {oldLink, newLink, triggeredByLinkId}}) => {}
-      },
-    },
+    // string: {
+    //   data: {
+    //     value: "1" // fs.readFileSync(path.join(__dirname, 'gcloudSpeechInsertHandler.js'), { encoding: 'utf-8' }), // Handler file must contain async function like this: async ({deep, data: {oldLink, newLink, triggeredByLinkId}}) => {}
+    //   },
+    // },
     in: {
       data: {
         type_id: containTypeLinkId,
@@ -129,36 +129,34 @@ export default async function insertHandler() {
     }
   }
 
-  const handlerInsertData: MutationInputLink = {
-    id: reservedIds.pop(),
-    type_id: handlerTypeLinkId,
-    from_id: supportsJsLinkId,
-    to_id: syncTextFileInsertData.id,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: "GcloudSpeechHandler" } },
-      }
-    }
-  };
+  // const handlerInsertData: MutationInputLink = {
+  //   id: reservedIds.pop(),
+  //   type_id: handlerTypeLinkId,
+  //   from_id: supportsJsLinkId,
+  //   to_id: syncTextFileInsertData.id,
+  //   in: {
+  //     data: {
+  //       type_id: containTypeLinkId,
+  //       from_id: packageLinkId,
+  //       string: { data: { value: "GcloudSpeechHandler" } },
+  //     }
+  //   }
+  // };
 
-  const handleOperationData: MutationInputLink = {
-    type_id: handleOperationLinkId,
-    from_id: triggerTypeLinkId,
-    to_id: handlerInsertData.id,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: "HandleTranscription" } },
-      }
-    }
-  }
+  // const handleOperationData: MutationInputLink = {
+  //   type_id: handleOperationLinkId,
+  //   from_id: triggerTypeLinkId,
+  //   to_id: handlerInsertData.id,
+  //   in: {
+  //     data: {
+  //       type_id: containTypeLinkId,
+  //       from_id: packageLinkId,
+  //       string: { data: { value: "HandleTranscription" } },
+  //     }
+  //   }
+  // }
 
   await deep.insert([
-    syncTextFileInsertData,
-    handlerInsertData,
-    handleOperationData
+    syncTextFileInsertData
   ])
 }

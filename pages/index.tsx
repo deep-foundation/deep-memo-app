@@ -20,6 +20,7 @@ import {
   DeepProvider,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import Link from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
@@ -111,6 +112,9 @@ function Page() {
         <Link href="/soundhandler">soundhandler</Link>
       </div>
       <div>
+        <Link replace href="/camera">camera</Link>
+      </div>
+      <div>
         <Link replace href="/browser-extension">browser-extension</Link>
       </div>
     </div>
@@ -118,6 +122,9 @@ function Page() {
 }
 
 export default function Index() {
+  useEffect(() => {
+    if (typeof(window) === "object") defineCustomElements(window);
+   });
   return (
     <>
       <ChakraProvider>
