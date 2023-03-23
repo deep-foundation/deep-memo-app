@@ -71,12 +71,18 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   const { data: [{ id: chatgptMessageLinkId }] } = await deep.insert({
     type_id: messageTypeLinkId,
     string: { data: { value: response.data.choices[0].text } },
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: triggeredByLinkId,
-      },
-    },
+    in:{
+        data: [
+          {
+          type_id: containTypeLinkId,
+          from_id: triggeredByLinkId,
+        },
+        {
+          type_id: authorTypeLinkId,
+          from_id: chatgptTypeLinkId,
+        },
+      ],
+    }
   });
 
   const { data: [{ id: replyToMessageLinkId }] } = await deep.insert({
