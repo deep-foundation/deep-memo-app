@@ -143,7 +143,7 @@ export async function installPackage () {
                   {
                     type_id: containTypeLinkId,
                     from_id: packageLinkId,
-                    string: { data: { value: "ReplyHandler" } },
+                    string: { data: { value: "ReplyInsertHandler" } },
                   },
                   {
                     type_id: handleInsertLinkId,
