@@ -9,9 +9,18 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   const chatgptTypeLinkId = await deep.id(PACKAGE_NAME, "ChatGPT");
   const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain");
 
-  const { data: [messageLink] } = await deep.select({
+  const { data: [messageLink = undefined] = [] } = await deep.select({
     id: replyLinkId.from_id,
+    _not: {
+      in: {
+        from_id: chatgptTypeLinkId,
+        type_id: authorTypeLinkId
+      }
+    }
   });
+  if (!messageLink) {
+    return 'No need to react to message of this reply.';
+  }
   if (!messageLink.value?.value) {
     throw new Error(`##${messageLink.id} must have a value`);
   }
@@ -84,4 +93,3 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
 
   return response.data;
 };
-
