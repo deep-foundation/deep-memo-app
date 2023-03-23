@@ -82,8 +82,8 @@ export async function installPackage () {
 
     const { data: [{ id: authorTypeLinkId }] } = await deep.insert({
       type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
+      from_id: messageTypeLinkId,
+      to_id: messageTypeLinkId,
       in: { data: {
         type_id: containTypeLinkId,
         from_id: packageLinkId, 
