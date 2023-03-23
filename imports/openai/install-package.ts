@@ -140,43 +140,42 @@ export async function installPackage () {
         } },
       });
 
-    await deep.insert({
+      await deep.insert({
         type_id: syncTextFileTypeLinkId,
         in: {
-            data: [
-                {
+          data: [
+            {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: "ReplyHandlerCode" } },
+            },
+            {
+              from_id: dockerSupportsJsLinkId,
+              type_id: handlerTypeLinkId,
+              in: {
+                data: [
+                  {
                     type_id: containTypeLinkId,
-                    from_id: packageLinkId, // before created package
-                    string: {data: {value: "OpenAiRequestHandlerCode"}},
-                },
-                {
-                    from_id: dockerSupportsJsLinkId,
-                    type_id: handlerTypeLinkId,
+                    from_id: packageLinkId,
+                    string: { data: { value: "ReplyHandler" } },
+                  },
+                  {
+                    type_id: handleInsertLinkId,
+                    from_id: await deep.id('@flakeed/messaging', "Reply"),
                     in: {
-                        data: [
-                            {
-                                type_id: containTypeLinkId,
-                                from_id: packageLinkId, // before created package
-                                string: {data: {value: "OpenAiRequestHandler"}},
-                            },
-                            {
-                                type_id: handleInsertLinkId,
-                                // The type of link which operation will trigger handler. Example: insert handle will be triggered if you insert a link with this type_id
-                                from_id: openAiRequestTypeLinkId,
-                                in: {
-                                    data: [
-                                        {
-                                            type_id: containTypeLinkId,
-                                            from_id: packageLinkId, // before created package
-                                            string: {data: {value: "HandleOpenAiRequest"}},
-                                        },
-                                    ],
-                                },
-                            },
-                        ],
+                      data: [
+                        {
+                          type_id: containTypeLinkId,
+                          from_id: packageLinkId,
+                          string: { data: { value: "HandleReply" } },
+                        },
+                      ],
                     },
-                },
-            ],
+                  },
+                ],
+              },
+            },
+          ],
         },
         string: {
             data: {
