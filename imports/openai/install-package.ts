@@ -133,7 +133,7 @@ export async function installPackage () {
             {
               type_id: containTypeLinkId,
               from_id: packageLinkId,
-              string: { data: { value: "ReplyHandlerCode" } },
+              string: { data: { value: "ReplyInsertHandlerCode" } },
             },
             {
               from_id: dockerSupportsJsLinkId,
