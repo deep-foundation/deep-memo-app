@@ -61,7 +61,7 @@ async ({ data: { newLink: replyLinkId,triggeredByLinkId }, deep, require }) => {
     in: {
       data: {
         type_id: containTypeLinkId,
-        from_id: deep.linkId,
+        from_id: triggeredByLinkId,
       },
     },
   });
