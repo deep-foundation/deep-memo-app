@@ -1,12 +1,14 @@
-async ({ data: { newLink: replyLinkId }, deep, require }) => {
+async ({ data: { newLink: replyLinkId,triggeredByLinkId }, deep, require }) => {
   const PACKAGE_NAME = `@flakeed/chatgpt`;
   const { Configuration, OpenAIApi } = require("openai");
   const openAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, "OpenAiApiKey");
   const usesOpenAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, "UsesOpenAiApiKey");
-  const messageTypeLinkId = await deep.id('@flakeed#5078/messaging', "Message");
-  const replyTypeLinkId = await deep.id('@flakeed#5078/messaging', "Reply");
-  const authorTypeLinkId = await deep.id('@flakeed#5078/messaging', "Author");
+  const messageTypeLinkId = await deep.id('@flakeed/messaging', "Message");
+  const replyTypeLinkId = await deep.id('@flakeed/messaging', "Reply");
+  const authorTypeLinkId = await deep.id('@flakeed/messaging', "Author");
   const chatgptTypeLinkId = await deep.id(PACKAGE_NAME, "Chatgpt");
+  const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain");
+
 
   const { data: [linkWithStringValue] } = await deep.select({
     id: replyLinkId.from_id,
@@ -31,7 +33,7 @@ async ({ data: { newLink: replyLinkId }, deep, require }) => {
     type_id: openAiApiKeyTypeLinkId,
     in: {
       type_id: usesOpenAiApiKeyTypeLinkId,
-      from_id: replyLinkId,
+      from_id: triggeredByLinkId,
     },
   });
 
@@ -55,7 +57,7 @@ async ({ data: { newLink: replyLinkId }, deep, require }) => {
 
   const { data: [{ id: chatgptMessageLinkId }] } = await deep.insert({
     type_id: messageTypeLinkId,
-    string: { data: { value: response.data.choices[0].text.trim() } },
+    string: { data: { value: response.data.choices[0].text } },
     in: {
       data: {
         type_id: containTypeLinkId,
