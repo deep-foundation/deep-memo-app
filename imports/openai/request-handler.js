@@ -3,9 +3,9 @@ async ({ data: { newLink: replyLinkId }, deep, require }) => {
   const { Configuration, OpenAIApi } = require("openai");
   const openAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, "OpenAiApiKey");
   const usesOpenAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, "UsesOpenAiApiKey");
-  const messageTypeLinkId = await deep.id('@flakeed/messaging', "Message");
-  const replyTypeLinkId = await deep.id('@flakeed/messaging', "Reply");
-  const authorTypeLinkId = await deep.id('@flakeed/messaging', "Author");
+  const messageTypeLinkId = await deep.id('@flakeed#5078/messaging', "Message");
+  const replyTypeLinkId = await deep.id('@flakeed#5078/messaging', "Reply");
+  const authorTypeLinkId = await deep.id('@flakeed#5078/messaging', "Author");
   const chatgptTypeLinkId = await deep.id(PACKAGE_NAME, "Chatgpt");
 
   const { data: [linkWithStringValue] } = await deep.select({
@@ -15,6 +15,17 @@ async ({ data: { newLink: replyLinkId }, deep, require }) => {
     throw new Error(`##${linkWithStringValue.id} must have a value`);
   }
   const openAiPrompt = linkWithStringValue.value.value;
+
+  const { data: [{ id: userMessageLinkId }] } = await deep.insert({
+    type_id: messageTypeLinkId,
+    string: { data: { value: openAiPrompt } },
+    in: {
+      data: {
+        type_id: containTypeLinkId,
+        from_id: deep.linkId,
+      },
+    },
+  });
 
   const { data: [apiKeyLink] } = await deep.select({
     type_id: openAiApiKeyTypeLinkId,
@@ -55,8 +66,8 @@ async ({ data: { newLink: replyLinkId }, deep, require }) => {
 
   const { data: [{ id: replyToMessageLinkId }] } = await deep.insert({
     type_id: replyTypeLinkId,
-    from_id: replyLinkId.from_id,
-    to_id: chatgptMessageLinkId,
+    from_id: chatgptMessageLinkId,
+    to_id: userMessageLinkId,
     in: {
       data: {
         type_id: containTypeLinkId,
@@ -79,4 +90,3 @@ async ({ data: { newLink: replyLinkId }, deep, require }) => {
 
   return response.data;
 };
-
