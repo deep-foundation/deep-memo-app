@@ -5,46 +5,33 @@ export async function savePosition(deep: DeepClient, deviceLinkId: number, coord
   const geolocationEarthTypeLinkId = await deep.id("@deep-foundation/geolocation", "Earth");
 
   if(!deviceLinkId) {
-		throw new Error("deviceLinkId must not be 0")
-	}
+    throw new Error("deviceLinkId must not be 0")
+  }
 
-	const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
   const xTypeLinkId = await deep.id(PACKAGE_NAME, 'X');
   const yTypeLinkId = await deep.id(PACKAGE_NAME, 'Y');
   const zTypeLinkId = await deep.id(PACKAGE_NAME, 'Z');
   console.log({coordinates});
-  
-  if (coordinates?.x) {
-    const {
-      data: [{ id: xLinkId }],
-    } = await deep.insert({
+
+  await deep.insert([
+    coordinates?.x && {
       type_id: xTypeLinkId,
       from_id: deviceLinkId,
       to_id: geolocationEarthTypeLinkId,
       string: { data: { value: (coordinates?.x || "").toString() } },
-    });
-  }
-
-  if (coordinates?.y) {
-    const {
-      data: [{ id: yLinkId }],
-    } = await deep.insert({
+    },
+    coordinates?.y && {
       type_id: yTypeLinkId,
       from_id: deviceLinkId,
       to_id: geolocationEarthTypeLinkId,
       string: { data: { value: (coordinates?.y || "").toString() } },
-    });
-  }
-
-  if (coordinates?.z) {
-    const {
-      data: [{ id: zLinkId }],
-    } = await deep.insert({
+    },
+    coordinates?.z && {
       type_id: zTypeLinkId,
       from_id: deviceLinkId,
       to_id: geolocationEarthTypeLinkId,
       string: { data: { value: (coordinates?.z || "").toString() } },
-    });
-  }
+    }
+  ]);
 
 }

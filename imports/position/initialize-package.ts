@@ -10,7 +10,9 @@ export async function initializePackage(deep: DeepClient) {
   const valueTypeLinkId = await deep.id("@deep-foundation/core", "Value");
   const numberTypeLinkId = await deep.id("@deep-foundation/core", "Number");
   const deviceTypeLinkId = await deep.id("@deep-foundation/device", "Device");
+  const treeTypeLinkId = await deep.id('@deep-foundation/core', 'Tree');
   const geolocationSpaceTypeLinkId = await deep.id("@deep-foundation/geolocation", "Space");
+  const treeIncludeNodeTypeLinkId = await deep.id("@deep-foundation/core", "TreeIncludeNode");
 
   const { data: [{ id: packageLinkId }] } = await deep.insert({
     type_id: packageTypeLinkId,
@@ -33,15 +35,40 @@ export async function initializePackage(deep: DeepClient) {
     ] },
   });
 
+  const { data: [{ id: positionTreeLinkId }] } = await deep.insert({
+    type_id: treeTypeLinkId,
+    in: {
+      data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'PositionTree' } },
+      },
+    }
+  })
+
   const { data: [{ id: xTypeLinkId }] } = await deep.insert({
     type_id: typeTypeLinkId,
     from_id: deviceTypeLinkId,
     to_id: geolocationSpaceTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'X' } },
-    } },
+    in: { data: [
+      {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'X' } },
+      },
+      {
+        type_id: treeIncludeNodeTypeLinkId,
+        from_id: positionTreeLinkId,
+        in: {
+          data: [
+            {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+            },
+          ],
+        },
+      }
+    ]},
     out: {
       data: {
         type_id: valueTypeLinkId,
@@ -54,11 +81,25 @@ export async function initializePackage(deep: DeepClient) {
     type_id: typeTypeLinkId,
     from_id: deviceTypeLinkId,
     to_id: geolocationSpaceTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'Y' } },
-    } },
+    in: { data: [
+      {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'Y' } },
+      },
+      {
+        type_id: treeIncludeNodeTypeLinkId,
+        from_id: positionTreeLinkId,
+        in: {
+          data: [
+            {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+            },
+          ],
+        },
+      }
+    ]},
     out: {
       data: {
         type_id: valueTypeLinkId,
@@ -71,11 +112,25 @@ export async function initializePackage(deep: DeepClient) {
     type_id: typeTypeLinkId,
     from_id: deviceTypeLinkId,
     to_id: geolocationSpaceTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'Z' } },
-    } },
+    in: { data: [
+      {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'Z' } },
+      },
+      {
+        type_id: treeIncludeNodeTypeLinkId,
+        from_id: positionTreeLinkId,
+        in: {
+          data: [
+            {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+            },
+          ],
+        },
+      }
+    ]},
     out: {
       data: {
         type_id: valueTypeLinkId,
