@@ -36,8 +36,6 @@ async ({ data: { newLink: replyLinkId,triggeredByLinkId }, deep, require }) => {
       from_id: triggeredByLinkId,
     },
   });
-
-
   if (!apiKeyLink) {
     throw new Error(`A link with type ##${openAiApiKeyTypeLinkId} is not found`);
   }
