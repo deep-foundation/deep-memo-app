@@ -18,16 +18,6 @@ async ({ data: { newLink: replyLinkId,triggeredByLinkId }, deep, require }) => {
   }
   const openAiPrompt = linkWithStringValue.value.value;
 
-  const { data: [{ id: userMessageLinkId }] } = await deep.insert({
-    type_id: messageTypeLinkId,
-    string: { data: { value: openAiPrompt } },
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: deep.linkId,
-      },
-    },
-  });
 
   const { data: [apiKeyLink] } = await deep.select({
     type_id: openAiApiKeyTypeLinkId,
