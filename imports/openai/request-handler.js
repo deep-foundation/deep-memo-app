@@ -45,24 +45,6 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   });
   const openai = new OpenAIApi(configuration);
 
-  const { data: messageLinks } = await deep.select({
-    id: replyLinkId.from_id,
-    type_id: messageTypeLinkId,
-  });
-
-  if (!messageLinks.length) {
-    throw new Error(`##${replyLinkId.from_id} must be a valid Post`);
-  }
-  const { data: chatGptAuthors } = await deep.select({
-    type_id: authorTypeLinkId,
-    from_id: chatgptTypeLinkId,
-    to_id: replyLinkId.from_id,
-  });
-  
-  if (chatGptAuthors.length > 0) {
-    throw new Error("The post has an Author with ChatGPT. Skipping the request.");
-  }
-
   const response = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: [{ role: "user", content: message }],
