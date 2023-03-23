@@ -122,7 +122,7 @@ export async function installPackage () {
         in: { data: {
           type_id: containTypeLinkId,
           from_id: packageLinkId, 
-          string: { data: { value: 'Chatgpt' } },
+          string: { data: { value: 'ChatGPT' } },
         } },
       });
 
