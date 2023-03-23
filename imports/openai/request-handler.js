@@ -70,7 +70,7 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
 
   const { data: [{ id: chatgptMessageLinkId }] } = await deep.insert({
     type_id: messageTypeLinkId,
-    string: { data: { value: response.data.choices[0].text } },
+    string: { data: { value: response.data.choices[0].message.content } },
     in:{
         data: [
           {
