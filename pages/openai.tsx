@@ -34,28 +34,28 @@ function Content() {
             },
           });
 
-          const { data: [{ id: newMessageLinkId }] } = await deep.insert({
-            type_id: await deep.id('@flakeed/messaging', "Message"),
-            string: { data: { value: "message" } },
-            in: {
-              data: {
-                type_id: await deep.id('@deep-foundation/core', "Contain"),
-                from_id: deep.linkId,
-              },
-            },
-          });
+          // const { data: [{ id: newMessageLinkId }] } = await deep.insert({
+          //   type_id: await deep.id('@flakeed/messaging', "Message"),
+          //   string: { data: { value: "message" } },
+          //   in: {
+          //     data: {
+          //       type_id: await deep.id('@deep-foundation/core', "Contain"),
+          //       from_id: deep.linkId,
+          //     },
+          //   },
+          // });
 
-          const { data: [{ id: replyLinkId }] } = await deep.insert({
-            type_id: await deep.id('@flakeed/messaging', "Reply"),
-            from_id: newMessageLinkId,
-            to_id: newConversationLinkId,
-            in: {
-              data: {
-                type_id: await deep.id('@deep-foundation/core', "Contain"),
-                from_id: deep.linkId,
-              },
-            },
-          });
+          // const { data: [{ id: replyLinkId }] } = await deep.insert({
+          //   type_id: await deep.id('@flakeed/messaging', "Reply"),
+          //   from_id: await deep.id('@flakeed/messaging', "Message"),
+          //   to_id: newConversationLinkId,
+          //   in: {
+          //     data: {
+          //       type_id: await deep.id('@deep-foundation/core', "Contain"),
+          //       from_id: deep.linkId,
+          //     },
+          //   },
+          // });
         }
       }
       >
