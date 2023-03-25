@@ -115,7 +115,10 @@ function Page() {
         <Link replace href="/camera">camera</Link>
       </div>
       <div>
-            <Link href="/network">network</Link>
+        <Link href="/network">network</Link>
+      </div>
+      <div>
+        <Link href="/network">network</Link>
       </div>
       <div>
         <Link replace href="/browser-extension">browser-extension</Link>
@@ -126,8 +129,8 @@ function Page() {
 
 export default function Index() {
   useEffect(() => {
-    if (typeof(window) === "object") defineCustomElements(window);
-   });
+    if (typeof (window) === "object") defineCustomElements(window);
+  });
   return (
     <>
       <ChakraProvider>
