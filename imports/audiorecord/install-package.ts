@@ -7,7 +7,7 @@ dotenv.config();
 
 export const PACKAGE_NAME = "@deep-foundation/audiorecord"
 
-export default async function installPackage(deviceLinkId) {
+export default async function installPackage(deviceLinkId?) {
 
   const apolloClient = generateApolloClient({
     path: process.env.NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE

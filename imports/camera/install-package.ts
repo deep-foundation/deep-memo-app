@@ -9,7 +9,7 @@ export const PACKAGE_NAME = "@deep-foundation/camera"
 export const PACKAGE_TYPES =
   ["Camera", "CameraPermission", "PhotoPermission", "Photo", "Base64", "Path", "WebPath", "Exif", "Format", "TimeStamp"]
 
-export default async function installPackage(deviceLinkId) {
+export default async function installPackage(deviceLinkId?) {
 
   const apolloClient = generateApolloClient({
     path: process.env.NEXT_PUBLIC_GQL_PATH || '', // <<= HERE PATH TO UPDATE
