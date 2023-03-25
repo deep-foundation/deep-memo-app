@@ -35,7 +35,7 @@ function Page() {
   );
 
   useEffect(() => {
-    if(deep.linkId === 0) {
+    if (deep.linkId === 0) {
       deep.guest();
     }
   }, []);
@@ -55,7 +55,7 @@ function Page() {
   }, [deep]);
 
   useEffect(() => {
-    if(deep.linkId == 0) {
+    if (deep.linkId == 0) {
       return;
     }
     new Promise(async () => {
@@ -63,7 +63,7 @@ function Page() {
       if (deep.linkId != adminLinkId) {
         return;
       }
-      
+
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
@@ -113,6 +113,9 @@ function Page() {
       </div>
       <div>
         <Link replace href="/camera">camera</Link>
+      </div>
+      <div>
+            <Link href="/network">network</Link>
       </div>
       <div>
         <Link replace href="/browser-extension">browser-extension</Link>
