@@ -24,7 +24,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
     const { data } = await deep.select({
       up: {
         parent: {
-          id: newLink.id
+          id: newLink.to_id
         },
         link: {
           type_id: {
@@ -82,7 +82,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
         in: {
           data: {
             type_id: await deep.id("@deep-foundation/core", "Contain"),
-            from_id: newLink.id
+            from_id: newLink.to_id
           }
         }
       })
