@@ -21,8 +21,11 @@ import {
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import Link from 'next/link';
-import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
+import { PACKAGE_NAME as DEVICE_PACKAGE_NAME, PACKAGE_NAME } from '../imports/device/package-name';
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
+import { BoolExpLink } from '@deep-foundation/deeplinks/imports/client_types';
+import { insertDevice } from '../imports/device/insert-device';
+import { applyPackageLinksToMinilinks } from '../imports/apply-package-links-to-minilinks';
 
 function Page() {
   const deep = useDeep();
@@ -56,38 +59,31 @@ function Page() {
     if(deep.linkId == 0) {
       return;
     }
+    self["deep"] = deep;
     new Promise(async () => {
       const adminLinkId = await deep.id('deep', 'admin');
       if (deep.linkId != adminLinkId) {
         return;
       }
-      
+
+      await applyPackageLinksToMinilinks({
+        deep,
+        packageName: DEVICE_PACKAGE_NAME
+      })
+     
       if (!deviceLinkId) {
-        const initializeDeviceLink = async () => {
-          const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
-          const containTypeLinkId = await deep.id(
-            '@deep-foundation/core',
-            'Contain'
-          );
-          const {
-            data: [{ id: newDeviceLinkId }],
-          } = await deep.insert({
-            type_id: deviceTypeLinkId,
-            in: {
-              data: [
-                {
-                  type_id: containTypeLinkId,
-                  from_id: deep.linkId,
-                },
-              ],
-            },
-          });
-          setDeviceLinkId(newDeviceLinkId);
-        };
-        initializeDeviceLink();
+        const deviceLinkId = await insertDevice({deep});
+        setDeviceLinkId(deviceLinkId);
       }
     });
   }, [deep]);
+
+  useEffect(() => {
+    if(!deviceLinkId) {
+      return
+    };
+    
+  }, [deviceLinkId])
 
   return (
     <div>

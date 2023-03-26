@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { TokenProvider } from '@deep-foundation/deeplinks/imports/react-token';
 import {
   LocalStoreProvider,
@@ -25,6 +25,10 @@ function Content() {
     'deviceLinkId',
     undefined
   );
+
+  useEffect(() => {
+    self["Device"] = Device
+  }, [])
 
   return (
     <Stack>
