@@ -2,6 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { generateApolloClient } from '@deep-foundation/hasura/client';
 import { getIsPackageInstalled } from "../get-is-package-installed";
 import * as dotenv from 'dotenv';
+import { getIsLinkExist } from "../get-is-link-exist";
 dotenv.config();
 
 export const PACKAGE_NAME = "@deep-foundation/network"
@@ -123,7 +124,7 @@ export default async function installPackage(deviceLinkId?) {
     })));
 
     if (deviceLinkId) {
-      if (!await deep.id(deviceLinkId, "Network")) {
+      if (!await getIsLinkExist({deep, linkName: "Network"})) {
         const { data: [{ id: networkLinkId }] } = await deep.insert({
           type_id: await deep.id(PACKAGE_NAME, "Network"),
           in: {
@@ -132,50 +133,8 @@ export default async function installPackage(deviceLinkId?) {
               from_id: deviceLinkId,
               string: { data: { value: "Network" } },
             }]
-          },
-          out: {
-            data: [{
-              type_id: containTypeLinkId,
-              string: { data: { value: "Wifi" } },
-              to: {
-                data: {
-                  type_id: await deep.id(PACKAGE_NAME, "Wifi"),
-                  string: { data: { value: "disconnected" } }
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              string: { data: { value: "Cellular" } },
-              to: {
-                data: {
-                  type_id: await deep.id(PACKAGE_NAME, "Cellular"),
-                  string: { data: { value: "disconnected" } }
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              string: { data: { value: "Unknown" } },
-              to: {
-                data: {
-                  type_id: await deep.id(PACKAGE_NAME, "Unknown"),
-                  string: { data: { value: "disconnected" } }
-                }
-              }
-            },
-            {
-              type_id: containTypeLinkId,
-              string: { data: { value: "None" } },
-              to: {
-                data: {
-                  type_id: await deep.id(PACKAGE_NAME, "None"),
-                  string: { data: { value: "disconnected" } }
-                }
-              }
-            }]
           }
-        })
+        });
       }
     }
     console.log("network package installed")

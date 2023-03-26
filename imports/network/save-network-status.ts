@@ -1,6 +1,6 @@
 import { Network } from "@capacitor/network"
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
-import { PACKAGE_NAME } from "./initialize-package";
+import { PACKAGE_NAME } from "./install-package";
 
 export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId: number, newConnection?: any) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
@@ -10,6 +10,8 @@ export default async function saveNetworkStatus(deep: DeepClient, deviceLinkId: 
   const noneTypeLinkId = await deep.id(PACKAGE_NAME, "None");
 
   const connection = !!newConnection ? newConnection : await Network.getStatus();
+
+  
 
   switch (connection.connectionType) {
     case "wifi":
