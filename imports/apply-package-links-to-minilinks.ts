@@ -21,10 +21,14 @@ export async function applyPackageLinksToMinilinks({deep, packageName}: {deep: D
   const packageLinksSelectData: BoolExpLink = {
     in: containSelectData
   }
+  console.log("select before apply")
   const {data} = await deep.select({
     _or: [
       devicePackageSelectData, containSelectData, packageLinksSelectData
     ]
   })
+  console.log("apply")
   deep.minilinks.apply(data)
+  console.log("after apply");
+  
 }

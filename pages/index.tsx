@@ -26,11 +26,20 @@ import { getIsPackageInstalled } from '../imports/get-is-package-installed';
 import { BoolExpLink } from '@deep-foundation/deeplinks/imports/client_types';
 import { insertDevice } from '../imports/device/insert-device';
 import { applyPackageLinksToMinilinks } from '../imports/apply-package-links-to-minilinks';
+import { updateOrInsertGeneralInfoToDeep } from '../imports/device/insert-general-info-to-deep';
+import { Device } from '@capacitor/device';
 
 function Page() {
   const deep = useDeep();
+  
+  const [adminLinkId, setAdminLinkId] = useState<number|undefined>(undefined);
 
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore(
+  const [areLinksAppliedToMinilinks, setAreLinksAppliedToMinilinks] = useState<boolean>(false);
+
+  const isDeepReady: boolean = adminLinkId !== undefined && deep.linkId === adminLinkId; 
+  const areDeepAndMinilinksReady: boolean = isDeepReady && areLinksAppliedToMinilinks;
+
+  const [deviceLinkId, setDeviceLinkId] = useLocalStore<number|undefined>(
     'deviceLinkId',
     undefined
   );
@@ -39,50 +48,76 @@ function Page() {
     if(deep.linkId === 0) {
       deep.guest();
     }
+    self["deep"] = deep;
   }, []);
 
   useEffect(() => {
     new Promise(async () => {
       if (deep.linkId != 0) {
         const adminLinkId = await deep.id('deep', 'admin');
-        if (deep.linkId != adminLinkId) {
-
-          await deep.login({
-            linkId: adminLinkId,
-          });
-        }
+        setAdminLinkId(adminLinkId)
       }
-    });
-  }, [deep]);
+    })
+  }, [deep])
 
   useEffect(() => {
-    if(deep.linkId == 0) {
-      return;
-    }
-    self["deep"] = deep;
     new Promise(async () => {
-      const adminLinkId = await deep.id('deep', 'admin');
-      if (deep.linkId != adminLinkId) {
-        return;
+      if (!adminLinkId) {
+        return
       }
+      
+      if (deep.linkId != adminLinkId) {
+        await deep.login({
+          linkId: adminLinkId,
+        });
+      }
+    });
+  }, [deep, adminLinkId]);
 
+  useEffect(() => {
+    if(!isDeepReady || areLinksAppliedToMinilinks) {
+      return
+    }
+    
+    new Promise(async () => {
+      console.log("before applyPackageLinksToMinilinks")
       await applyPackageLinksToMinilinks({
         deep,
         packageName: DEVICE_PACKAGE_NAME
-      })
-     
-      if (!deviceLinkId) {
-        const deviceLinkId = await insertDevice({deep});
-        setDeviceLinkId(deviceLinkId);
-      }
+      });
+      setAreLinksAppliedToMinilinks(true);
     });
-  }, [deep]);
+  });
 
   useEffect(() => {
-    if(!deviceLinkId) {
-      return
-    };
+    if(!areDeepAndMinilinksReady) {
+      return;
+    }
     
+    if (!deviceLinkId) {
+      new Promise(async () => {
+        console.log("before insert device")
+        const {deviceLinkId} = await insertDevice({deep});
+        console.log("afetr insert device")
+        setDeviceLinkId(deviceLinkId);
+      })
+    }
+  })
+
+  useEffect(() => {
+    console.log("Before update", {deviceLinkId, areDeepAndMinilinksReady})
+    if(!deviceLinkId || !areDeepAndMinilinksReady) {
+      return
+    }
+    console.log("update")
+
+    new Promise(async () => {
+      await updateOrInsertGeneralInfoToDeep({
+        deep,
+        deviceGeneralInfo: await Device.getInfo(),
+        deviceLinkId
+      })
+    });
   }, [deviceLinkId])
 
   return (

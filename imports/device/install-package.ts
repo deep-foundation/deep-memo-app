@@ -68,7 +68,7 @@ async function installPackage() {
       in: { data: {
         type_id: containTypeLinkId,
         from_id: packageLinkId,
-        string: { data: { value: 'UUID' } },
+        string: { data: { value: 'Uuid' } },
       } },
       out: {
         data: {
@@ -124,7 +124,7 @@ async function installPackage() {
       in: { data: {
         type_id: containTypeLinkId,
         from_id: packageLinkId,
-        string: { data: { value: 'Operating System' } },
+        string: { data: { value: 'OperatingSystem' } },
       } },
       out: {
         data: {
@@ -138,7 +138,7 @@ async function installPackage() {
       in: { data: {
         type_id: containTypeLinkId,
         from_id: packageLinkId,
-        string: { data: { value: 'OS Version' } },
+        string: { data: { value: 'OsVersion' } },
       } },
       out: {
         data: {
