@@ -36,13 +36,14 @@ function Page() {
 
   const [areLinksAppliedToMinilinks, setAreLinksAppliedToMinilinks] = useState<boolean>(false);
 
-  const isDeepReady: boolean = adminLinkId !== undefined && deep.linkId === adminLinkId; 
-  const areDeepAndMinilinksReady: boolean = isDeepReady && areLinksAppliedToMinilinks;
-
   const [deviceLinkId, setDeviceLinkId] = useLocalStore<number|undefined>(
     'deviceLinkId',
     undefined
   );
+
+  
+  const [isDeepReady, setIsDeepReady] = useState(false); 
+  const [areDeepAndMinilinksReady, setAreDeepAndMinilinksReady] = useState(false);
 
   useEffect(() => {
     if(deep.linkId === 0) {
@@ -119,6 +120,19 @@ function Page() {
       })
     });
   }, [deviceLinkId])
+
+  useEffect(() => {
+    setIsDeepReady(adminLinkId !== undefined && deep.linkId === adminLinkId);
+  }, [adminLinkId, deep]);
+
+  useEffect(() => {
+    setAreDeepAndMinilinksReady(isDeepReady && areLinksAppliedToMinilinks)
+  }, [isDeepReady, areLinksAppliedToMinilinks])
+
+  if(!areDeepAndMinilinksReady) {
+    return <div>Loading...</div>
+  }
+  
 
   return (
     <div>

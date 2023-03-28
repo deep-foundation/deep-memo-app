@@ -10,8 +10,8 @@ export async function updateOrInsertGeneralInfoToDeep({ deep, deviceLinkId, devi
   }
 
   const containTypeLinkId = deep.idLocal('@deep-foundation/core', 'Contain');
-  const falseTypeLinkId = deep.idLocal('@deep-foundation/core', 'False');
-  const trueTypeLinkId = deep.idLocal('@deep-foundation/core', 'True');
+  const falseTypeLinkId = deep.idLocal('@deep-foundation/boolean', 'False');
+  const trueTypeLinkId = deep.idLocal('@deep-foundation/boolean', 'True');
   const { data: deviceTreeLinksDownToParentDevice } = await deep.select({
     up: {
       tree_id: {
@@ -33,7 +33,24 @@ export async function updateOrInsertGeneralInfoToDeep({ deep, deviceLinkId, devi
   for (const [key, value] of Object.entries(deviceGeneralInfo)) {
     const typeLinkId = deep.idLocal(PACKAGE_NAME, _.chain(key).camelCase().upperFirst().value())
     const link = deviceTreeLinksDownToParentDevice.find(link => link.type_id ===  typeLinkId);
-    if(link) {
+    // Update instead of delete+insert when deep add this feature
+    if(typeof value === 'boolean') {
+      deletesData.push({
+        type_id: typeLinkId,
+        from_id: deviceLinkId,
+      })
+      insertsData.push({
+        type_id: typeLinkId,
+        from_id: deviceLinkId,
+        to_id: value ? trueTypeLinkId : falseTypeLinkId,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId,
+          },
+        },
+      })
+    } else if(link) {
       updatesData.push({
         exp: {
           link_id: link.id,
@@ -46,37 +63,17 @@ export async function updateOrInsertGeneralInfoToDeep({ deep, deviceLinkId, devi
           table: (typeof value) + 's'
         }
       })
-    } else {
-      if(typeof value !== 'boolean') {
-        insertsData.push({
-          type_id: typeLinkId,
-          [typeof value]: { data: { value: value } },
-          in: {
-            data: {
-              type_id: containTypeLinkId,
-              from_id: deviceLinkId,
-            },
+    } else if(!link) {
+      insertsData.push({
+        type_id: typeLinkId,
+        [typeof value]: { data: { value: value } },
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deviceLinkId,
           },
-        });
-      } else {
-        // TODO Use update when we will be able to update links (not only values)
-        deletesData.push({
-          type_id: typeLinkId,
-          from_id: deviceLinkId,
-        })
-        insertsData.push({
-          type_id: typeLinkId,
-          from_id: deviceLinkId,
-          to_id: value ? trueTypeLinkId : falseTypeLinkId,
-          in: {
-            data: {
-              type_id: containTypeLinkId,
-              from_id: deep.linkId,
-            },
-          },
-        })
-      }
-      
+        },
+      });
     }
   }
 

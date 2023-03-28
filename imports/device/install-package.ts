@@ -2,6 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 import { generateApolloClient } from '@deep-foundation/hasura/client';
 import * as dotenv from 'dotenv';
+import { MutationInputLink } from "@deep-foundation/deeplinks/imports/client_types";
 dotenv.config();
 
 async function installPackage() {
@@ -32,276 +33,380 @@ async function installPackage() {
   const stringTypeLinkId = await deep.id("@deep-foundation/core", "String");
   const numberTypeLinkId = await deep.id("@deep-foundation/core", "Number");
 
+await deep.select({
+  _by_item: {
+    
+  }
+})
   const { data: [{ id: packageLinkId }] } = await deep.insert({
     type_id: packageTypeLinkId,
     string: { data: { value: PACKAGE_NAME } },
-    in: { data: [
-      {
-        type_id: containTypeLinkId,
-        from_id: deep.linkId
-      },
-    ] },
-    out: { data: [
-      {
-        type_id: joinTypeLinkId,
-        to_id: await deep.id('deep', 'users', 'packages'),
-      },
-      {
-        type_id: joinTypeLinkId,
-        to_id: await deep.id('deep', 'admin'),
-      },
-    ] },
-});
+    in: {
+      data: [
+        {
+          type_id: containTypeLinkId,
+          from_id: deep.linkId
+        },
+      ]
+    },
+    out: {
+      data: [
+        {
+          type_id: joinTypeLinkId,
+          to_id: await deep.id('deep', 'users', 'packages'),
+        },
+        {
+          type_id: joinTypeLinkId,
+          to_id: await deep.id('deep', 'admin'),
+        },
+      ]
+    },
+  });
 
+  const reservedIds = await deep.reserve(1);
 
-  await deep.insert([
-    {
-      type_id: typeTypeLinkId,
-      in: { data: {
+  const deviceInsertData: MutationInputLink = {
+    id: reservedIds.pop(),
+    type_id: typeTypeLinkId,
+    in: {
+      data: {
         type_id: containTypeLinkId,
         from_id: packageLinkId,
         string: { data: { value: 'Device' } },
-      } },
+      }
     },
+  }
+
+  await deep.insert([
+    deviceInsertData,
     {
       type_id: typeTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'Uuid' } },
-      } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Uuid' } },
+        }
+      },
       out: {
         data: {
           type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId
+          to_id: stringTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'UuidValue' } },
+            }
+          },
         }
       }
     },
     {
       type_id: typeTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'Name' } },
-      } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Name' } },
+        }
+      },
       out: {
         data: {
           type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId
+          to_id: stringTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'NameValue' } },
+            }
+          },
         }
       }
     },
     {
       type_id: typeTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'Model' } },
-      } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Model' } },
+        }
+      },
       out: {
         data: {
           type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId
+          to_id: stringTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'ModelValue' } },
+            }
+          },
         }
       }
     },
     {
       type_id: typeTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'Platform' } },
-      } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Platform' } },
+        }
+      },
       out: {
         data: {
           type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId
+          to_id: stringTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'PlatformValue' } },
+            }
+          },
         }
       }
     },
     {
       type_id: typeTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'OperatingSystem' } },
-      } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'OperatingSystem' } },
+        }
+      },
       out: {
         data: {
           type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId
+          to_id: stringTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'OperatingSystemValue' } },
+            }
+          },
         }
       }
     },
     {
       type_id: typeTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'OsVersion' } },
-      } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'OsVersion' } },
+        }
+      },
       out: {
         data: {
           type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId
+          to_id: stringTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'OsVersionValue' } },
+            }
+          },
         }
       }
     },
     {
       type_id: typeTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'Manufacturer' } },
-      } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'Manufacturer' } },
+        }
+      },
       out: {
         data: {
           type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId
+          to_id: stringTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'ManufacturerValue' } },
+            }
+          },
         }
       }
     },
     {
       type_id: typeTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'IsVirtual' } },
-      } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'IsVirtual' } },
+        }
+      },
     },
     {
       type_id: typeTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'MemUsed' } },
-      } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'MemUsed' } },
+        }
+      },
       out: {
         data: {
           type_id: valueTypeLinkId,
           to_id: numberTypeLinkId
+          ,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'MemUsedValue' } },
+            }
+          },
         }
       }
     },
     {
       type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'RealDiskFree' } },
-      } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'RealDiskFree' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: numberTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'RealDiskFreeValue' } },
+            }
+          },
+        }
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'WebViewVersion' } },
+        }
+      },
+      out: {
+        data: {
+          type_id: valueTypeLinkId,
+          to_id: stringTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'WebViewVersionValue' } },
+            }
+          },
+        }
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'BatteryLevel' } },
+        }
+      },
       out: {
         data: {
           type_id: valueTypeLinkId,
           to_id: numberTypeLinkId
+          ,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'BatteryLevelValue' } },
+            }
+          },
         }
       }
     },
+
     {
       type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'WebViewVersion' } },
-      } },
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'IsCharging' } },
+        }
+      },
+    },
+
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'LanguageCode' } },
+        }
+      },
       out: {
         data: {
           type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId
+          to_id: stringTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'LanguageCodeValue' } },
+            }
+          },
         }
       }
     },
+
     {
       type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'BatteryLevel' } },
-      } },
-      out: {
+      in: {
         data: {
-          type_id: valueTypeLinkId,
-          to_id: numberTypeLinkId
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'LanguageTag' } },
         }
-      }
-    },
-  
-    {
-      type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'ChargingState' } },
-      } },
-    },
-  
-    {
-      type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'IsCharging' } },
-      } },
-    },
-  
-    {
-      type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'IsNotCharging' } },
-      } },
-    },
-  
-    {
-      type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'LanguageCode' } },
-      } },
+      },
       out: {
         data: {
           type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId
-        }
-      }
-    },
-  
-    {
-      type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
-      to_id: anyTypeLinkId,
-      in: { data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: 'LanguageTag' } },
-      } },
-      out: {
-        data: {
-          type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId
+          to_id: stringTypeLinkId,
+          in: {
+            data: {
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: 'LanguageTagValue' } },
+            }
+          },
         }
       }
     },
   ]);
 
-  
-  
+
+
 }
 
 installPackage();
