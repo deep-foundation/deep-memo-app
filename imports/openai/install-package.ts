@@ -126,6 +126,33 @@ export async function installPackage () {
         } },
       });
 
+      const { data: [{ id: modelTypeLinkId }] } = await deep.insert({
+        type_id: typeTypeLinkId,
+        from_id: userTypeLinkId,
+        to_id: conversationTypeLinkId,
+        in: {
+            data: {
+                type_id: containTypeLinkId,
+                from_id: packageLinkId,
+                string: { data: { value: "Model" } },
+            },
+            
+        },
+        out: {
+          data: {
+            type_id: typeValueLinkId,
+            to_id: typeStringLinkId,
+            in: {
+              data: {
+                from_id: packageLinkId,
+                type_id: containTypeLinkId,
+                string: { data: { value: 'ModelValue' } },
+              }
+            }
+          }
+        }
+    });
+
       await deep.insert({
         type_id: syncTextFileTypeLinkId,
         in: {
