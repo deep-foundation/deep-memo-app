@@ -3,8 +3,8 @@ import { Device } from "./device";
 import { PACKAGE_NAME } from "./package-name";
 
 export async function getDevice({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number}): Promise<Device> {
-  const nameTypeLinkId = await deep.id(PACKAGE_NAME, "Name");
-  const modelTypeLinkId = await deep.id(PACKAGE_NAME, "Model");
+  const nameTypeLinkId = deep.idLocal(PACKAGE_NAME, "Name");
+  const modelTypeLinkId = deep.idLocal(PACKAGE_NAME, "Model");
 
   const {data: deviceTreeLinksUpToParentDevice} = await deep.select({
     up: {

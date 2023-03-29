@@ -1,138 +1,92 @@
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { PACKAGE_NAME } from './package-name';
 import { Device, DeviceInfo } from '@capacitor/device';
+import { BoolExpLink, MutationInputLink, MutationInputValue } from '@deep-foundation/deeplinks/imports/client_types';
+import _ from 'lodash';
 
-export async function insertGeneralInfoToDeep({deep, deviceLinkId, deviceGeneralInfo}: {deep: DeepClient, deviceLinkId: number, deviceGeneralInfo: DeviceInfo}) {
-	if(!deviceLinkId) {
-		throw new Error("deviceLinkId must not be 0")
-	}
+export async function updateOrInsertGeneralInfoToDeep({ deep, deviceLinkId, deviceGeneralInfo }: { deep: DeepClient, deviceLinkId: number, deviceGeneralInfo: DeviceInfo }) {
+  if (!deviceLinkId) {
+    throw new Error("deviceLinkId must not be 0")
+  }
 
-	const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
-	const nameTypeLinkId = await deep.id(PACKAGE_NAME, 'Name');
-	const modelTypeLinkId = await deep.id(PACKAGE_NAME, 'Model');
-	const platformTypeLinkId = await deep.id(PACKAGE_NAME, 'Platform');
-	const operatingSystemTypeLinkId = await deep.id(
-		PACKAGE_NAME,
-		'Operating System'
-	);
-	const osVersionTypeLinkId = await deep.id(PACKAGE_NAME, 'OS Version');
-	const manufacturerTypeLinkId = await deep.id(PACKAGE_NAME, 'Manufacturer');
-	const isVirtualTypeLinkId = await deep.id(PACKAGE_NAME, 'IsVirtual');
-	const memUsedTypeLinkId = await deep.id(PACKAGE_NAME, 'MemUsed');
-	const realDiskFreeTypeLinkId = await deep.id(PACKAGE_NAME, 'RealDiskFree');
-	const webViewVersionTypeLinkId = await deep.id(
-		PACKAGE_NAME,
-		'WebViewVersion'
-	);
+  const containTypeLinkId = deep.idLocal('@deep-foundation/core', 'Contain');
+  const falseTypeLinkId = deep.idLocal('@deep-foundation/boolean', 'False');
+  const trueTypeLinkId = deep.idLocal('@deep-foundation/boolean', 'True');
+  const { data: deviceTreeLinksDownToParentDevice } = await deep.select({
+    up: {
+      tree_id: {
+        _id: [PACKAGE_NAME, "DeviceTree"]
+      },
+      parent_id: { _eq: deviceLinkId }
+    }
+  });
 
-		await deep.insert([
-			deviceGeneralInfo.name && {
-				type_id: nameTypeLinkId,
-				string: { data: { value: deviceGeneralInfo.name } },
-				in: {
-					data: {
-						type_id: containTypeLinkId,
-						from_id: deviceLinkId,
-					},
-				},
-			},
-		
-			{
-				type_id: modelTypeLinkId,
-				string: { data: { value: deviceGeneralInfo.model } },
-				in: {
-					data: {
-						type_id: containTypeLinkId,
-						from_id: deviceLinkId,
-					},
-				},
-			},
-		
-			{
-				type_id: platformTypeLinkId,
-				string: { data: { value: deviceGeneralInfo.platform } },
-				in: {
-					data: {
-						type_id: containTypeLinkId,
-						from_id: deviceLinkId,
-					},
-				},
-			},
-		
-			{
-				type_id: operatingSystemTypeLinkId,
-				string: { data: { value: deviceGeneralInfo.operatingSystem } },
-				in: {
-					data: {
-						type_id: containTypeLinkId,
-						from_id: deviceLinkId,
-					},
-				},
-			},
-		
-			{
-				type_id: osVersionTypeLinkId,
-				string: { data: { value: deviceGeneralInfo.osVersion } },
-				in: {
-					data: {
-						type_id: containTypeLinkId,
-						from_id: deviceLinkId,
-					},
-				},
-			},
-		
-			{
-				type_id: manufacturerTypeLinkId,
-				string: { data: { value: deviceGeneralInfo.manufacturer } },
-				in: {
-					data: {
-						type_id: containTypeLinkId,
-						from_id: deviceLinkId,
-					},
-				},
-			},
-		
-			deviceGeneralInfo.isVirtual && {
-				type_id: isVirtualTypeLinkId,
-				in: {
-					data: {
-						type_id: containTypeLinkId,
-						from_id: deviceLinkId,
-					},
-				},
-			},
-		
-			deviceGeneralInfo.memUsed && {
-				type_id: memUsedTypeLinkId,
-				number: { data: { value: deviceGeneralInfo.memUsed } },
-				in: {
-					data: {
-						type_id: containTypeLinkId,
-						from_id: deviceLinkId,
-					},
-				},
-			},
-		
-			deviceGeneralInfo.realDiskFree && {
-				type_id: realDiskFreeTypeLinkId,
-				number: { data: { value: deviceGeneralInfo.realDiskFree } },
-				in: {
-					data: {
-						type_id: containTypeLinkId,
-						from_id: deviceLinkId,
-					},
-				},
-			},
-		
-			{
-				type_id: webViewVersionTypeLinkId,
-				string: { data: { value: deviceGeneralInfo.webViewVersion } },
-				in: {
-					data: {
-						type_id: containTypeLinkId,
-						from_id: deviceLinkId,
-					},
-				},
-			},
-		])
+  const updatesData: {
+    exp: any,
+    value: any,
+    options: any
+  }[] = [];
+
+  const deletesData: BoolExpLink[] = [];
+  const insertsData: MutationInputLink[] = [];
+
+  for (const [key, value] of Object.entries(deviceGeneralInfo)) {
+    const typeLinkId = deep.idLocal(PACKAGE_NAME, _.chain(key).camelCase().upperFirst().value())
+    const link = deviceTreeLinksDownToParentDevice.find(link => link.type_id ===  typeLinkId);
+    // Update instead of delete+insert when deep add this feature
+    if(typeof value === 'boolean') {
+      deletesData.push({
+        type_id: typeLinkId,
+        from_id: deviceLinkId,
+      })
+      insertsData.push({
+        type_id: typeLinkId,
+        from_id: deviceLinkId,
+        to_id: value ? trueTypeLinkId : falseTypeLinkId,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deep.linkId,
+          },
+        },
+      })
+    } else if(link) {
+      updatesData.push({
+        exp: {
+          link_id: link.id,
+        },
+        value: {
+          value: value,
+        },
+        options: {
+          // @ts-ignore
+          table: (typeof value) + 's'
+        }
+      })
+    } else if(!link) {
+      insertsData.push({
+        type_id: typeLinkId,
+        [typeof value]: { data: { value: value } },
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: deviceLinkId,
+          },
+        },
+      });
+    }
+  }
+
+  await deep.delete({
+    _or: deletesData
+  });
+  await deep.insert(insertsData);
+  // Update in one query when it will be available
+  for (const updateData of updatesData) {
+    await deep.update(
+      updateData.exp,
+      updateData.value,
+      updateData.options
+    )
+  }
 }

@@ -8,8 +8,8 @@ export async function insertLanguageTagToDeep({deep, deviceLinkId, deviceLanguag
 		throw new Error("deviceLinkId must not be 0")
 	}
 
-  const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
-  const languageTagTypeLinkId = await deep.id(PACKAGE_NAME, 'LanguageTag');
+  const containTypeLinkId = deep.idLocal('@deep-foundation/core', 'Contain');
+  const languageTagTypeLinkId = deep.idLocal(PACKAGE_NAME, 'LanguageTag');
 
   await deep.insert({
 		type_id: languageTagTypeLinkId,
