@@ -118,9 +118,6 @@ function Page() {
         <Link href="/network">network</Link>
       </div>
       <div>
-        <Link href="/network">network</Link>
-      </div>
-      <div>
         <Link replace href="/browser-extension">browser-extension</Link>
       </div>
     </div>

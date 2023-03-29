@@ -2,6 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { generateApolloClient } from '@deep-foundation/hasura/client';
 import { getIsPackageInstalled } from "../get-is-package-installed";
 import * as dotenv from 'dotenv';
+import { getIsLinkExist } from "../get-is-link-exist";
 dotenv.config();
 
 
@@ -286,7 +287,7 @@ export default async function installPackage(deviceLinkId?) {
     ]);
     
     if (deviceLinkId) {
-      if (!await deep.id(deviceLinkId, "AudioRecords")) {
+      if (!await getIsLinkExist({ deep, packageName: "@deep-foundation/audiorecord", linkName: "AudioRecords" })) {
         const { data: [{ id: AudioRecordsLinkId }] } = await deep.insert({
           type_id: await deep.id(PACKAGE_NAME, "AudioRecords"),
           in: {

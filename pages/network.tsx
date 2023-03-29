@@ -34,6 +34,7 @@ function Page() {
   }
 
   return <Stack>
+    <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
     <Button onClick={async () => { await installPackage(deviceLinkId) }}>
       <Text>INITIALIZE PACKAGE</Text>
     </Button>

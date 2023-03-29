@@ -95,36 +95,61 @@ export default async function installPackage(deviceLinkId?) {
             ],
           },
         }]
-      }
-    })
-
-    await deep.insert(PACKAGE_TYPES.map((TYPE) => ({
-      type_id: typeTypeLinkId,
-      from_id: networkTypeLinkId,
-      to_id: networkTypeLinkId,
-      in: {
-        data: [{
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: TYPE } },
-        },
-        {
-          type_id: treeIncludeNodeTypeLinkId,
-          from_id: networkTreeId,
+      },
+      out: {
+        data: PACKAGE_TYPES.map((TYPE) => ({
+          type_id: typeTypeLinkId,
+          to_id: anyTypeLinkId,
           in: {
-            data: [
-              {
-                type_id: containTypeLinkId,
-                from_id: packageLinkId,
+            data: [{
+              type_id: containTypeLinkId,
+              from_id: packageLinkId,
+              string: { data: { value: TYPE } },
+            },
+            {
+              type_id: treeIncludeNodeTypeLinkId,
+              from_id: networkTreeId,
+              in: {
+                data: [
+                  {
+                    type_id: containTypeLinkId,
+                    from_id: packageLinkId,
+                  },
+                ],
               },
-            ],
-          },
-        }]
+            }]
+          }
+        }))
       }
-    })));
+    });
+
+    // await deep.insert(PACKAGE_TYPES.map((TYPE) => ({
+    //   type_id: typeTypeLinkId,
+    //   from_id: networkTypeLinkId,
+    //   to_id: anyTypeLinkId,
+    //   in: {
+    //     data: [{
+    //       type_id: containTypeLinkId,
+    //       from_id: packageLinkId,
+    //       string: { data: { value: TYPE } },
+    //     },
+    //     {
+    //       type_id: treeIncludeNodeTypeLinkId,
+    //       from_id: networkTreeId,
+    //       in: {
+    //         data: [
+    //           {
+    //             type_id: containTypeLinkId,
+    //             from_id: packageLinkId,
+    //           },
+    //         ],
+    //       },
+    //     }]
+    //   }
+    // })));
 
     if (deviceLinkId) {
-      if (!await getIsLinkExist({deep, linkName: "Network"})) {
+      if (!await getIsLinkExist({ deep, packageName: "@deep-foundation/network", linkName: "Network" })) {
         const { data: [{ id: networkLinkId }] } = await deep.insert({
           type_id: await deep.id(PACKAGE_NAME, "Network"),
           in: {

@@ -55,11 +55,11 @@ function Page() {
     const { data } = await deep.select({
       type_id: base64TypeLinkId,
       in: {
-          type_id: containTypeLinkId,
-          from: {
-              type_id: photoTypeLinkId
-          }
+        type_id: containTypeLinkId,
+        from: {
+          type_id: photoTypeLinkId
         }
+      }
     },);
     setImages(data);
   }
@@ -80,6 +80,7 @@ function Page() {
 
   return <>
     <Stack>
+      <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
       <Button onClick={async () => await installPackage(deviceLinkId)}>
         <Text>INITIALIZE PACKAGE</Text>
       </Button>

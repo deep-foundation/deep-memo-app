@@ -28,7 +28,8 @@ function Page({credentials}) {
 
 
   return <Stack>
-    <Button onClick={async () => await installPackage(deep)}>
+    <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
+    <Button onClick={async () => await installPackage()}>
       INITIALIZE PACKAGE
     </Button>
     <Button onClick={async () => await insertSoundHandler(deep)}>

@@ -82,6 +82,7 @@ export function Extension() {
   return (
     <>
       <Stack>
+        <Text suppressHydrationWarning>Device link id: {deviceLinkId ?? " "}</Text>
         <Button onClick={async () => await installPackage(deviceLinkId)} >INITIALIZE PACKAGE</Button>
         <Button onClick={async () => await createBrowserExtensionLink(deep)} >CREATE NEW CONTAINER LINK</Button>
         <Button onClick={async () => await getHistory()} >UPLOAD HISTORY</Button>
