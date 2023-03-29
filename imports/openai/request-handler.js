@@ -7,6 +7,7 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   const replyTypeLinkId = await deep.id('@flakeed/messaging', "Reply");
   const authorTypeLinkId = await deep.id('@flakeed/messaging', "Author");
   const chatgptTypeLinkId = await deep.id(PACKAGE_NAME, "ChatGPT");
+  const modelTypeLinkId = await deep.id(PACKAGE_NAME, "Model");
   const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain");
 
   const { data: [messageLink = undefined] = [] } = await deep.select({
@@ -39,14 +40,49 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   if (!apiKeyLink.value?.value) {
     throw new Error(`##${apiKeyLink.id} must have a value`);
   }
+
+  const { data: [selectedModelLink] } = await deep.select({
+    type_id: modelTypeLinkId,
+    in: {
+      type_id: containTypeLinkId,
+      from_id: triggeredByLinkId,
+    },
+  });
+
+  if (!selectedModelLink) {
+    throw new Error(`A link with type ##${modelTypeLinkId} is not found`);
+  }
+
+  const updatedModel = selectedModelLink.value.value;
+
+  const { data: [{ id: currentModelLinkId }] } = await deep.insert({
+    type_id: modelTypeLinkId,
+    string: { data: { value: updatedModel } },
+    in: {
+        data: {
+            type_id: containTypeLinkId,
+            from_id: triggeredByLinkId,
+        },
+    },
+  });
+
+  if (currentModelLinkId) {
+    updatedModel = currentModelLinkId.value.value;
+    await deep.update(selectedModelLink.id, {
+      string: { data: { value: updatedModel } },
+    });
+  }
+  
   const apiKey = apiKeyLink.value.value;
   const configuration = new Configuration({
     apiKey: apiKey,
   });
   const openai = new OpenAIApi(configuration);
 
+  const model=updatedModel.value.value
+
   const response = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
+    model: model,
     messages: [{ role: "user", content: message }],
   });
 
