@@ -10,6 +10,7 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain");
   const modelTypeLinkId = await deep.id(PACKAGE_NAME, "Model");
   const usesModelTypeLinkId = await deep.id(PACKAGE_NAME, "UsesModel");
+  const conversationTypeLinkId = await deep.id(PACKAGE_NAME, "Conversation");
 
   const { data: [messageLink = undefined] = [] } = await deep.select({
     id: replyLinkId.from_id,
@@ -51,13 +52,13 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
     type_id: modelTypeLinkId,
     in: {
       type_id: usesModelTypeLinkId,
-      from_id: triggeredByLinkId,
+      from_id: replyLinkId.to_id,
     },
   });
 
-  if (!linkedModel) {
-    throw new Error(`A link with type ##${modelTypeLinkId} is not found`);
-  }
+  // if (!linkedModel) {
+  //   throw new Error(`A link with type ##${modelTypeLinkId} is not found`);
+  // }
 
   if (!linkedModel.value?.value) {
     throw new Error(`##${linkedModel.id} must have a value`);
