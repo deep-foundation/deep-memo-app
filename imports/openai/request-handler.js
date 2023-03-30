@@ -7,8 +7,9 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   const replyTypeLinkId = await deep.id('@flakeed/messaging', "Reply");
   const authorTypeLinkId = await deep.id('@flakeed/messaging', "Author");
   const chatgptTypeLinkId = await deep.id(PACKAGE_NAME, "ChatGPT");
-  const modelTypeLinkId = await deep.id(PACKAGE_NAME, "Model");
   const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain");
+  const modelTypeLinkId = await deep.id(PACKAGE_NAME, "Model");
+  const usesModelTypeLinkId = await deep.id(PACKAGE_NAME, "UsesModel");
 
   const { data: [messageLink = undefined] = [] } = await deep.select({
     id: replyLinkId.from_id,
@@ -40,46 +41,29 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   if (!apiKeyLink.value?.value) {
     throw new Error(`##${apiKeyLink.id} must have a value`);
   }
-
-  const { data: [selectedModelLink] } = await deep.select({
-    type_id: modelTypeLinkId,
-    in: {
-      type_id: containTypeLinkId,
-      from_id: triggeredByLinkId,
-    },
-  });
-
-  if (!selectedModelLink) {
-    throw new Error(`A link with type ##${modelTypeLinkId} is not found`);
-  }
-
-  const updatedModel = selectedModelLink.value.value;
-
-  const { data: [{ id: currentModelLinkId }] } = await deep.insert({
-    type_id: modelTypeLinkId,
-    string: { data: { value: updatedModel } },
-    in: {
-        data: {
-            type_id: containTypeLinkId,
-            from_id: triggeredByLinkId,
-        },
-    },
-  });
-
-  if (currentModelLinkId) {
-    updatedModel = currentModelLinkId.value.value;
-    await deep.update(selectedModelLink.id, {
-      string: { data: { value: updatedModel } },
-    });
-  }
-  
   const apiKey = apiKeyLink.value.value;
   const configuration = new Configuration({
     apiKey: apiKey,
   });
   const openai = new OpenAIApi(configuration);
 
-  const model=updatedModel.value.value
+  const { data: [linkedModel] } = await deep.select({
+    type_id: modelTypeLinkId,
+    in: {
+      type_id: usesModelTypeLinkId,
+      from_id: triggeredByLinkId,
+    },
+  });
+
+  if (!linkedModel) {
+    throw new Error(`A link with type ##${modelTypeLinkId} is not found`);
+  }
+
+  if (!linkedModel.value?.value) {
+    throw new Error(`##${linkedModel.id} must have a value`);
+  }
+
+  const model = linkedModel.value.value;
 
   const response = await openai.createChatCompletion({
     model: model,
