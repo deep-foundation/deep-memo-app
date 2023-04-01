@@ -47,15 +47,16 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
     apiKey: apiKey,
   });
   const openai = new OpenAIApi(configuration);
-let model;
 
-const { data: [linkedModel] } = await deep.select({
-  type_id: modelTypeLinkId,
-  in: {
-    type_id: usesModelTypeLinkId,
-    from_id: replyLinkId.to_id,
-  },
-});
+  let model;
+
+  const { data: [linkedModel] } = await deep.select({
+    type_id: modelTypeLinkId,
+    in: {
+      type_id: usesModelTypeLinkId,
+      from_id: replyLinkId.to_id,
+    },
+  });
 
   if (linkedModel && linkedModel.value?.value) {
     model = linkedModel.value.value;
@@ -82,6 +83,7 @@ const { data: [linkedModel] } = await deep.select({
   if (!model) {
     throw new Error(`A valid model value was not found in either linkedModel or userLinkedModel`);
   }
+  
   const response = await openai.createChatCompletion({
     model: model,
     messages: [{ role: "user", content: message }],
