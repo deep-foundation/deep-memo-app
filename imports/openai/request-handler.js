@@ -83,10 +83,43 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   if (!model) {
     throw new Error(`A valid model value was not found in either linkedModel or userLinkedModel`);
   }
-  
+
+  const { data: [assistantMessageSelect] } = await deep.select({
+    type_id: messageTypeLinkId,
+    in: {
+      type_id: authorTypeLinkId,
+      from_id: chatgptTypeLinkId,
+    },
+  });
+
+  if (!assistantMessageSelect.value?.value) {
+    throw new Error(`##${assistantMessageSelect.id} must have a value`);
+  }
+
+  assistantMessage=assistantMessageSelect.value.value;
+
+  const { data: [гuserMessageSelect] } = await deep.select({
+    type_id: messageTypeLinkId,
+    in: {
+      type_id: messageTypeLinkId,
+      from_id: triggeredByLinkId.from_id,
+    },
+  });
+
+  if (!userMessageSelect.value?.value) {
+    throw new Error(`##${userMessageSelect.id} must have a value`);
+  }
+
+  userMessage=userMessageSelect.value.value;
+
+
   const response = await openai.createChatCompletion({
     model: model,
-    messages: [{ role: "user", content: message }],
+    messages: [{ 
+      role: "user", content: userMessage,
+      role: "assistant", content: assistantMessage, 
+      role: "user", content: message
+    }],
   });
 
   const { data: [{ id: chatgptMessageLinkId }] } = await deep.insert({
