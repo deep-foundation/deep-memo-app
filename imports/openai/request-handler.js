@@ -47,25 +47,41 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
     apiKey: apiKey,
   });
   const openai = new OpenAIApi(configuration);
+let model;
 
-  const { data: [linkedModel] } = await deep.select({
-    type_id: modelTypeLinkId,
-    in: {
-      type_id: usesModelTypeLinkId,
-      from_id: replyLinkId.to_id,
-    },
-  });
+const { data: [linkedModel] } = await deep.select({
+  type_id: modelTypeLinkId,
+  in: {
+    type_id: usesModelTypeLinkId,
+    from_id: replyLinkId.to_id,
+  },
+});
 
-  // if (!linkedModel) {
-  //   throw new Error(`A link with type ##${modelTypeLinkId} is not found`);
-  // }
-
-  if (!linkedModel.value?.value) {
-    throw new Error(`##${linkedModel.id} must have a value`);
+  if (linkedModel && linkedModel.value?.value) {
+    model = linkedModel.value.value;
+  } else {
+    const { data: [userLinkedModel] } = await deep.select({
+      type_id: modelTypeLinkId,
+      in: {
+        type_id: usesModelTypeLinkId,
+        from_id: await deep.id('@deep-foundation/core', "User"),
+      },
+    });
+  
+    if (!userLinkedModel) {
+      throw new Error(`A link with type ##${userLinkedModel} is not found`);
+    }
+  
+    if (!userLinkedModel.value?.value) {
+      throw new Error(`##${userLinkedModel.id} must have a value`);
+    } else {
+      model = userLinkedModel.value.value;
+    }
   }
-
-  const model = linkedModel.value.value;
-
+  
+  if (!model) {
+    throw new Error(`A valid model value was not found in either linkedModel or userLinkedModel`);
+  }
   const response = await openai.createChatCompletion({
     model: model,
     messages: [{ role: "user", content: message }],
