@@ -152,7 +152,7 @@ export async function installPackage () {
 
     const { data: [{ id: usesModelTypeLinkId }] } = await deep.insert({
       type_id: typeTypeLinkId,
-      from_id: conversationTypeLinkId,
+      from_id: anyTypeLinkId,
       to_id: modelTypeLinkId,
       in: {
           data: {
@@ -165,13 +165,13 @@ export async function installPackage () {
 
   const { data: [{ id: gpt_3_5_turbo }] } = await deep.insert({
     type_id: modelTypeLinkId,
-    string: { data: { value: 'GPT 3.5 Turbo' } },
+    string: { data: { value: 'gpt-3.5-turbo' } },
     in: {
       data: [
         {
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: 'gpt-3.5-turbo' } },
+          string: { data: { value: 'GPT 3.5 Turbo' } },
         },
       ],
     },
@@ -179,13 +179,13 @@ export async function installPackage () {
   
   const { data: [{ id: gpt_3_5_turbo_0301 }] } = await deep.insert({
     type_id: modelTypeLinkId,
-    string: { data: { value: 'GPT 3.5 TURBO 0301' } },
+    string: { data: { value: 'gpt-3.5-turbo-0301' } },
     in: {
       data: [
         {
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: 'gpt-3.5-turbo-0301' } },
+          string: { data: { value: 'GPT 3.5 TURBO 0301' } },
         },
       ],
     },
