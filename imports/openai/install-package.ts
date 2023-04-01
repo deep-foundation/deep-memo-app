@@ -33,6 +33,13 @@ export async function installPackage () {
     const joinTypeLinkId = await deep.id('@deep-foundation/core', "Join");
     const typeStringLinkId = await deep.id('@deep-foundation/core', "String");
     const typeValueLinkId = await deep.id('@deep-foundation/core', "Value");
+    const messageTypeLinkId = await deep.id('@flakeed/messaging', "Message");
+    const replyTypeLinkId = await deep.id('@flakeed/messaging', "Reply");
+    const treeIncludeNodeTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeNode");
+    const treeIncludeDownTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeDown");
+    const treeTypeLinkId = await deep.id('@deep-foundation/core', "Tree");
+
+
 
     const { data: [{ id: packageLinkId }] } = await deep.insert({
         type_id: packageTypeLinkId,
@@ -190,7 +197,24 @@ export async function installPackage () {
       ],
     },
   });
-
+  
+  const { data: [{ id: chatGPTTree }] } = await deep.insert({
+    type_id: treeTypeLinkId,
+    out: { data: [
+      {
+        type_id: treeIncludeNodeTypeLinkId,
+        to_id: conversationTypeLinkId
+      },
+      {
+        type_id: treeIncludeNodeTypeLinkId,
+        to_id: messageTypeLinkId
+      },
+      {
+        type_id: treeIncludeDownTypeLinkId,
+        to_id: replyTypeLinkId
+      },
+    ] },
+  });
       await deep.insert({
         type_id: syncTextFileTypeLinkId,
         in: {
