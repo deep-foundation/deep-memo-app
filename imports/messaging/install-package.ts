@@ -72,7 +72,7 @@ export async function installPackage () {
       } },
     });
 
-    const { data: [{ id: reeplyTypeLinkId }] } = await deep.insert({
+    const { data: [{ id: replyTypeLinkId }] } = await deep.insert({
       type_id: typeTypeLinkId,
       from_id: messageTypeLinkId,
       to_id: anyTypeLinkId,
@@ -103,7 +103,7 @@ export async function installPackage () {
         },
         {
           type_id: treeIncludeUpTypeLinkId,
-          to_id: reeplyTypeLinkId
+          to_id: replyTypeLinkId
         },
       ] },
     });
