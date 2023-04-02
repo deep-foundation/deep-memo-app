@@ -1,4 +1,5 @@
 async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => {
+  let requestCounter = 0;
   const PACKAGE_NAME = `@flakeed/chatgpt`;
   const { Configuration, OpenAIApi } = require("openai");
   const openAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, "OpenAiApiKey");
@@ -11,6 +12,9 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   const modelTypeLinkId = await deep.id(PACKAGE_NAME, "Model");
   const usesModelTypeLinkId = await deep.id(PACKAGE_NAME, "UsesModel");
   const conversationTypeLinkId = await deep.id(PACKAGE_NAME, "Conversation");
+  const treeIncludeNodeTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeNode");
+    const treeIncludeDownTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeDown");
+    const treeTypeLinkId = await deep.id('@deep-foundation/core', "Tree");
 
   const { data: [messageLink = undefined] = [] } = await deep.select({
     id: replyLinkId.from_id,
@@ -83,40 +87,27 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   if (!model) {
     throw new Error(`A valid model value was not found in either linkedModel or userLinkedModel`);
   }
+let assistantMessage;
 
-  const { data: [assistantMessageSelect] } = await deep.select({
-    type_id: messageTypeLinkId,
-    in: {
-      type_id: authorTypeLinkId,
-      from_id: chatgptTypeLinkId,
-    },
-  });
+  if (requestCounter > 1) {
+    const { data: [assistantMessageSelect] } = await deep.select({
+      type_id: treeTypeLinkId,
+      out : {
+        type_id: treeIncludeNodeTypeLinkId,
+        to_id:messageTypeLinkId,
+      },
+    });
+  
+    if (!assistantMessageSelect.value?.value) {
+      throw new Error(`##${assistantMessageSelect.id} must have a value`);
+    }
 
-  if (!assistantMessageSelect.value?.value) {
-    throw new Error(`##${assistantMessageSelect.id} must have a value`);
+    assistantMessage=assistantMessageSelect.value.value;
   }
-
-  assistantMessage=assistantMessageSelect.value.value;
-
-  const { data: [гuserMessageSelect] } = await deep.select({
-    type_id: messageTypeLinkId,
-    in: {
-      type_id: messageTypeLinkId,
-      from_id: triggeredByLinkId.from_id,
-    },
-  });
-
-  if (!userMessageSelect.value?.value) {
-    throw new Error(`##${userMessageSelect.id} must have a value`);
-  }
-
-  userMessage=userMessageSelect.value.value;
-
 
   const response = await openai.createChatCompletion({
     model: model,
-    messages: [{ 
-      role: "user", content: userMessage,
+    messages: [{
       role: "assistant", content: assistantMessage, 
       role: "user", content: message
     }],
@@ -150,6 +141,7 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
       },
     },
   });
+  requestCounter++;
 
   return response.data;
 };
