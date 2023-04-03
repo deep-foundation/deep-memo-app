@@ -94,21 +94,21 @@ export async function installPackage () {
       } },
     });
 
-const { data: [{ id: conversationTree }] } = await deep.insert({
+const { data: [{ id: messagingTree }] } = await deep.insert({
       type_id: treeTypeLinkId,
       in: { data: {
         type_id: containTypeLinkId,
         from_id: packageLinkId,
-        string: { data: { value: 'ConversationTree' } },
+        string: { data: { value: 'MessagingTree' } },
       } },
       out: { data: [
         {
           type_id: treeIncludeNodeTypeLinkId,
-          to_id: messageTypeLinkId,
+          to_id: anyTypeLinkId,
           in: { data: {
             type_id: containTypeLinkId,
             from_id: packageLinkId,
-            string: { data: { value: ' Message ConversationTree' } },
+            string: { data: { value: 'messagingTreeAny' } },
           } },
         },
         {
@@ -117,7 +117,7 @@ const { data: [{ id: conversationTree }] } = await deep.insert({
           in: { data: {
             type_id: containTypeLinkId,
             from_id: packageLinkId,
-            string: { data: { value: 'Reply ConversationTree' } },
+            string: { data: { value: 'messagingTreeReply' } },
           } },
         },
       ] },
