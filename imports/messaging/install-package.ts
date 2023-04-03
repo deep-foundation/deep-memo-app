@@ -105,12 +105,20 @@ const { data: [{ id: conversationTree }] } = await deep.insert({
         {
           type_id: treeIncludeNodeTypeLinkId,
           to_id: messageTypeLinkId,
-          string: { data: { value: 'Message ConversationTree' } },
+          in: { data: {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: ' Message ConversationTree' } },
+          } },
         },
         {
           type_id: treeIncludeUpTypeLinkId,
           to_id: replyTypeLinkId,
-          string: { data: { value: 'Reply ConversationTree' } },
+          in: { data: {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'Reply ConversationTree' } },
+          } },
         },
       ] },
     });
