@@ -1,6 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 const { generateApolloClient } = require('@deep-foundation/hasura/client');
-const PACKAGE_NAME=`@flakeed/messaging`
+const PACKAGE_NAME="@flakeed/messaging";
 require('dotenv').config();
 export async function installPackage () {
     const apolloClient = generateApolloClient({
@@ -94,16 +94,23 @@ export async function installPackage () {
       } },
     });
 
-    const { data: [{ id: conversationTree }] } = await deep.insert({
+const { data: [{ id: conversationTree }] } = await deep.insert({
       type_id: treeTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'ConversationTree' } },
+      } },
       out: { data: [
         {
           type_id: treeIncludeNodeTypeLinkId,
-          to_id: messageTypeLinkId
+          to_id: messageTypeLinkId,
+          string: { data: { value: 'Message ConversationTree' } },
         },
         {
           type_id: treeIncludeUpTypeLinkId,
-          to_id: replyTypeLinkId
+          to_id: replyTypeLinkId,
+          string: { data: { value: 'Reply ConversationTree' } },
         },
       ] },
     });
