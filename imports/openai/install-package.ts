@@ -33,11 +33,8 @@ export async function installPackage () {
     const joinTypeLinkId = await deep.id('@deep-foundation/core', "Join");
     const typeStringLinkId = await deep.id('@deep-foundation/core', "String");
     const typeValueLinkId = await deep.id('@deep-foundation/core', "Value");
-    const messageTypeLinkId = await deep.id('@flakeed/messaging', "Message");
-    const replyTypeLinkId = await deep.id('@flakeed/messaging', "Reply");
     const treeIncludeNodeTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeNode");
-    const conversationTree = await deep.id('@flakeed/messaging', "ConversationTree");
-    const treeIncludeUpTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeUp");
+    const messagingTree = await deep.id('@flakeed/messaging', "MessagingTree");
 
 
 
@@ -199,55 +196,18 @@ const { data: [{ id: gpt_3_5_turbo }] } = await deep.insert({
       ],
     },
   });
-  
-  const { data: [{ id: messageLinkId }] } = await deep.insert({
-    type_id: messageTypeLinkId,
-    in: {
-      data: {
-        type_id: await deep.id('@deep-foundation/core', "Contain"),
-        from_id: deep.linkId,
-      },
-    },
-  });
 
-  const { data: [{ id: replyLinkId }] } = await deep.insert({
-    type_id: replyTypeLinkId,
-    from_id: messageLinkId,
+  const { data: [{ id: conversationTree }] } = await deep.insert({
+    from_id: messagingTree,
+    type_id: treeIncludeNodeTypeLinkId,
     to_id: conversationTypeLinkId,
-    in: {
-      data: {
-        type_id: await deep.id('@deep-foundation/core', "Contain"),
-        from_id: deep.linkId,
-      },
-    },
-  });
-
-  const { data: [{ id: chatGPTTree }] } = await deep.insert({
-    type_id: conversationTree,
     in: { data: {
       type_id: containTypeLinkId,
       from_id: packageLinkId,
-      string: { data: { value: 'ConversationTree' } },
+      string: { data: { value: 'messagingTreeConversation' } },
     } },
-    out: { data: [
-      {
-        type_id: treeIncludeNodeTypeLinkId,
-        to_id: conversationTypeLinkId,
-        string: { data: { value: 'ConversationTree' } },
-      },
-      {
-        type_id: treeIncludeNodeTypeLinkId,
-        to_id: messageLinkId,
-        string: { data: { value: ' Message ConversationTree' } },
-      },
-      {
-        type_id: treeIncludeUpTypeLinkId,
-        to_id: replyLinkId,
-        string: { data: { value: 'Reply ConversationTree' } },
-      },
-    ] },
   });
-  
+
       await deep.insert({
         type_id: syncTextFileTypeLinkId,
         in: {
