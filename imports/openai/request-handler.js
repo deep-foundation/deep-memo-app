@@ -58,35 +58,34 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
     type_id: modelTypeLinkId,
     in: {
       type_id: usesModelTypeLinkId,
-      from_id: replyLinkId.to_id,
+      from_id: replyLinkId.to_id[0],
     },
   });
 
-  if (linkedModel && linkedModel.value?.value) {
+  const { data: [userLinkedModel] } = await deep.select({
+    type_id: modelTypeLinkId,
+    in: {
+      type_id: usesModelTypeLinkId,
+      from_id: triggeredByLinkId,
+    },
+  });
+
+  if (linkedModel && linkedModel.value?.value && userLinkedModel && userLinkedModel.value?.value) {
     model = linkedModel.value.value;
   } else {
-    const { data: [userLinkedModel] } = await deep.select({
-      type_id: modelTypeLinkId,
-      in: {
-        type_id: usesModelTypeLinkId,
-        from_id: await deep.id('@deep-foundation/core', "User"),
-      },
-    });
-  
     if (!userLinkedModel) {
       throw new Error(`A link with type ##${userLinkedModel} is not found`);
     }
-  
     if (!userLinkedModel.value?.value) {
       throw new Error(`##${userLinkedModel.id} must have a value`);
     } else {
       model = userLinkedModel.value.value;
     }
   }
-  
   if (!model) {
     throw new Error(`A valid model value was not found in either linkedModel or userLinkedModel`);
   }
+
 let assistantMessage;
 
   if (requestCounter > 1) {
