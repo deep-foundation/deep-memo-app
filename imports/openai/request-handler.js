@@ -70,7 +70,7 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
     },
   });
 
-  if (linkedModel && linkedModel.value?.value && userLinkedModel && userLinkedModel.value?.value) {
+  if (linkedModel && linkedModel.value?.value && userLinkedModel && userLinkedModel.value?.value || linkedModel && linkedModel.value?.value) {
     model = linkedModel.value.value;
   } else {
     if (!userLinkedModel) {
@@ -85,32 +85,48 @@ async ({ data: { newLink: replyLinkId, triggeredByLinkId }, deep, require }) => 
   if (!model) {
     throw new Error(`A valid model value was not found in either linkedModel or userLinkedModel`);
   }
-
+  let response;
 let assistantMessage;
-
+let messagesForModel;
   if (requestCounter > 1) {
-    const { data: [assistantMessageSelect] } = await deep.select({
-      type_id: treeTypeLinkId,
-      out : {
-        type_id: treeIncludeNodeTypeLinkId,
-        to_id:messageTypeLinkId,
+    const { data: messages } = await deep.select({
+      up: {
+        tree_id: {
+          _id: ["@deep-foundation/core", "TreeIncludeNode"],
+        },
+        parent: {
+          type_id: {
+            _id: ["@deep-foundation/core", "Contain"],
+          },
+          to: {
+            type_id: {
+              _id: ["@flakeed/messaging", "Message"],
+            },
+          },
+        },
+        string: {
+          value: {},
+        },
       },
     });
-  
-    if (!assistantMessageSelect.value?.value) {
-      throw new Error(`##${assistantMessageSelect.id} must have a value`);
-    }
 
-    assistantMessage=assistantMessageSelect.value.value;
+    response = await openai.createChatCompletion({
+      model: model,
+      messages: [{
+        role: "assistant", content: messages,
+        role: "user", content: message
+      }],
+    });
   }
 
-  const response = await openai.createChatCompletion({
+  if (requestCounter < 1) {
+  response = await openai.createChatCompletion({
     model: model,
     messages: [{
-      role: "assistant", content: assistantMessage, 
       role: "user", content: message
     }],
   });
+}
 
   const { data: [{ id: chatgptMessageLinkId }] } = await deep.insert({
     type_id: messageTypeLinkId,
