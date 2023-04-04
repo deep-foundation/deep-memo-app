@@ -33,12 +33,6 @@ export async function installPackage () {
     const joinTypeLinkId = await deep.id('@deep-foundation/core', "Join");
     const typeStringLinkId = await deep.id('@deep-foundation/core', "String");
     const typeValueLinkId = await deep.id('@deep-foundation/core', "Value");
-    const treeIncludeNodeTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeNode");
-    const messagingTree = await deep.id('@flakeed/messaging', "MessagingTree");
-
-
-
-
 
     const { data: [{ id: packageLinkId }] } = await deep.insert({
         type_id: packageTypeLinkId,
@@ -195,17 +189,6 @@ const { data: [{ id: gpt_3_5_turbo }] } = await deep.insert({
         },
       ],
     },
-  });
-
-  const { data: [{ id: conversationTree }] } = await deep.insert({
-    from_id: messagingTree,
-    type_id: treeIncludeNodeTypeLinkId,
-    to_id: conversationTypeLinkId,
-    in: { data: {
-      type_id: containTypeLinkId,
-      from_id: packageLinkId,
-      string: { data: { value: 'messagingTreeConversation' } },
-    } },
   });
 
       await deep.insert({
