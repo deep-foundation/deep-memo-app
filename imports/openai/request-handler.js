@@ -1,4 +1,3 @@
-
 async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   let requestCounter = 0;
   const PACKAGE_NAME = `@flakeed/chatgpt`;
@@ -13,6 +12,9 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   const modelTypeLinkId = await deep.id(PACKAGE_NAME, "Model");
   const usesModelTypeLinkId = await deep.id(PACKAGE_NAME, "UsesModel");
   const conversationTypeLinkId = await deep.id(PACKAGE_NAME, "Conversation");
+  const messagingTree = await deep.id('@flakeed/messaging', "MessagingTree");
+  const treeIncludeNodeId = await deep.id('@deep-foundation/core', "TreeIncludeNode");
+  let model;
 
   const { data: [messageLink = undefined] = [] } = await deep.select({
     id: replyLink.from_id,
@@ -50,20 +52,25 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   });
   const openai = new OpenAIApi(configuration);
 
-  let model;
+  const { data: [replyLinkId] } = await deep.select({
+    type_id: replyTypeLinkId,
+    to_id: { _eq: conversationTypeLinkId },
+  });
 
-  const { data: [conversationLink] } = await deep.select({
-    type_id: conversationTypeLinkId,
-    in: {
-      type_id: containTypeLinkId,
-      from_id: triggeredByLinkId,
+  const { data: conversationLink } = await deep.select({
+    up: {
+      tree_id: { _eq: messagingTree },
+      parent: {
+        type_id: treeIncludeNodeId,
+        to_id: replyLinkId,
+      },
     },
   });
 
   if (!conversationLink) {
-    throw new Error('A conversation link is not found');
+    throw new Error('A conversationLink link is not found');
   }
-
+  
   const { data: [linkedModel] } = await deep.select({
     type_id: modelTypeLinkId,
     in: {
