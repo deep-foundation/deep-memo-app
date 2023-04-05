@@ -36,9 +36,9 @@ function Page() {
 
   return <Stack>
 
-    <Button onClick={async () => {initializePackagePosition(deep)}}>Initialize package position</Button>
-
     <Button onClick={async () => {initializePackageGeolocation(deep)}}>Initialize package geolocation</Button>
+
+    <Button onClick={async () => {initializePackagePosition(deep)}}>Initialize package position</Button>
 
     <Button onClick={() => checkPermissions({callback: ({newPermissionState}) => setPermissionState(newPermissionState)})}>Check geolocation permission</Button>
 

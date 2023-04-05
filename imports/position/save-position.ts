@@ -13,7 +13,7 @@ export async function savePosition(deep: DeepClient, deviceLinkId: number, coord
   const zTypeLinkId = await deep.id(PACKAGE_NAME, 'Z');
   console.log({coordinates});
 
-  await deep.insert([
+  const coordinatesLinks = [
     coordinates?.x && {
       type_id: xTypeLinkId,
       from_id: deviceLinkId,
@@ -32,6 +32,9 @@ export async function savePosition(deep: DeepClient, deviceLinkId: number, coord
       to_id: geolocationEarthTypeLinkId,
       string: { data: { value: (coordinates?.z || "").toString() } },
     }
-  ]);
+  ].filter((item) => item !== null)
+  console.log({coordinatesLinks});
+
+  await deep.insert(coordinatesLinks);
 
 }
