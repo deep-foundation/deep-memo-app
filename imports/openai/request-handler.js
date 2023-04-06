@@ -52,18 +52,11 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   });
   const openai = new OpenAIApi(configuration);
 
-  const { data: [replyLinkId] } = await deep.select({
-    type_id: replyTypeLinkId,
-    to_id: conversationTypeLinkId,
-  });
-
-  const { data: conversationLink } = await deep.select({
-    up: {
-      tree_id: messagingTree,
-      parent: {
-        type_id: treeIncludeNodeId,
-        to_id: replyLinkId,
-      },
+  const { data: [conversationLink] } = await deep.select({
+    type_id: conversationTypeLinkId,
+    down: {
+      tree_id: { _eq: messagingTree },
+      link_id: { _eq: replyLink.id },
     },
   });
 
@@ -72,12 +65,12 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   }
   
   const { data: [linkedModel] } = await deep.select({
-    type_id: modelTypeLinkId,
-    in: {
-      type_id: usesModelTypeLinkId,
-      from_id: conversationLink.id,
+  type_id: modelTypeLinkId,
+  in: {
+    type_id: usesModelTypeLinkId,
+    from_id: conversationLink.id, 
     },
-  });
+  }); 
 
   const { data: [userLinkedModel] } = await deep.select({
     type_id: modelTypeLinkId,
