@@ -13,7 +13,6 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   const usesModelTypeLinkId = await deep.id(PACKAGE_NAME, "UsesModel");
   const conversationTypeLinkId = await deep.id(PACKAGE_NAME, "Conversation");
   const messagingTree = await deep.id('@flakeed/messaging', "MessagingTree");
-  const treeIncludeNodeId = await deep.id('@deep-foundation/core', "TreeIncludeNode");
   let model;
 
   const { data: [messageLink = undefined] = [] } = await deep.select({
@@ -53,7 +52,6 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   const openai = new OpenAIApi(configuration);
 
   const { data: [conversationLink] } = await deep.select({
-    type_id: conversationTypeLinkId,
     down: {
       tree_id: { _eq: messagingTree },
       link_id: { _eq: replyLink.id },
@@ -63,12 +61,13 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   if (!conversationLink) {
     throw new Error('A conversationLink link is not found');
   }
-  
+  const currentConversation=conversationLink.find((link) => link.type_id === conversationTypeLinkId);
+
   const { data: [linkedModel] } = await deep.select({
   type_id: modelTypeLinkId,
   in: {
     type_id: usesModelTypeLinkId,
-    from_id: conversationLink.id, 
+    from_id: currentConversation.id, 
     },
   }); 
 
