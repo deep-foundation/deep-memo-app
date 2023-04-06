@@ -29,6 +29,7 @@ export async function installPackage () {
     const typeValueLinkId = await deep.id('@deep-foundation/core', "Value");
     const treeIncludeNodeTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeNode");
     const treeIncludeUpTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeUp");
+    const treeIncludeDownTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeDown");
     const treeTypeLinkId = await deep.id('@deep-foundation/core', "Tree");
 
     const { data: [{ id: packageLinkId }] } = await deep.insert({
@@ -118,6 +119,15 @@ const { data: [{ id: messagingTree }] } = await deep.insert({
             type_id: containTypeLinkId,
             from_id: packageLinkId,
             string: { data: { value: 'messagingTreeReply' } },
+          } },
+        },
+        {
+          type_id: treeIncludeDownTypeLinkId,
+          to_id: authorTypeLinkId,
+          in: { data: {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'messagingTreeAuthor' } },
           } },
         },
       ] },
