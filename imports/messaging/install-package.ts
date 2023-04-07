@@ -122,7 +122,7 @@ const { data: [{ id: messagingTree }] } = await deep.insert({
           } },
         },
         {
-          type_id: treeIncludeDownTypeLinkId,
+          type_id: treeIncludeUpTypeLinkId,
           to_id: authorTypeLinkId,
           in: { data: {
             type_id: containTypeLinkId,
