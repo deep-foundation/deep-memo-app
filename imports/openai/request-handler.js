@@ -18,8 +18,8 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   const { data: [messageLink = undefined] = [] } = await deep.select({
     id: replyLink.from_id,
     _not: {
-      in: {
-        from_id: chatgptTypeLinkId,
+      out: {
+        to_id: chatgptTypeLinkId,
         type_id: authorTypeLinkId
       }
     }
@@ -95,8 +95,7 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
     throw new Error(`A valid model value was not found in either linkedModel or userLinkedModel`);
   }
   let response;
-let assistantMessage;
-let messagesForModel;
+
   if (requestCounter >= 1) {
     const { data: messages } = await deep.select({
       down: {
@@ -140,21 +139,25 @@ let messagesForModel;
 }
 
   const { data: [{ id: chatgptMessageLinkId }] } = await deep.insert({
-    type_id: messageTypeLinkId,
-    string: { data: { value: response.data.choices[0].message.content } },
-    in:{
-        data: [
-          {
-          type_id: containTypeLinkId,
-          from_id: triggeredByLinkId,
-        },
-        {
-          type_id: authorTypeLinkId,
-          from_id: chatgptTypeLinkId,
-        },
-      ],
-    }
-  });
+  type_id: messageTypeLinkId,
+  string: { data: { value: response.data.choices[0].message.content } },
+  in:{
+    data: [
+      {
+        type_id: containTypeLinkId,
+        from_id: triggeredByLinkId,
+      },
+    ],
+  },
+  out: {
+    data: [
+      {
+        type_id: authorTypeLinkId,
+        to_id: chatgptTypeLinkId,
+      },
+    ],
+  },
+});
 
   const { data: [{ id: replyToMessageLinkId }] } = await deep.insert({
     type_id: replyTypeLinkId,
