@@ -51,7 +51,7 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   });
   const openai = new OpenAIApi(configuration);
 
-  const { data: [conversationLink] } = await deep.select({
+  const { data: conversationLink } = await deep.select({
     down: {
       tree_id: { _eq: messagingTree },
       link_id: { _eq: replyLink.id },
