@@ -1,5 +1,4 @@
 async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
-  let requestCounter = 0;
   const PACKAGE_NAME = `@flakeed/chatgpt`;
   const { Configuration, OpenAIApi } = require("openai");
   const openAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, "OpenAiApiKey");
@@ -96,47 +95,32 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   }
   let response;
 
-  if (requestCounter >= 1) {
-    const { data: messages } = await deep.select({
-      down: {
-        tree_id: {
-          _id: ["@flakeed/messaging", "MessagingTree"],
-        },
-        parent: {
-          type_id: {
-            _id: ["@deep-foundation/core", "TreeIncludeNode"],
-          },
-          to: {
-            type_id: {
-              _id: replyLink.from_id ,
-            },
-          },
-        },
-        parent_id:replyLink.to_id[0]
-      },
+  const messageLinks = conversationLink.filter(link => link.type_id === messageTypeLinkId);
+  
+  async function getMessageRole(messageLinks) {
+    const { data: [authorLink] } = await deep.select({
+      type_id: authorTypeLinkId,
+      from_id: messageLinks.id,
     });
-
-    const messagesForModel = messages.map(message => {
-      const role = message.in.find(link => link.type_id === authorTypeLinkId).from_id === chatgptTypeLinkId
-      ? "assistant"
-      : "user";
-      return { role, content: message.value.value };
-      });
-
-      const response = await openai.createChatCompletion({
-        model: model,
-        messages: messagesForModel.concat({ role: "user", content: message }),
-        });
+    if (authorLink) {
+      return authorLink.to_id === chatgptTypeLinkId ? "assistant" : "user";
+    } else {
+      return "user"; 
+    }
   }
-
-  if (requestCounter < 1) {
+  
+  const conversationMessages = await Promise.all(
+    messageLinks.map(async (messageLinks) => {
+      const role = await getMessageRole(messageLinks);
+      return { role, content: messageLinks.value.value };
+    })
+  );
+    
   response = await openai.createChatCompletion({
     model: model,
-    messages: [{
-      role: "user", content: message
-    }],
+    messages: conversationMessages.concat([{ role: "user", content: message }]),
   });
-}
+  
 
   const { data: [{ id: chatgptMessageLinkId }] } = await deep.insert({
   type_id: messageTypeLinkId,
@@ -170,7 +154,6 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
       },
     },
   });
-  requestCounter++;
 
   return response.data;
 };
