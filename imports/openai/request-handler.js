@@ -91,8 +91,9 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
     }
   }
   if (!model) {
-    throw new Error(`A valid model value was not found in either linkedModel or userLinkedModel`);
+    model="gpt-3.5-turbo";
   }
+  
   let response;
 
   const messageLinks = conversationLink.filter(link => link.type_id === messageTypeLinkId);
