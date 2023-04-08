@@ -31,20 +31,8 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   }
   const message = messageLink.value.value;
 
-  const { data: [apiKeyLink] } = await deep.select({
-    type_id: openAiApiKeyTypeLinkId,
-    in: {
-      type_id: usesOpenAiApiKeyTypeLinkId,
-      from_id: triggeredByLinkId,
-    },
-  });
-  if (!apiKeyLink) {
-    throw new Error(`A link with type ##${openAiApiKeyTypeLinkId} is not found`);
-  }
-  if (!apiKeyLink.value?.value) {
-    throw new Error(`##${apiKeyLink.id} must have a value`);
-  }
-  const apiKey = apiKeyLink.value.value;
+  const apiKey = getTokenLink();
+
   const configuration = new Configuration({
     apiKey: apiKey,
   });
@@ -93,36 +81,18 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
   if (!model) {
     model="gpt-3.5-turbo";
   }
-  
-  let response;
 
   const messageLinks = conversationLink.filter(link => link.type_id === messageTypeLinkId);
-  
-  async function getMessageRole(messageLinks) {
-    const { data: [authorLink] } = await deep.select({
-      type_id: authorTypeLinkId,
-      from_id: messageLinks.id,
-    });
-    if (authorLink) {
-      return authorLink.to_id === chatgptTypeLinkId ? "assistant" : "user";
-    } else {
-      return "user"; 
-    }
-  }
-  
-  const conversationMessages = await Promise.all(
-    messageLinks.map(async (messageLinks) => {
-      const role = await getMessageRole(messageLinks);
-      return { role, content: messageLinks.value.value };
-    })
-  );
     
-  response = await openai.createChatCompletion({
+  const response = await openai.createChatCompletion({
     model: model,
-    messages: conversationMessages.concat([{ role: "user", content: message }]),
+    messages: messageLinks.map((link) => ({
+        role: getMessageRole({ messageLink: link }),
+        content: link.value.value,
+    })),
   });
-  
 
+  
   const { data: [{ id: chatgptMessageLinkId }] } = await deep.insert({
   type_id: messageTypeLinkId,
   string: { data: { value: response.data.choices[0].message.content } },
@@ -155,6 +125,62 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
       },
     },
   });
+  async function getTokenLink() {
+    let resultTokenLink;
+    const { data } = await deep.select({
+        _or: [
+            {
+                type_id: openAiApiKeyTypeLinkId,
+                in: {
+                    type_id: containTypeLinkId,
+                    from_id: triggeredByLinkId,
+                },
+            },
+            {
+                from_id: triggeredByLinkId,
+                type_id: usesOpenAiApiKeyTypeLinkId,
+            },
+        ],
+    });
+    if (data.length === 0) {
+        throw new Error(`Link of type ##${openAiApiKeyTypeLinkId} is not found`);
+    }
+    const usesLinks = data.filter(
+        (link) => link.type_id === usesOpenAiApiKeyTypeLinkId
+    );
+    if (usesLinks.length > 1) {
+        throw new Error(
+            `More than 1 links of type ##${usesOpenAiApiKeyTypeLinkId} are found`
+        );
+    }
+    const usesLink = data.find(
+        (link) => link.type_id === usesOpenAiApiKeyTypeLinkId
+    );
+    if (usesLink) {
+        const tokenLink = data.find((link) => link.id === usesLink.to_id);
+        resultTokenLink = tokenLink;
+    } else {
+        const tokenLink = data.find(
+            (link) => link.type_id === openAiApiKeyTypeLinkId
+        );
+        if (!tokenLink) {
+            throw new Error(`Link of type ${openAiApiKeyTypeLinkId} is not found`);
+        }
+        resultTokenLink = tokenLink;
+    }
+    if (!resultTokenLink.value?.value) {
+        throw new Error(`Link of type ${openAiApiKeyTypeLinkId} has no value`);
+    }
+    return resultTokenLink;
+}
+
+async function getMessageRole({ messageLink }) {
+  const authorLink = messageLinks.find(
+      (link) =>
+          link.type_id === authorTypeLinkId && link.from_id === messageLink.id
+  );
+    return authorLink.to_id === chatgptTypeLinkId ? 'assistant' : 'user';
+  }
 
   return response.data;
 };
