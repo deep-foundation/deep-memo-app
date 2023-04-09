@@ -75,27 +75,26 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
 		},
 	});
 
-	if (
-		(linkedModel &&
-			linkedModel.value?.value &&
-			userLinkedModel &&
-			userLinkedModel.value?.value) ||
-		(linkedModel && linkedModel.value?.value)
-	) {
-		model = linkedModel.value.value;
-	} else {
-		if (!userLinkedModel) {
-			throw new Error(`A link with type ##${userLinkedModel} is not found`);
-		}
-		if (!userLinkedModel.value?.value) {
-			throw new Error(`##${userLinkedModel.id} must have a value`);
-		} else {
-			model = userLinkedModel.value.value;
-		}
-	}
-	if (!model) {
+	if(!linkedModel && !userLinkedModel){
 		model = 'gpt-3.5-turbo';
-	}
+	}else	if (
+			(linkedModel &&
+				linkedModel.value?.value &&
+				userLinkedModel &&
+				userLinkedModel.value?.value) ||
+			(linkedModel && linkedModel.value?.value)
+		) {
+			model = linkedModel.value.value;
+		} else {
+			if (!userLinkedModel) {
+				throw new Error(`A link with type ##${userLinkedModel} is not found`);
+			}
+			if (!userLinkedModel.value?.value) {
+				throw new Error(`##${userLinkedModel.id} must have a value`);
+			} else {
+				model = userLinkedModel.value.value;
+			}
+		}
   const messageLinks = conversationLink.filter((link) => link.type_id === messageTypeLinkId);
 console.log("messageLinks",messageLinks)
   const allMessages = await getMessages({ messageLinks: messageLinks });
@@ -111,17 +110,6 @@ console.log("allMessages",allMessages)
     ],
 });
 
-console.log("reponse ",{
-  model: model,
-  messages: [
-      ...allMessages,
-      {
-          role: 'user',
-          content: message,
-      },
-  ],
-})
-console.log("messageLinks",messageLinks);
 	const {
 		data: [{ id: chatgptMessageLinkId }],
 	} = await deep.insert({
