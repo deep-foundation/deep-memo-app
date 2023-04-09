@@ -205,11 +205,7 @@ console.log("allMessages",allMessages)
 	}
 
 	async function getMessageRole({ messageLink }) {
-    const authorLink = messageLinks.find(
-      (link) =>
-        link.type_id === authorTypeLinkId && link.from_id === messageLink.id
-    );
-    console.log("authorLink",authorLink);
+    const authorLink = messageLinks.filter((link) => link.author && link.author.length > 0);
     if (!authorLink) {
       throw new Error(`Author link not found for message ##${messageLink.id}`);
     }
