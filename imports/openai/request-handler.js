@@ -42,11 +42,11 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
 	const openai = new OpenAIApi(configuration);
 
 	const { data: conversationLink } = await deep.select({
-		down: {
-			tree_id: { _eq: messagingTree },
-			link_id: { _eq: replyLink.id },
-		},
-	});
+    down: {
+        tree_id: { _eq: messagingTree },
+        link_id: { _eq: replyLink.id },
+    },
+}, { returning: `id from_id type_id to_id value author: out (where: { type_id: { _eq: ${authorTypeLinkId}} }) { id from_id type_id to_id }` });
 
 	if (!conversationLink) {
 		throw new Error('A conversationLink link is not found');
