@@ -197,14 +197,17 @@ console.log("allMessages",allMessages)
 			const tokenLink = data.filter(
 				(link) => link.type_id === openAiApiKeyTypeLinkId
 			);
-			if (!tokenLink) {
-				throw new Error(`Link of type ${openAiApiKeyTypeLinkId} is not found`);
-			} 
 			if (tokenLink.length > 1) {
 				throw new Error(
 					`For 2 or more ##${openAiApiKeyTypeLinkId} links you must activate it with usesOpenAiApiKey link`
 				);
 			}else{
+				const tokenLink = data.find(
+					(link) => link.type_id === openAiApiKeyTypeLinkId
+				);
+				if (!tokenLink) {
+					throw new Error(`Link of type ${openAiApiKeyTypeLinkId} is not found`);
+				} 
 				resultTokenLink = tokenLink;
 			}
 		
