@@ -117,7 +117,6 @@ let serialOperations = [];
 			type: 'insert',
 			objects: [
 				{
-					data: [{ id: chatgptMessageLinkId }],
 					type_id: messageTypeLinkId,
 					string: { data: { value: response.data.choices[0].message.content } },
 					in: {
@@ -140,13 +139,22 @@ let serialOperations = [];
 			],
 		});
 
+const serialResult = await deep.serial({
+		operations: serialOperations
+	})
+
+		const chatGPTMessageId = serialResult[0]?.id;
+
+  if (!chatGPTMessageId) {
+    throw new Error('Failed to create ChatGPT message.');
+  }
 		serialOperations.push({
       table: 'links',//replyToMessageLinkId
       type: 'insert',
       objects: [
         {
           type_id: replyTypeLinkId,
-					from_id: chatgptMessageLinkId,
+					from_id: chatGPTMessageId,
 					to_id: replyLink.from_id,
 					in: {
 						data: {
@@ -158,14 +166,14 @@ let serialOperations = [];
       ],
     });
 
-	const serialResult = await deep.serial({
-		operations: serialOperations
-	})
+		await deep.serial({
+			operations: serialOperations,
+		});
 	
 	async function getMessages({ messageLinks }) {
     return Promise.all(
         messageLinks.map(async (link) => ({
-            role: await getMessageRole({ messageLink: link }),
+            role: await getMessageRole({ messageLinks: link }),
             content: link.value.value,
         }))
     );
@@ -236,7 +244,7 @@ let serialOperations = [];
 	
 
 	async function getMessageRole({ messageLink }) {
-    const authorLink = messageLinks.filter((link) => link.author && link.author.length > 0);
+    const authorLink = messageLink.filter((link) => link.author && link.author.length > 0);
     if (!authorLink) {
       throw new Error(`Author link not found for message ##${messageLink.id}`);
     }
