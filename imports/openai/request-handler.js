@@ -110,43 +110,58 @@ console.log("allMessages",allMessages)
     ],
 });
 
-	const {
-		data: [{ id: chatgptMessageLinkId }],
-	} = await deep.insert({
-		type_id: messageTypeLinkId,
-		string: { data: { value: response.data.choices[0].message.content } },
-		in: {
-			data: [
+let serialOperations = [];
+
+		serialOperations.push({
+			table: 'links',//chatgptMessageLinkId
+			type: 'insert',
+			objects: [
 				{
-					type_id: containTypeLinkId,
-					from_id: triggeredByLinkId,
+					data: [{ id: chatgptMessageLinkId }],
+					type_id: messageTypeLinkId,
+					string: { data: { value: response.data.choices[0].message.content } },
+					in: {
+						data: [
+							{
+								type_id: containTypeLinkId,
+								from_id: triggeredByLinkId,
+							},
+						],
+					},
+					out: {
+						data: [
+							{
+								type_id: authorTypeLinkId,
+								to_id: chatgptTypeLinkId,
+							},
+						],
+					},
 				},
 			],
-		},
-		out: {
-			data: [
-				{
-					type_id: authorTypeLinkId,
-					to_id: chatgptTypeLinkId,
-				},
-			],
-		},
-	});
+		});
 
-	const {
-		data: [{ id: replyToMessageLinkId }],
-	} = await deep.insert({
-		type_id: replyTypeLinkId,
-		from_id: chatgptMessageLinkId,
-		to_id: replyLink.from_id,
-		in: {
-			data: {
-				type_id: containTypeLinkId,
-				from_id: triggeredByLinkId,
-			},
-		},
-	});
+		serialOperations.push({
+      table: 'links',//replyToMessageLinkId
+      type: 'insert',
+      objects: [
+        {
+          type_id: replyTypeLinkId,
+					from_id: chatgptMessageLinkId,
+					to_id: replyLink.from_id,
+					in: {
+						data: {
+							type_id: containTypeLinkId,
+							from_id: triggeredByLinkId,
+						},
+					},
+       	},
+      ],
+    });
 
+	const serialResult = await deep.serial({
+		operations: serialOperations
+	})
+	
 	async function getMessages({ messageLinks }) {
     return Promise.all(
         messageLinks.map(async (link) => ({
@@ -217,6 +232,8 @@ console.log("allMessages",allMessages)
 		}
 		return resultTokenLink;
 	}
+
+	
 
 	async function getMessageRole({ messageLink }) {
     const authorLink = messageLinks.filter((link) => link.author && link.author.length > 0);
