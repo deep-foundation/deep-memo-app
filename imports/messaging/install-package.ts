@@ -1,6 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 const { generateApolloClient } = require('@deep-foundation/hasura/client');
-const PACKAGE_NAME=`@flakeed/messaging`
+const PACKAGE_NAME="@flakeed/messaging";
 require('dotenv').config();
 export async function installPackage () {
     const apolloClient = generateApolloClient({
@@ -27,6 +27,9 @@ export async function installPackage () {
     const joinTypeLinkId = await deep.id('@deep-foundation/core', "Join");
     const typeStringLinkId = await deep.id('@deep-foundation/core', "String");
     const typeValueLinkId = await deep.id('@deep-foundation/core', "Value");
+    const treeIncludeNodeTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeNode");
+    const treeIncludeUpTypeLinkId = await deep.id('@deep-foundation/core', "TreeIncludeUp");
+    const treeTypeLinkId = await deep.id('@deep-foundation/core', "Tree");
 
     const { data: [{ id: packageLinkId }] } = await deep.insert({
         type_id: packageTypeLinkId,
@@ -69,9 +72,9 @@ export async function installPackage () {
       } },
     });
 
-    const { data: [{ id: reeplyTypeLinkId }] } = await deep.insert({
+    const { data: [{ id: replyTypeLinkId }] } = await deep.insert({
       type_id: typeTypeLinkId,
-      from_id: anyTypeLinkId,
+      from_id: messageTypeLinkId,
       to_id: anyTypeLinkId,
       in: { data: {
         type_id: containTypeLinkId,
@@ -89,6 +92,35 @@ export async function installPackage () {
         from_id: packageLinkId, 
         string: { data: { value: 'Author' } },
       } },
+    });
+
+    const { data: [{ id: messagingTree }] } = await deep.insert({
+      type_id: treeTypeLinkId,
+      in: { data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'MessagingTree' } },
+      } },
+      out: { data: [
+        {
+          type_id: treeIncludeNodeTypeLinkId,
+          to_id: anyTypeLinkId,
+          in: { data: {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'messagingTreeAny' } },
+          } },
+        },
+        {
+          type_id: treeIncludeUpTypeLinkId,
+          to_id: replyTypeLinkId,
+          in: { data: {
+            type_id: containTypeLinkId,
+            from_id: packageLinkId,
+            string: { data: { value: 'messagingTreeReply' } },
+          } },
+        },
+      ] },
     });
 }
 
