@@ -112,36 +112,18 @@ console.log("allMessages",allMessages)
 
 
 const reservedIds = await deep.reserve(1);
-const chatgptMessageLinkId = {
-  id: reservedIds.pop(),
-	type_id: messageTypeLinkId,
-	string: { data: { value: response.data.choices[0].message.content } },
-	in: {
-		data: [
-			{
-				type_id: containTypeLinkId,
-				from_id: triggeredByLinkId,
-			},
-		],
-	},
-	out: {
-		data: [
-			{
-				type_id: authorTypeLinkId,
-				to_id: chatgptTypeLinkId,
-			},
-		],
-	},
-};
+
+const chatgptMessageLinkId = reservedIds.pop();
 
 await deep.serial({
+	
   operations: [
     {
       table: 'links',
       type: 'insert',
       objects: {
+				id: chatgptMessageLinkId ,
         type_id: messageTypeLinkId,
-        string: { data: { value: response.data.choices[0].message.content } },
         in: {
           data: [
             {
@@ -160,12 +142,20 @@ await deep.serial({
         },
       },
     },
+		{
+      table: 'strings',
+      type: 'insert',
+      objects: {
+        link_id: chatgptMessageLinkId,
+        value: response.data.choices[0].message.content
+      }
+    },
     {
       table: 'links',
       type: 'insert',
       objects: {
         type_id: replyTypeLinkId,
-        from_id: chatgptMessageLinkId.id,
+        from_id: chatgptMessageLinkId,
         to_id: replyLink.from_id,
         in: {
           data: {
