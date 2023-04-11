@@ -1,12 +1,12 @@
 async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
 	const PACKAGE_NAME = `@flakeed/chatgpt`;
 	const { Configuration, OpenAIApi } = require('openai');
-	const apiKeyTypeLinkId = await deep.id(PACKAGE_NAME, 'ApiKey');
-	const usesApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, 'UsesApiKey');
 	const chatGPTTypeLinkId = await deep.id(PACKAGE_NAME, 'ChatGPT');
-	const modelTypeLinkId = await deep.id(PACKAGE_NAME, 'Model');
-	const usesModelTypeLinkId = await deep.id(PACKAGE_NAME, 'UsesModel');
 	const conversationTypeLinkId = await deep.id(PACKAGE_NAME, 'Conversation');
+	const apiKeyTypeLinkId = await deep.id('@flakeed/openai', 'ApiKey');
+	const usesApiKeyTypeLinkId = await deep.id('@flakeed/openai', 'UsesApiKey');
+	const modelTypeLinkId = await deep.id('@flakeed/openai', 'Model');
+	const usesModelTypeLinkId = await deep.id('@flakeed/openai', 'UsesModel');
 	const messageTypeLinkId = await deep.id('@flakeed/messaging', 'Message');
 	const replyTypeLinkId = await deep.id('@flakeed/messaging', 'Reply');
 	const authorTypeLinkId = await deep.id('@flakeed/messaging', 'Author');
