@@ -1,1 +1,1 @@
-export const PACKAGE_NAME=`@deep-foundation/geolocation`
+export const PACKAGE_NAME=`@suenot/geolocation`

@@ -1,9 +1,10 @@
 import { DeepClient, DeepClientResult } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
+import { PACKAGE_NAME as PACKAGE_NAME_GEOLOCATION } from "../geolocation/package-name";
 
 export async function getPositions({deep, deviceLinkId, space, callback}: {deep: DeepClient, deviceLinkId: number, space?: string, callback?: (positions: DeepClientResult<any>) => any}) {
   try {
-    const geolocationSpaceTypeLinkId = await deep.id("@deep-foundation/geolocation", space || "Earth");
+    const geolocationSpaceTypeLinkId = await deep.id(PACKAGE_NAME_GEOLOCATION, space || "Earth");
 
     if(!deviceLinkId) {
       throw new Error("deviceLinkId must not be 0");
@@ -13,7 +14,7 @@ export async function getPositions({deep, deviceLinkId, space, callback}: {deep:
     const yTypeLinkId = await deep.id(PACKAGE_NAME, 'Y');
     const zTypeLinkId = await deep.id(PACKAGE_NAME, 'Z');
     const positionTreeLinkId = await deep.id(PACKAGE_NAME, 'PositionTree');
-    
+
     const positions = await deep.select({
       type_id: {
         _in: [xTypeLinkId, yTypeLinkId, zTypeLinkId]
@@ -27,7 +28,7 @@ export async function getPositions({deep, deviceLinkId, space, callback}: {deep:
         parent_id: { _eq: geolocationSpaceTypeLinkId },
         tree_id: { _eq: positionTreeLinkId }
       }
-    }, 
+    },
     {
       returning: `type_id id from_id to_id 
         to {

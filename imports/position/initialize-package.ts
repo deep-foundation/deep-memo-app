@@ -1,5 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
+import { PACKAGE_NAME as PACKAGE_NAME_GEOLOCATION } from "../geolocation/package-name";
 
 export async function initializePackage(deep: DeepClient) {
 
@@ -13,7 +14,7 @@ export async function initializePackage(deep: DeepClient) {
   const deviceTypeLinkId = await deep.id("@deep-foundation/device", "Device");
   const treeTypeLinkId = await deep.id('@deep-foundation/core', 'Tree');
   const userTypeLinkId = await deep.id('@deep-foundation/core', 'User');
-  const geolocationSpaceTypeLinkId = await deep.id("@deep-foundation/geolocation", "Space");
+  const geolocationSpaceTypeLinkId = await deep.id(PACKAGE_NAME_GEOLOCATION, "Space");
   const treeIncludeNodeTypeLinkId = await deep.id("@deep-foundation/core", "TreeIncludeNode");
   const treeIncludeDownTypeLinkId = await deep.id("@deep-foundation/core", "TreeIncludeDown");
 
@@ -23,7 +24,8 @@ export async function initializePackage(deep: DeepClient) {
     in: { data: [
       {
         type_id: containTypeLinkId,
-        from_id: deep.linkId
+        from_id: deep.linkId,
+        string: { data: { value: 'Package' } },
       },
     ] },
     out: { data: [
@@ -77,6 +79,7 @@ export async function initializePackage(deep: DeepClient) {
             {
               type_id: containTypeLinkId,
               from_id: packageLinkId,
+              string: { data: { value: 'TreeIncludeDownToX' } },
             },
           ],
         },
@@ -108,6 +111,7 @@ export async function initializePackage(deep: DeepClient) {
             {
               type_id: containTypeLinkId,
               from_id: packageLinkId,
+              string: { data: { value: 'TreeIncludeDownToY' } },
             },
           ],
         },
@@ -139,6 +143,7 @@ export async function initializePackage(deep: DeepClient) {
             {
               type_id: containTypeLinkId,
               from_id: packageLinkId,
+              string: { data: { value: 'TreeIncludeDownToZ' } },
             },
           ],
         },
@@ -170,6 +175,7 @@ export async function initializePackage(deep: DeepClient) {
             {
               type_id: containTypeLinkId,
               from_id: packageLinkId,
+              string: { data: { value: 'TreeIncludeDownToTimestamp' } },
             },
           ],
         },
@@ -201,6 +207,7 @@ export async function initializePackage(deep: DeepClient) {
             {
               type_id: containTypeLinkId,
               from_id: packageLinkId,
+              string: { data: { value: 'TreeIncludeDownToOptions' } },
             },
           ],
         },

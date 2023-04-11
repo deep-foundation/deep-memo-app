@@ -1,1 +1,1 @@
-export const PACKAGE_NAME=`@deep-foundation/position`
+export const PACKAGE_NAME=`@suenot/position`
