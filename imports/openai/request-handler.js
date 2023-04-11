@@ -168,6 +168,7 @@ await deep.serial({
   ],
 });
 
+
 	async function getMessages({ messageLinks }) {
     return Promise.all(
         messageLinks.map(async (link) => ({
@@ -209,25 +210,10 @@ await deep.serial({
 		);
 		if (usesLink) {
 			const tokenLink = data.find((link) => link.id === usesLink.to_id);
-		if(!tokenLink){
-			const tokenLink = data.filter(
-				(link) => link.type_id === openAiApiKeyTypeLinkId
-			);
-			if (tokenLink.length > 1) {
-				throw new Error(
-					`For 2 or more ##${openAiApiKeyTypeLinkId} links you must activate it with usesOpenAiApiKey link`
-				);
+			if (!tokenLink) {
+				throw new Error(`Link of type ##${openAiApiKeyTypeLinkId} is not found`);
 			}else{
-				const tokenLink = data.find(
-					(link) => link.type_id === openAiApiKeyTypeLinkId
-				);
-				if (!tokenLink) {
-					throw new Error(`Link of type ##${openAiApiKeyTypeLinkId} is not found`);
-				} 
-				resultTokenLink = tokenLink;
-			}
-		}else{
-				resultTokenLink = tokenLink;
+			resultTokenLink = tokenLink;
 		}
 		} else {
 			const tokenLink = data.filter(
