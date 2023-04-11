@@ -21,8 +21,6 @@ export async function installPackage() {
   });
   const deep = new DeepClient({ deep: guestDeep, ...admin });
 
-  const anyTypeLinkId = await deep.id('@deep-foundation/core', "Any");
-  const userTypeLinkId = await deep.id('@deep-foundation/core', "User");
   const typeTypeLinkId = await deep.id('@deep-foundation/core', "Type");
   const syncTextFileTypeLinkId = await deep.id('@deep-foundation/core', "SyncTextFile");
   const containTypeLinkId = await deep.id('@deep-foundation/core', "Contain");
@@ -33,6 +31,7 @@ export async function installPackage() {
   const joinTypeLinkId = await deep.id('@deep-foundation/core', "Join");
   const typeStringLinkId = await deep.id('@deep-foundation/core', "String");
   const typeValueLinkId = await deep.id('@deep-foundation/core', "Value");
+  const modelTypeLinkId = await deep.id('@flakeed/openai', "Model");
 
   const { data: [{ id: packageLinkId }] } = await deep.insert({
     type_id: packageTypeLinkId,
@@ -59,31 +58,6 @@ export async function installPackage() {
     },
   });
 
-
-  const { data: [{ id: openAiApiKeyTypeLinkId, }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: "OpenAiApiKey" } }
-      },
-    },
-    out: {
-      data: {
-        type_id: typeValueLinkId,
-        to_id: typeStringLinkId,
-        in: {
-          data: {
-            from_id: packageLinkId,
-            type_id: containTypeLinkId,
-            string: { data: { value: 'OpenAiApiKeyValue' } },
-          }
-        }
-      }
-    }
-  });
-
   const { data: [{ id: conversationTypeLinkId, }] } = await deep.insert({
     type_id: typeTypeLinkId,
     in: {
@@ -108,19 +82,6 @@ export async function installPackage() {
     }
   });
 
-  const { data: [{ id: usesOpenAiApiKeyTypeLinkId, }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: userTypeLinkId,
-    to_id: openAiApiKeyTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: "UsesOpenAiApiKey" } }
-      },
-    }
-  });
-
   const { data: [{ id: chatGPTTypeLinkId }] } = await deep.insert({
     type_id: typeTypeLinkId,
     in: {
@@ -129,43 +90,6 @@ export async function installPackage() {
         from_id: packageLinkId,
         string: { data: { value: 'ChatGPT' } },
       }
-    },
-  });
-
-  const { data: [{ id: modelTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: "Model" } },
-      },
-    },
-    out: {
-      data: {
-        type_id: typeValueLinkId,
-        to_id: typeStringLinkId,
-        in: {
-          data: {
-            from_id: packageLinkId,
-            type_id: containTypeLinkId,
-            string: { data: { value: 'ModelValue' } },
-          }
-        }
-      }
-    }
-  });
-
-  const { data: [{ id: usesModelTypeLinkId }] } = await deep.insert({
-    type_id: typeTypeLinkId,
-    from_id: anyTypeLinkId,
-    to_id: modelTypeLinkId,
-    in: {
-      data: {
-        type_id: containTypeLinkId,
-        from_id: packageLinkId,
-        string: { data: { value: "UsesModel" } },
-      },
     },
   });
 
