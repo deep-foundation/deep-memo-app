@@ -110,66 +110,75 @@ console.log("allMessages",allMessages)
     ],
 });
 
-let serialOperations = [];
 
-		serialOperations.push({
-			table: 'links',//chatgptMessageLinkId
-			type: 'insert',
-			objects: [
-				{
-					type_id: messageTypeLinkId,
-					string: { data: { value: response.data.choices[0].message.content } },
-					in: {
-						data: [
-							{
-								type_id: containTypeLinkId,
-								from_id: triggeredByLinkId,
-							},
-						],
-					},
-					out: {
-						data: [
-							{
-								type_id: authorTypeLinkId,
-								to_id: chatgptTypeLinkId,
-							},
-						],
-					},
-				},
-			],
-		});
+const reservedIds = await deep.reserve(1);
+const chatgptMessageLinkId = {
+  id: reservedIds.pop(),
+	type_id: messageTypeLinkId,
+	string: { data: { value: response.data.choices[0].message.content } },
+	in: {
+		data: [
+			{
+				type_id: containTypeLinkId,
+				from_id: triggeredByLinkId,
+			},
+		],
+	},
+	out: {
+		data: [
+			{
+				type_id: authorTypeLinkId,
+				to_id: chatgptTypeLinkId,
+			},
+		],
+	},
+};
 
-const serialResult = await deep.serial({
-		operations: serialOperations
-	})
-
-		const chatGPTMessageId = serialResult[0]?.id;
-
-  if (!chatGPTMessageId) {
-    throw new Error('Failed to create ChatGPT message.');
-  }
-		serialOperations.push({
-      table: 'links',//replyToMessageLinkId
+await deep.serial({
+  operations: [
+    {
+      table: 'links',
       type: 'insert',
-      objects: [
-        {
-          type_id: replyTypeLinkId,
-					from_id: chatGPTMessageId,
-					to_id: replyLink.from_id,
-					in: {
-						data: {
-							type_id: containTypeLinkId,
-							from_id: triggeredByLinkId,
-						},
-					},
-       	},
-      ],
-    });
+      objects: {
+        type_id: messageTypeLinkId,
+        string: { data: { value: response.data.choices[0].message.content } },
+        in: {
+          data: [
+            {
+              type_id: containTypeLinkId,
+              from_id: triggeredByLinkId,
+            },
+          ],
+        },
+        out: {
+          data: [
+            {
+              type_id: authorTypeLinkId,
+              to_id: chatgptTypeLinkId,
+            },
+          ],
+        },
+      },
+    },
+    {
+      table: 'links',
+      type: 'insert',
+      objects: {
+        type_id: replyTypeLinkId,
+        from_id: chatgptMessageLinkId.id,
+        to_id: replyLink.from_id,
+        in: {
+          data: {
+            type_id: containTypeLinkId,
+            from_id: triggeredByLinkId,
+          },
+        },
+      },
+    },
+  ],
+});
 
-		await deep.serial({
-			operations: serialOperations,
-		});
-	
+
 	async function getMessages({ messageLinks }) {
     return Promise.all(
         messageLinks.map(async (link) => ({
@@ -212,7 +221,7 @@ const serialResult = await deep.serial({
 		if (usesLink) {
 			const tokenLink = data.find((link) => link.id === usesLink.to_id);
 			if (!tokenLink) {
-				throw new Error(`Link of type ${openAiApiKeyTypeLinkId} is not found`);
+				throw new Error(`Link of type ##${openAiApiKeyTypeLinkId} is not found`);
 			}else{
 			resultTokenLink = tokenLink;
 		}
@@ -229,14 +238,14 @@ const serialResult = await deep.serial({
 					(link) => link.type_id === openAiApiKeyTypeLinkId
 				);
 				if (!tokenLink) {
-					throw new Error(`Link of type ${openAiApiKeyTypeLinkId} is not found`);
+					throw new Error(`Link of type ##${openAiApiKeyTypeLinkId} is not found`);
 				} 
 				resultTokenLink = tokenLink;
 			}
 		
 		}
 		if (!resultTokenLink.value?.value) {
-			throw new Error(`Link of type ${openAiApiKeyTypeLinkId} has no value`);
+			throw new Error(`Link of type ##${openAiApiKeyTypeLinkId} has no value`);
 		}
 		return resultTokenLink;
 	}
