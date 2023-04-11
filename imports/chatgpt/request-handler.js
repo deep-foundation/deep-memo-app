@@ -1,8 +1,8 @@
 async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
 	const PACKAGE_NAME = `@flakeed/chatgpt`;
 	const { Configuration, OpenAIApi } = require('openai');
-	const openAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, 'OpenAiApiKey');
-	const usesOpenAiApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, 'UsesOpenAiApiKey');
+	const apiKeyTypeLinkId = await deep.id(PACKAGE_NAME, 'ApiKey');
+	const usesApiKeyTypeLinkId = await deep.id(PACKAGE_NAME, 'UsesApiKey');
 	const chatGPTTypeLinkId = await deep.id(PACKAGE_NAME, 'ChatGPT');
 	const modelTypeLinkId = await deep.id(PACKAGE_NAME, 'Model');
 	const usesModelTypeLinkId = await deep.id(PACKAGE_NAME, 'UsesModel');
@@ -14,7 +14,6 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
 	const messagingTree = await deep.id('@flakeed/messaging', 'MessagingTree');
 	const reservedIds = await deep.reserve(1);
 	const chatGPTMessageLinkId = reservedIds.pop();
-
 	let model;
 
 	const { data: [messageLink] } = await deep.select({
@@ -176,7 +175,7 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
 		const { data } = await deep.select({
 			_or: [
 				{
-					type_id: openAiApiKeyTypeLinkId,
+					type_id: apiKeyTypeLinkId,
 					in: {
 						type_id: containTypeLinkId,
 						from_id: triggeredByLinkId,
@@ -184,51 +183,51 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
 				},
 				{
 					from_id: triggeredByLinkId,
-					type_id: usesOpenAiApiKeyTypeLinkId,
+					type_id: usesApiKeyTypeLinkId,
 				},
 			],
 		});
 		if (data.length === 0) {
-			throw new Error(`Link of type ##${openAiApiKeyTypeLinkId} is not found`);
+			throw new Error(`Link of type ##${apiKeyTypeLinkId} is not found`);
 		}
 		const usesLinks = data.filter(
-			(link) => link.type_id === usesOpenAiApiKeyTypeLinkId
+			(link) => link.type_id === usesApiKeyTypeLinkId
 		);
 		if (usesLinks.length > 1) {
 			throw new Error(
-				`More than 1 links of type ##${usesOpenAiApiKeyTypeLinkId} are found`
+				`More than 1 links of type ##${usesApiKeyTypeLinkId} are found`
 			);
 		}
 		const usesLink = data.find(
-			(link) => link.type_id === usesOpenAiApiKeyTypeLinkId
+			(link) => link.type_id === usesApiKeyTypeLinkId
 		);
 		if (usesLink) {
 			const tokenLink = data.find((link) => link.id === usesLink.to_id);
 			if (!tokenLink) {
-				throw new Error(`Link of type ##${openAiApiKeyTypeLinkId} is not found`);
+				throw new Error(`Link of type ##${apiKeyTypeLinkId} is not found`);
 			} else {
 				resultTokenLink = tokenLink;
 			}
 		} else {
 			const tokenLink = data.filter(
-				(link) => link.type_id === openAiApiKeyTypeLinkId
+				(link) => link.type_id === apiKeyTypeLinkId
 			);
 			if (tokenLink.length > 1) {
 				throw new Error(
-					`For 2 or more ##${openAiApiKeyTypeLinkId} links you must activate it with usesOpenAiApiKey link`
+					`For 2 or more ##${apiKeyTypeLinkId} links you must activate it with usesOpenAiApiKey link`
 				);
 			} else {
 				const tokenLink = data.find(
-					(link) => link.type_id === openAiApiKeyTypeLinkId
+					(link) => link.type_id === apiKeyTypeLinkId
 				);
 				if (!tokenLink) {
-					throw new Error(`Link of type ##${openAiApiKeyTypeLinkId} is not found`);
+					throw new Error(`Link of type ##${apiKeyTypeLinkId} is not found`);
 				}
 				resultTokenLink = tokenLink;
 			}
 		}
 		if (!resultTokenLink.value?.value) {
-			throw new Error(`Link of type ##${openAiApiKeyTypeLinkId} has no value`);
+			throw new Error(`Link of type ##${apiKeyTypeLinkId} has no value`);
 		}
 		return resultTokenLink;
 	}
