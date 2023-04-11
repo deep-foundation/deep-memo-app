@@ -160,7 +160,7 @@ export async function installPackage() {
     },
     string: {
       data: {
-        value: fs.readFileSync('/workspace/dev/packages/sdk/imports/openai/request-handler.js', { encoding: 'utf-8' }),
+        value: fs.readFileSync('/workspace/dev/packages/sdk/imports/chatgpt/request-handler.js', { encoding: 'utf-8' }),
       },
     },
   });
