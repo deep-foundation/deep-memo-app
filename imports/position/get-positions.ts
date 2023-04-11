@@ -13,7 +13,7 @@ export async function getPositions({deep, deviceLinkId, space, callback}: {deep:
     const xTypeLinkId = await deep.id(PACKAGE_NAME, 'X');
     const yTypeLinkId = await deep.id(PACKAGE_NAME, 'Y');
     const zTypeLinkId = await deep.id(PACKAGE_NAME, 'Z');
-    const positionTreeLinkId = await deep.id(PACKAGE_NAME, 'PositionTree');
+    // const positionTreeLinkId = await deep.id(PACKAGE_NAME, 'PositionTree');
 
     const positions = await deep.select({
       type_id: {
@@ -23,20 +23,20 @@ export async function getPositions({deep, deviceLinkId, space, callback}: {deep:
       to_id: geolocationSpaceTypeLinkId,
     });
 
-    const linksDownToEarthMp = await deep.select({
-      up: {
-        parent_id: { _eq: geolocationSpaceTypeLinkId },
-        tree_id: { _eq: positionTreeLinkId }
-      }
-    },
-    {
-      returning: `type_id id from_id to_id 
-        to {
-          value 
-        }
-      `
-    });
-    console.log({linksDownToEarthMp});
+    // const linksDownToEarthMp = await deep.select({
+    //   up: {
+    //     parent_id: { _eq: geolocationSpaceTypeLinkId },
+    //     tree_id: { _eq: positionTreeLinkId }
+    //   }
+    // },
+    // {
+    //   returning: `type_id id from_id to_id 
+    //     to {
+    //       value 
+    //     }
+    //   `
+    // });
+    // console.log({linksDownToEarthMp});
 
     callback?.(positions);
   return positions;

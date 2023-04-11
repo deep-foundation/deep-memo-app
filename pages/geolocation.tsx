@@ -19,7 +19,6 @@ import { clearWatch } from '../imports/position/clear-watch';
 
 
 function Page() {
-
   const deep = useDeep();
   const [deviceLinkId] = useLocalStore("deviceLinkId", undefined);
   const [options, setOptions] = useState<any>({
@@ -35,7 +34,6 @@ function Page() {
   const [watchId, setWatchId] = useState<string>(null);
 
   return <Stack>
-
     <Button onClick={async () => {initializePackageGeolocation(deep)}}>Initialize package geolocation</Button>
 
     <Button onClick={async () => {initializePackagePosition(deep)}}>Initialize package position</Button>
@@ -48,6 +46,7 @@ function Page() {
 
     <Button onClick={() => checkPermissions({callback: ({newPermissionState}) => setPermissionState(newPermissionState)}) &&
       getCurrentPosition({callback: ({coordinates}) => {
+        console.log({coordinates});
         setLoc(coordinates);
         savePosition(deep, deviceLinkId, {x: coordinates.coords.longitude, y: coordinates.coords.latitude, z: coordinates.coords.altitude});
       }})
