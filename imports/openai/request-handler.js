@@ -172,7 +172,7 @@ await deep.serial({
 	async function getMessages({ messageLinks }) {
     return Promise.all(
         messageLinks.map(async (link) => ({
-            role: await getMessageRole({ messageLinks: link }),
+            role: await getMessageRole({ messageLink: link }),
             content: link.value.value,
         }))
     );
@@ -243,9 +243,9 @@ await deep.serial({
 	
 
 	async function getMessageRole({ messageLink }) {
-    const authorLink = messageLink.filter((link) => link.author && link.author.length > 0);
+    const authorLink = messageLinks.filter((link) => link.author && link.author.length > 0);
     if (!authorLink) {
-      throw new Error(`Author link not found for message ##${messageLink.id}`);
+      throw new Error(`Author link not found for message ##${messageLinks.id}`);
     }
     return authorLink.to_id === chatgptTypeLinkId ? 'assistant' : 'user';
   }
