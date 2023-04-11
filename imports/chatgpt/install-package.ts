@@ -80,7 +80,7 @@ export async function installPackage () {
           }
     });
 
-  const { data: [{ id: conversationTypeLinkId, }] } = await deep.insert({
+const { data: [{ id: conversationTypeLinkId, }] } = await deep.insert({
         type_id: typeTypeLinkId,
         in: {
             data: {
