@@ -214,7 +214,7 @@ async ({ data: { newLink: replyLink, triggeredByLinkId }, deep, require }) => {
 			);
 			if (tokenLink.length > 1) {
 				throw new Error(
-					`For 2 or more ##${apiKeyTypeLinkId} links you must activate it with usesOpenAiApiKey link`
+					`For 2 or more ##${apiKeyTypeLinkId} links you must activate it with UsesApiKey link`
 				);
 			} else {
 				const tokenLink = data.find(
