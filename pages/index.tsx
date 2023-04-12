@@ -107,6 +107,9 @@ function Page() {
       <div>
         <Link href="/device">device</Link>
       </div>
+      <div>
+        <Link href="/chatgpt">chatgpt</Link>
+      </div>  
     </div>
   );
 }
