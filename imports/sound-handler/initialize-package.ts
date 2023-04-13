@@ -1,6 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
-export const PACKAGE_NAME = "@deep-foundation/sound-handler"
+export const PACKAGE_NAME = "@romanxz/sound-handler"
 export const PACKAGE_TYPES = ["GoogleSpeechTranscription", "GoogleCloudAuthFile"]
 
 export default async function initializePackage(deep: DeepClient) {
@@ -27,7 +27,8 @@ export default async function initializePackage(deep: DeepClient) {
         to_id: await deep.id('deep', 'admin')
       }]
     },
-  })
+  });
+
   const { data: [{ id: pacakgeTypeLinkId }] } = await deep.insert(PACKAGE_TYPES.map((TYPE) => ({
     type_id: typeTypeLinkId,
     in: {
@@ -37,6 +38,19 @@ export default async function initializePackage(deep: DeepClient) {
         string: { data: { value: TYPE } }
       }]
     }
-  })))
+  })));
+
+  const { data: [{ id: deviceDependencyTypeLinkId }] } = await deep.insert({
+    type_id: typeTypeLinkId,
+    from_id: await deep.id("@deep-foundation/device", "Device"),
+    to_id: await deep.id("@deep-foundation/device", "Device"),
+    in: {
+      data: {
+        type_id: containTypeLinkId,
+        from_id: packageLinkId,
+        string: { data: { value: 'DeviceDependency' } },
+      },
+    }
+  });
   console.log("sound-handler package installed");
 }
