@@ -14,16 +14,26 @@ import {
   MinilinksResult,
   useMinilinksConstruct,
 } from '@deep-foundation/deeplinks/imports/minilinks';
-import { ChakraProvider, Text } from '@chakra-ui/react';
+import { ChakraProvider, Text, Link, Stack } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import {
   DeepProvider,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
-import Link from 'next/link';
-import { insertPackageToDeep as insertDevicePackageToDeep } from '../imports/device/insert-package-to-deep';
+import NextLink from 'next/link';
 import { PACKAGE_NAME as DEVICE_PACKAGE_NAME } from '../imports/device/package-name';
+
+import { initPackageContact, createAllContacts } from "../imports/packages/contact/contact";
 import { getIsPackageInstalled } from '../imports/get-is-package-installed';
+
+import { initPackageHaptic, useHapticVibrate } from "../imports/packages/haptics/haptics";
+import { createAllCallHistory } from "../imports/packages/callhistory/callhistory";
+import { initPackageClipboard, copyClipboardToDeep } from "../imports/packages/clipboard/clipboard";
+import {Haptics} from '@capacitor/haptics';
+
+import {
+  createTelegramPackage,
+} from "../imports/packages/telegram/telegram";
 
 function Page() {
   const deep = useDeep();
@@ -32,9 +42,12 @@ function Page() {
     'deviceLinkId',
     undefined
   );
+  const [adminLinkId, setAdminLinkId] = useState<number | undefined>(undefined)
+
+  useHapticVibrate({deviceLinkId});
 
   useEffect(() => {
-    if(deep.linkId === 0) {
+    if (deep.linkId === 0) {
       deep.guest();
     }
   }, []);
@@ -43,6 +56,7 @@ function Page() {
     new Promise(async () => {
       if (deep.linkId != 0) {
         const adminLinkId = await deep.id('deep', 'admin');
+        setAdminLinkId(adminLinkId)
         if (deep.linkId != adminLinkId) {
 
           await deep.login({
@@ -54,7 +68,7 @@ function Page() {
   }, [deep]);
 
   useEffect(() => {
-    if(deep.linkId == 0) {
+    if (deep.linkId == 0) {
       return;
     }
     new Promise(async () => {
@@ -62,10 +76,7 @@ function Page() {
       if (deep.linkId != adminLinkId) {
         return;
       }
-      
-      if (!await getIsPackageInstalled({deep, packageName: DEVICE_PACKAGE_NAME})) {
-        await insertDevicePackageToDeep({ deep });
-      }
+
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
           const deviceTypeLinkId = await deep.id(DEVICE_PACKAGE_NAME, 'Device');
@@ -89,28 +100,68 @@ function Page() {
           setDeviceLinkId(newDeviceLinkId);
         };
         initializeDeviceLink();
+      } else {
+        const { data: [deviceLink] } = await deep.select(deviceLinkId);
+        if (!deviceLink) {
+          setDeviceLinkId(undefined);
+        }
       }
     });
   }, [deep]);
 
+  const isDeepReady = adminLinkId !== undefined && deep.linkId === adminLinkId && deviceLinkId !== undefined;
+
   return (
-    <div>
-      <h1>Deep.Foundation sdk examples</h1> 
-      <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text> 
+    <Stack alignItems={"center"}>
+      <h1>Deep</h1>
+      <Text suppressHydrationWarning>Authentication Link Id: {deep.linkId ?? " "}</Text>
       <Text suppressHydrationWarning>Device Link Id: {deviceLinkId ?? " "}</Text>
-       <div>
-        <Link href="/all">all subscribe</Link>
+      <div>
+        <Link as={NextLink} href='/device'>
+          Device
+        </Link>
       </div>
       <div>
-        <Link href="/messanger">messanger</Link>
+        <Link as={NextLink} href='/call-history'>
+          Call History
+        </Link>
       </div>
       <div>
-        <Link href="/device">device</Link>
-      </div> 
-      <div>
-        <Link href="/geolocation">geolocation</Link>
+        <Link as={NextLink} href='/contacts'>
+          Contacts
+        </Link>
       </div>
-    </div>
+      <div>
+        <Link as={NextLink} href='/telegram'>
+          Telegarm
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href='/action-sheet'>
+          Action Sheet
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href='/dialog'>
+          Dialog
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/screen-reader">
+          Screen Reader
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/openai-completion">
+          OpenAI Completion
+        </Link>
+      </div>
+      <div>
+        <Link as={NextLink} href="/geolocation">
+          Geolocation
+        </Link>
+      </div>
+    </Stack>
   );
 }
 
