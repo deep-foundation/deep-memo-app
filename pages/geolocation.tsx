@@ -46,7 +46,7 @@ function Page() {
 
     <Button onClick={() => checkPermissions({callback: ({newPermissionState}) => setPermissionState(newPermissionState)}) &&
       getCurrentPosition({callback: ({coordinates}) => {
-        console.log({coordinates});
+        console.log({coordinatesInGeolocationTSX: coordinates});
         setLoc(coordinates);
         savePosition(deep, deviceLinkId, {x: coordinates.coords.longitude, y: coordinates.coords.latitude, z: coordinates.coords.altitude});
       }})

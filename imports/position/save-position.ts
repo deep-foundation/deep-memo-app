@@ -8,6 +8,7 @@ export async function savePosition(deep: DeepClient, deviceLinkId: number, coord
   if(!deviceLinkId) {
     throw new Error("deviceLinkId must not be 0")
   }
+  console.log({deviceLinkId});
 
   const xTypeLinkId = await deep.id(PACKAGE_NAME, 'X');
   const yTypeLinkId = await deep.id(PACKAGE_NAME, 'Y');
