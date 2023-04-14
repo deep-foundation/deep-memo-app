@@ -318,12 +318,12 @@ function Page() {
         <Link as={NextLink} href="/screen-reader">
           Screen Reader
         </Link>
-      </div> 
+      </div>
       <div>
         <Link as={NextLink} href="/openai-completion">
           OpenAI Completion
         </Link>
-      </div> 
+      </div>
       <div>
         <Link as={NextLink} replace href="/browser-extension">Browser Extension</Link>
       </div>
@@ -347,7 +347,12 @@ function Page() {
         <Link as={NextLink} href="/haptics">
           Haptics
         </Link>
-      </div> 
+      </div>
+      <div>
+        <Link as={NextLink} href="/geolocation">
+          Geolocation
+        </Link>
+      </div>
       <div>
       </div>
     </Stack>
