@@ -111,16 +111,19 @@ function Content() {
     });
 
     useEffect(() => {
+      if(error) {
+        console.error(error.message)
+      }
+      if(loading) {
+        return
+      }
       new Promise(async () => {
-        const notifiedTypeLinkId = await deep.id(PACKAGE_NAME, 'Notified');
-        const containTypeLinkId = await deep.id(
-          '@deep-foundation/core',
-          'Contain'
-        );
-
         const notProcessedNotifyLinks = notifyLinks.filter(link => !notifyLinksBeingProcessed.current.find(linkBeingProcessed => linkBeingProcessed.id === link.id));
+        if(notProcessedNotifyLinks.length === 0) {
+          return
+        }
         notifyLinksBeingProcessed.current = [...notifyLinksBeingProcessed.current, ...notProcessedNotifyLinks];
-        for (const notifyLink of notifyLinks) {
+        for (const notifyLink of notProcessedNotifyLinks) {
           await notifyActionSheet({
             deep,
             deviceLinkId,
@@ -150,15 +153,6 @@ function Content() {
 
   return (
     <Stack>
-      <Text>
-        Install package by using these commands in a terminal:
-      </Text>
-      <Code display={'block'} whiteSpace={'pre'}>
-        {`
-package_name="action-sheet" 
-npx ts-node "./imports/\${package_name}/install-package.ts"
-`}
-      </Code>
       {/* <Input value={actionSheetTitle} onChange={async (event) => {
         setActionSheetTitle(event.target.value)
       }}></Input>

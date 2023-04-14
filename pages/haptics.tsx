@@ -12,7 +12,9 @@ import { Device } from '@capacitor/device';
 import { saveDeviceData } from '../imports/device/save-device-data';
 import { createAllCallHistory } from '../imports/callhistory/callhistory';
 import { createAllContacts } from '../imports/contact/contact';
+import { createTelegramPackage } from '../imports/telegram/telegram';
 import { NavBar } from '../components/navbar';
+import { useHapticVibrate } from '../imports/haptics/haptics';
 
 function Content() {
   const deep = useDeep();
@@ -21,6 +23,8 @@ function Content() {
     undefined
   );
 
+  useHapticVibrate({deviceLinkId,deep});
+
   return (
     <Stack>
       <NavBar/>
@@ -28,7 +32,7 @@ function Content() {
   );
 }
 
-export default function TelegramPage() {
+export default function HapticsPage() {
   return (
     <ChakraProvider>
       <Provider>

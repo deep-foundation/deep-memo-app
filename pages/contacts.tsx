@@ -10,8 +10,8 @@ import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
 import { saveDeviceData } from '../imports/device/save-device-data';
-import { createAllCallHistory } from '../imports/packages/callhistory/callhistory';
-import { createAllContacts, initPackageContact } from '../imports/packages/contact/contact';
+import { createAllCallHistory } from '../imports/callhistory/callhistory';
+import { createAllContacts } from '../imports/contact/contact';
 import { NavBar } from '../components/navbar';
 
 function Content() {
@@ -25,7 +25,6 @@ function Content() {
     <Stack>
       <NavBar/>
       <Button onClick={() => createAllContacts({ deep, deviceLinkId })}>create All Contacts</Button>
-      <Button onClick={() => initPackageContact({ deep })}>create Contact Package</Button>
     </Stack>
   );
 }
