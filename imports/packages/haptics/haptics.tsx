@@ -13,10 +13,10 @@ export function useHapticVibrate({ deviceLinkId }: { deviceLinkId: number }) {
   const deep = useDeep();
 
   useEffect(() => {
-    deep.id("@deep-foundation/haptics", "Vibrate").then((vibrateType) => {
+    deep.id("@deep-foundation/capacitor-haptics", "Vibrate").then((vibrateType) => {
       setVibrateType(vibrateType)
     })
-    deep.id("@deep-foundation/haptics", "Vibrated").then((vibratedType) => {
+    deep.id("@deep-foundation/capacitor-haptics", "Vibrated").then((vibratedType) => {
       setVibratedType(vibratedType)
     })
   }, [])
@@ -46,7 +46,7 @@ export async function initPackageHaptic({ deep }: { deep: DeepClient }) {
 
   await deep.insert({
       type_id: typePackageQueryLinkId,
-      string: { data: { value: "@deep-foundation/haptics" } },
+      string: { data: { value: "@deep-foundation/capacitor-haptics" } },
       in: {
           data: [
               {
