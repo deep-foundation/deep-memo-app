@@ -2,7 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { Clipboard } from '@capacitor/clipboard';
 
 
-const CAPACITOR_CLIPBOARD_NAME_PACKAGE = "@l4legenda/capacitor-clipboard";
+const CAPACITOR_CLIPBOARD_NAME_PACKAGE = "@deep-foundation/capacitor-clipboard";
 const CORE_NAME_PACKAGE = "@deep-foundation/core";
 
 export async function copyClipboardToDeep({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: any }) {
