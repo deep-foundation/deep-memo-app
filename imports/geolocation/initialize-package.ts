@@ -2,6 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { PACKAGE_NAME } from "./package-name";
 
 export async function initializePackage(deep: DeepClient) {
+  console.log(`initializePackage ${PACKAGE_NAME}`)
 
   const typeTypeLinkId = await deep.id("@deep-foundation/core", "Type");
   const anyTypeLinkId = await deep.id("@deep-foundation/core", "Any");
