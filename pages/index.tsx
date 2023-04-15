@@ -108,8 +108,14 @@ function Page() {
         <Link href="/device">device</Link>
       </div> 
       <div>
-        <Link href="/soundhandler">soundhandler</Link>
+        <Link href="/google-speech">google-speech</Link>
       </div>
+      <div>
+        <Link href="/capacitor-voice-recorder">capacitor-voice-recorder</Link>
+      </div>
+      <div>
+        <Link href="/sound">sound</Link>
+      </div> 
     </div>
   );
 }

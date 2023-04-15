@@ -1,13 +1,13 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { VoiceRecorder } from "capacitor-voice-recorder"
-import { PACKAGE_NAME } from "./initialize-package";
+import { PACKAGE_NAME } from "./install-package";
 
-export default async function checkDeviceSupport(deep: DeepClient, deviceLinkId) {
+export default async function getAudioRecPermission(deep: DeepClient, deviceLinkId) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
-  const deviceSupportTypelinkId = await deep.id(PACKAGE_NAME, "DeviceSupport");
+  const permissionTypelinkId = await deep.id(PACKAGE_NAME, "Permissions");
   const audioRecordsLinkId = await deep.id(deviceLinkId, "AudioRecords");
 
-  const { value: supported } = await VoiceRecorder.canDeviceVoiceRecord();
+  const { value: permission } = await VoiceRecorder.requestAudioRecordingPermission();
 
   await deep.delete({
     up: {
@@ -23,7 +23,7 @@ export default async function checkDeviceSupport(deep: DeepClient, deviceLinkId)
           _or: [
             {
               type_id: {
-                _id: [PACKAGE_NAME, 'DeviceSupport'],
+                _id: [PACKAGE_NAME, 'Permissions'],
               },
             },
           ],
@@ -32,9 +32,9 @@ export default async function checkDeviceSupport(deep: DeepClient, deviceLinkId)
     },
   });
 
-  const { data } = await deep.insert({
-    type_id: deviceSupportTypelinkId,
-    string: { data: { value: supported ? "true" : "false" } },
+  const { data: [{ id: permissionLinkId }] } = await deep.insert({
+    type_id: permissionTypelinkId,
+    string: { data: { value: permission ? "true" : "false" } },
     in: {
       data: [{
         type_id: containTypeLinkId,

@@ -5,9 +5,9 @@ export default async function insertSoundHandler(deep: DeepClient) {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const supportsId = await deep.id("@deep-foundation/core", "dockerSupportsJs");
   const handlerTypeLinkId = await deep.id("@deep-foundation/core", "Handler");
-  const packageId = await deep.id("@romanxz/google-speech");
+  const packageId = await deep.id("@deep-foundation/google-speech");
   const handleOperationTypeLinkId = await deep.id("@deep-foundation/core", "HandleInsert");
-  const triggerTypeLinkId = await deep.id("@romanxz/google-speech", "Transcribe");
+  const triggerTypeLinkId = await deep.id("@deep-foundation/google-speech", "Transcribe");
 
   const code = /*javascript*/`async ({ require, deep, data: { newLink } }) => {
     const speech = require('@google-cloud/speech');
@@ -15,8 +15,8 @@ export default async function insertSoundHandler(deep: DeepClient) {
     const os = require('os');
     const { v4: uuid } = require('uuid');
   
-    const soundTypelinkId = await deep.id("@romanxz/audiorecord", "Sound");
-    const mimetypeTypelinkId = await deep.id("@romanxz/audiorecord", "MIME/type");
+    const soundTypelinkId = await deep.id("@deep-foundation/capacitor-voice-recorder", "Sound");
+    const mimetypeTypelinkId = await deep.id("@deep-foundation/capacitor-voice-recorder", "MIME/type");
   
     const { data } = await deep.select({
       up: {
@@ -38,7 +38,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
     const soundLink = data.filter((link) => link.type_id === soundTypelinkId)
     const mimetypeLink = data.filter((link) => link.type_id === mimetypeTypelinkId)
   
-    const authFilelinkId = await deep.id("@romanxz/google-speech", "GoogleCloudAuthFile");
+    const authFilelinkId = await deep.id("@deep-foundation/google-speech", "GoogleCloudAuthFile");
     const { data: [{ value: { value: authFile } }] } = await deep.select({ type_id: authFilelinkId });
   
     const baseTempDirectory = os.tmpdir();
@@ -74,7 +74,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
         .join('\\n');
     
       await deep.insert({
-        type_id: await deep.id("@romanxz/google-speech", "GoogleSpeechTranscription"),
+        type_id: await deep.id("@deep-foundation/google-speech", "GoogleSpeechTranscription"),
         string: { data: { value: transcription } },
         in: {
           data: {
@@ -132,5 +132,5 @@ export default async function insertSoundHandler(deep: DeepClient) {
       },
     },
   });
-  console.log("sound hanler inserted");
+  console.log("Transcription handler inserted");
 }
