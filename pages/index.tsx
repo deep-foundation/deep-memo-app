@@ -67,7 +67,7 @@ function Page() {
 
       if (!deviceLinkId) {
         const initializeDeviceLink = async () => {
-          const deviceTypeLinkId = await deep.id("@freephoenix888/device", 'Device');
+          const deviceTypeLinkId = await deep.id("@deep-foundation/device", 'Device');
           const containTypeLinkId = await deep.id(
             '@deep-foundation/core',
             'Contain'

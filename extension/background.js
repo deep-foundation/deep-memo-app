@@ -92,6 +92,7 @@ import { executeUploadHistory } from "./upload-history.js";
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   chrome.storage.sync.get(["DEVICE_LINK_ID", "PACKAGE_NAME", "GQL_URL", "GQL_TOKEN"], async (data) => {
+    console.log({data});
     if (data.DEVICE_LINK_ID && data.PACKAGE_NAME && data.GQL_URL && data.GQL_TOKEN) {
       if (message.action === "uploadHistory") {
         // Code to execute when UPLOAD HISTORY button is clicked

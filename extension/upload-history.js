@@ -128,7 +128,7 @@ const checkExistingHistory = async (history, PACKAGE_NAME, GQL_URL, GQL_TOKEN) =
 
   const requestPayload = {
     query: `
-        query getHistoryByIds($historyIds: [bigint!]) {
+        query getHistoryByIds($historyIds: [numeric!]) {
           links(where: {type_id: {_eq: ${pageTypeLinkId}}, number: {value: {_in: $historyIds}}}) {
               number {
                 value
@@ -154,5 +154,6 @@ const checkExistingHistory = async (history, PACKAGE_NAME, GQL_URL, GQL_TOKEN) =
   });
 
   const responseData = await response.json();
+  console.log(responseData)
   return responseData.data.links;
 };
