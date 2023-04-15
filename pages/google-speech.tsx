@@ -3,11 +3,11 @@ import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import initializePackage, { PACKAGE_NAME } from '../imports/sound-handler/install-package';
-import insertSoundHandler from '../imports/sound-handler/sound-handler';
-import insertGcloudAuthFile from '../imports/sound-handler/insert-gcloud-auth-file';
+import initializePackage, { PACKAGE_NAME } from '../imports/google-speech/install-package';
+import insertSoundHandler from '../imports/google-speech/insert-handler';
+import insertGcloudAuthFile from '../imports/google-speech/insert-gcloud-auth-file';
 import fs from "fs";
-import installPackage from '../imports/sound-handler/install-package';
+import installPackage from '../imports/google-speech/install-package';
 
 export async function getStaticProps() {
   const credentials = JSON.parse(fs.readFileSync("./imports/key.json", { encoding: "utf-8" }));

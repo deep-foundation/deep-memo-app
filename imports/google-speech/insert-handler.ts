@@ -15,8 +15,8 @@ export default async function insertSoundHandler(deep: DeepClient) {
     const os = require('os');
     const { v4: uuid } = require('uuid');
   
-    const soundTypelinkId = await deep.id("@deep-foundation/capacitor-voice-recorder", "Sound");
-    const mimetypeTypelinkId = await deep.id("@deep-foundation/capacitor-voice-recorder", "MIME/type");
+    const soundTypelinkId = await deep.id("@deep-foundation/sound", "Sound");
+    const mimetypeTypelinkId = await deep.id("@deep-foundation/sound", "MIME/type");
   
     const { data } = await deep.select({
       up: {

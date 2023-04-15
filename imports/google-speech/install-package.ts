@@ -92,6 +92,20 @@ export default async function installPackage() {
         }]
       }
     }])
+
+    const { data: [{ id: soundDependencyTypeLinkId }] } = await deep.insert({
+      type_id: typeTypeLinkId,
+      from_id: await deep.id("@deep-foundation/sound", "Sound"),
+      to_id: await deep.id("@deep-foundation/sound", "Sound"),
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'DeviceDependency' } },
+        },
+      }
+    });
+
     console.log("sound-handler package installed");
   } else console.log("sound-handler package already exists");
 }

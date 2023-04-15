@@ -3,6 +3,7 @@ import { generateApolloClient } from '@deep-foundation/hasura/client';
 import { getIsPackageInstalled } from "../get-is-package-installed";
 import * as dotenv from 'dotenv';
 import { getIsLinkExist } from "../get-is-link-exist";
+import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
 
@@ -43,7 +44,7 @@ export default async function installPackage(deviceLinkId?) {
     const treeIncludeDownTypeLinkId = await deep.id('@deep-foundation/core', 'TreeIncludeDown');
     const userTypeLinkId = await deep.id('@deep-foundation/core', 'User');
 
-    
+
 
     const { data: [{ id: packageLinkId }] } = await deep.insert({
       type_id: packageTypeLinkId,
@@ -65,17 +66,6 @@ export default async function installPackage(deviceLinkId?) {
       },
     })
 
-    const { data: [{ id: audiorecordTreeId }] } = await deep.insert({
-      type_id: treeTypeLinkId,
-      in: {
-        data: {
-          type_id: containTypeLinkId,
-          from_id: packageLinkId,
-          string: { data: { value: 'AudioRecordTree' } },
-        },
-      }
-    })
-
     await deep.insert([
       {
         type_id: typeTypeLinkId,
@@ -84,18 +74,6 @@ export default async function installPackage(deviceLinkId?) {
             type_id: containTypeLinkId,
             from_id: packageLinkId,
             string: { data: { value: 'AudioRecords' } },
-          },
-          {
-            type_id: treeIncludeNodeTypeLinkId,
-            from_id: audiorecordTreeId,
-            in: {
-              data: [
-                {
-                  type_id: containTypeLinkId,
-                  from_id: packageLinkId,
-                },
-              ],
-            },
           }]
         },
         out: {
@@ -108,17 +86,6 @@ export default async function installPackage(deviceLinkId?) {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
                   string: { data: { value: 'Permissions' } },
-                }, {
-                  type_id: treeIncludeDownTypeLinkId,
-                  from_id: audiorecordTreeId,
-                  in: {
-                    data: [
-                      {
-                        type_id: containTypeLinkId,
-                        from_id: packageLinkId,
-                      },
-                    ],
-                  },
                 }]
               }
             },
@@ -130,17 +97,6 @@ export default async function installPackage(deviceLinkId?) {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
                   string: { data: { value: 'DeviceSupport' } },
-                }, {
-                  type_id: treeIncludeDownTypeLinkId,
-                  from_id: audiorecordTreeId,
-                  in: {
-                    data: [
-                      {
-                        type_id: containTypeLinkId,
-                        from_id: packageLinkId,
-                      },
-                    ],
-                  },
                 }]
               }
             },
@@ -152,18 +108,6 @@ export default async function installPackage(deviceLinkId?) {
                   type_id: containTypeLinkId,
                   from_id: packageLinkId,
                   string: { data: { value: 'Record' } },
-                },
-                {
-                  type_id: treeIncludeNodeTypeLinkId,
-                  from_id: audiorecordTreeId,
-                  in: {
-                    data: [
-                      {
-                        type_id: containTypeLinkId,
-                        from_id: packageLinkId,
-                      },
-                    ],
-                  },
                 }]
               },
               out: {
@@ -176,17 +120,6 @@ export default async function installPackage(deviceLinkId?) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'Duration' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: audiorecordTreeId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -198,17 +131,6 @@ export default async function installPackage(deviceLinkId?) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'StartTime' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: audiorecordTreeId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                            },
-                          ],
-                        },
                       }]
                     }
                   },
@@ -220,20 +142,9 @@ export default async function installPackage(deviceLinkId?) {
                         type_id: containTypeLinkId,
                         from_id: packageLinkId,
                         string: { data: { value: 'EndTime' } },
-                      }, {
-                        type_id: treeIncludeDownTypeLinkId,
-                        from_id: audiorecordTreeId,
-                        in: {
-                          data: [
-                            {
-                              type_id: containTypeLinkId,
-                              from_id: packageLinkId,
-                            },
-                          ],
-                        },
                       }]
                     }
-                  },
+                  }
                 ]
               }
             },
@@ -241,9 +152,35 @@ export default async function installPackage(deviceLinkId?) {
         }
       },
     ]);
+
+    const { data: [{ id: deviceDependencyTypeLinkId }] } = await deep.insert({
+      type_id: typeTypeLinkId,
+      from_id: await deep.id("@deep-foundation/device", "Device"),
+      to_id: await deep.id("@deep-foundation/device", "Device"),
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'DeviceDependency' } },
+        },
+      }
+    });
+
+    const { data: [{ id: soundDependencyTypeLinkId }] } = await deep.insert({
+      type_id: typeTypeLinkId,
+      from_id: await deep.id("@deep-foundation/sound", "Sound"),
+      to_id: await deep.id("@deep-foundation/sound", "Sound"),
+      in: {
+        data: {
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: 'SoundDependency' } },
+        },
+      }
+    });
     
     if (deviceLinkId) {
-      if (!await getIsLinkExist({ deep, packageName: "@deep-foundation/capacitor-voice-recorder", linkName: "AudioRecords" })) {
+      if (!await getIsLinkExist({ deep, packageName: PACKAGE_NAME, linkName: "AudioRecords" })) {
         const { data: [{ id: AudioRecordsLinkId }] } = await deep.insert({
           type_id: await deep.id(PACKAGE_NAME, "AudioRecords"),
           in: {
@@ -256,6 +193,6 @@ export default async function installPackage(deviceLinkId?) {
         })
       }
     }
-    console.log("audiorecord package installed");
-  } else console.log("audiorecord package already exists");
+    console.log("capacitor-voice-recorder package installed");
+  } else console.log("capacitor-voice-recorder package already exists");
 }
