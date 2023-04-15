@@ -1,7 +1,6 @@
 import { getLinkId } from "./get-link-id.js"
-import { GQL_URL, GQL_TOKEN, PACKAGE_NAME } from "./config.js"
 
-export const executeDeactivateTabs = async () => {
+export const executeDeactivateTabs = async (GQL_URL, GQL_TOKEN, PACKAGE_NAME) => {
   const activeTypeLinkId = await getLinkId(PACKAGE_NAME, "Active");
   const requestPayload = {
     query: `

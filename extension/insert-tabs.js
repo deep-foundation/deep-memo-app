@@ -1,7 +1,6 @@
 import { getLinkId } from "./get-link-id.js"
-import { GQL_URL, GQL_TOKEN, DEVICE_LINK_ID, PACKAGE_NAME } from "./config.js"
 
-const prepareInsertTabsVariables = async (tabs) => {
+const prepareInsertTabsVariables = async (tabs, PACKAGE_NAME, DEVICE_LINK_ID) => {
   const containTypeLinkId = await getLinkId("@deep-foundation/core", "Contain");
   const browserExtensionLinkId = await getLinkId(DEVICE_LINK_ID, "BrowserExtension");
   const tabTypeLinkId = await getLinkId(PACKAGE_NAME, "Tab");
@@ -56,7 +55,7 @@ const prepareInsertTabsVariables = async (tabs) => {
   return links;
 };
 
-const insertTabs = async (newTabs) => {
+const insertTabs = async (newTabs, GQL_URL, GQL_TOKEN) => {
   const requestPayload = {
     query: `
       mutation InsertLinks($links: [links_insert_input!]!) {
@@ -67,7 +66,7 @@ const insertTabs = async (newTabs) => {
         }
       }
       `,
-      variables: {links: newTabs},
+    variables: { links: newTabs },
   };
 
   const response = await fetch(GQL_URL, {
@@ -85,22 +84,22 @@ const insertTabs = async (newTabs) => {
   return responseData.data;
 };
 
-export const executeInsertTabs = async (tabs) => {
-  const tabsData = await prepareInsertTabsVariables(tabs);
-  const existingTabs = await checkExistingTabs(tabs);
+export const executeInsertTabs = async (tabs, GQL_URL, GQL_TOKEN, PACKAGE_NAME, DEVICE_LINK_ID) => {
+  const tabsData = await prepareInsertTabsVariables(tabs, PACKAGE_NAME, DEVICE_LINK_ID);
+  const existingTabs = await checkExistingTabs(tabs, PACKAGE_NAME);
 
   const newTabs = tabsData.filter(
     (tab) => !existingTabs.some((existingTab) => existingTab.number.value === tab.number.data.value)
   );
-  console.log({newTabs})
+  console.log({ newTabs })
   if (newTabs.length) {
-    await insertTabs(newTabs);
+    await insertTabs(newTabs, GQL_URL, GQL_TOKEN);
   } else {
     console.log("No new tabs to insert.");
   }
 };
 
-const checkExistingTabs = async (tabs) => {
+const checkExistingTabs = async (tabs, PACKAGE_NAME, GQL_URL, GQL_TOKEN) => {
   const tabIds = tabs.map((tab) => tab.id);
   const tabTypeLinkId = await getLinkId(PACKAGE_NAME, "Tab");
 

@@ -1,7 +1,6 @@
 import { getLinkId } from "./get-link-id.js"
-import { GQL_URL, GQL_TOKEN, DEVICE_LINK_ID, PACKAGE_NAME } from "./config.js"
 
-const uploadHistory = async (newHistory) => {
+const uploadHistory = async (newHistory, GQL_URL, GQL_TOKEN) => {
   const requestPayload = {
     query: `
         mutation insertHistory($historyData: [links_insert_input!]!) {
@@ -35,7 +34,7 @@ const uploadHistory = async (newHistory) => {
   return responseData.data.insert_links.returning;
 };
 
-const prepareHistoryData = async (history) => {
+const prepareHistoryData = async (history, PACKAGE_NAME, DEVICE_LINK_ID) => {
   const containTypeLinkId = await getLinkId("@deep-foundation/core", "Contain");
   const browserExtensionLinkId = await getLinkId(DEVICE_LINK_ID, "BrowserExtension");
   const pageTypeLinkId = await getLinkId(PACKAGE_NAME, "Page");
@@ -108,27 +107,22 @@ const prepareHistoryData = async (history) => {
   return historyData;
 };
 
-export const executeUploadHistory = async (history) => {
-  const historyData = await prepareHistoryData(history);
-  const existingHistory = await checkExistingHistory(history);
-
-  console.log('historyData:', historyData);
-  console.log('existingHistory:', existingHistory);
+export const executeUploadHistory = async (history, GQL_URL, GQL_TOKEN, PACKAGE_NAME, DEVICE_LINK_ID) => {
+  const historyData = await prepareHistoryData(history, PACKAGE_NAME, DEVICE_LINK_ID);
+  const existingHistory = await checkExistingHistory(history, PACKAGE_NAME, GQL_URL, GQL_TOKEN);
 
   const newHistory = historyData.filter(
     (page) => !existingHistory.some((existingPage) => existingPage.number.value === page.number.data.value)
   );
 
-  console.log('newHistory:', newHistory);
-
   if (newHistory.length) {
-    await uploadHistory(newHistory);
+    await uploadHistory(newHistory, GQL_URL, GQL_TOKEN);
   } else {
     console.log("No new history to upload.");
   }
 };
 
-const checkExistingHistory = async (history) => {
+const checkExistingHistory = async (history, PACKAGE_NAME, GQL_URL, GQL_TOKEN) => {
   const historyIds = history.map((page) => page.id);
   const pageTypeLinkId = await getLinkId(PACKAGE_NAME, "Page");
 
