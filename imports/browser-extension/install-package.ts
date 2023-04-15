@@ -6,7 +6,7 @@ import { getIsLinkExist } from "../get-is-link-exist";
 import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
-export const PACKAGE_NAME = "@romanxz/browser-extension"
+export const PACKAGE_NAME = "@deep-foundation/browser-extension"
   
 export default async function installPackage(deviceLinkId:number) {
 
@@ -226,6 +226,6 @@ export default async function installPackage(deviceLinkId:number) {
         })
       }
     }
-    console.log("browser-history package installed")
-  } else console.log("browser-history package already exists");
+    console.log("browser-extension package installed")
+  } else console.log("browser-extension package already exists");
 }
