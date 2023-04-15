@@ -58,13 +58,23 @@ export default async function installPackage() {
       },
     })
 
-    const { data: [{ id: pacakgeTypeLinkId }] } = await deep.insert([...PACKAGE_TYPES.map((TYPE) => ({
+    const { data: [{ id: pacakgeTypeLinkId }] } = await deep.insert([{
       type_id: typeTypeLinkId,
       in: {
         data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: TYPE } },
+          string: { data: { value: "GoogleSpeechTranscription" } },
+        }],
+      },
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: [{
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: "GoogleCloudAuthFile" } },
         }],
       },
       out: {
@@ -80,7 +90,8 @@ export default async function installPackage() {
           }
         }
       }
-    })), {
+    },
+    {
       type_id: typeTypeLinkId,
       from_id: userTypeLinkId,
       to_id: anyTypeLinkId,
@@ -91,7 +102,7 @@ export default async function installPackage() {
           string: { data: { value: "Transcribe" } }
         }]
       }
-    }])
+    }]);
 
     const { data: [{ id: soundDependencyTypeLinkId }] } = await deep.insert({
       type_id: typeTypeLinkId,
@@ -101,7 +112,7 @@ export default async function installPackage() {
         data: {
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: 'DeviceDependency' } },
+          string: { data: { value: 'SoundDependency' } },
         },
       }
     });
