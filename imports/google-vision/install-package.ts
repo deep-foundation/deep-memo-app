@@ -4,7 +4,6 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import fs from 'fs';
 export const PACKAGE_NAME = "@flakeed/google-vision"
-export const PACKAGE_TYPE = "GoogleCloudAuthFile"
 
 export default async function installPackage() {
   const apolloClient = generateApolloClient({
@@ -60,7 +59,7 @@ export default async function installPackage() {
         data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: "GoogleCloudAuthFile" } },
+          object: { data: { value: "GoogleCloudAuthFile" } },
         }],
       },
       out: {
@@ -118,7 +117,7 @@ export default async function installPackage() {
     },
     string: {
       data: {
-        value: fs.readFileSync('/workspace/dev/packages/sdk/imports/google-vision/media-handler.js', { encoding: 'utf-8' }),
+        value: fs.readFileSync('/workspace/dev/packages/sdk/imports/google-vision/media-handler.jsx', { encoding: 'utf-8' }),
       },
     },
   });
