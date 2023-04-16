@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import fs from 'fs';
 
-export const PACKAGE_NAME = "@deep-foundation/google-vision"
+export const PACKAGE_NAME = "@flakeed/google-vision"
 export const PACKAGE_TYPES = ["GoogleSpeechTranscription", "GoogleCloudAuthFile"]
 
 export default async function installPackage() {
@@ -161,19 +161,6 @@ export default async function installPackage() {
         },
       },
     });
-
-    // const { data: [{ id: photoDependencyTypeLinkId }] } = await deep.insert({
-    //   type_id: typeTypeLinkId,
-    //   from_id: await deep.id("@flakeed/google-vision", "Photo"),
-    //   to_id: await deep.id("@flakeed/google-vision", "Photo"),
-    //   in: {
-    //     data: {
-    //       type_id: containTypeLinkId,
-    //       from_id: packageLinkId,
-    //       string: { data: { value: 'PhotoDependency' } },
-    //     },
-    //   }
-    // });
 }
 
 installPackage();
