@@ -117,7 +117,7 @@ export default async function installPackage() {
     },
     string: {
       data: {
-        value: fs.readFileSync('/workspace/dev/packages/sdk/imports/google-vision/media-handler.jsx', { encoding: 'utf-8' }),
+        value: fs.readFileSync('/workspace/dev/packages/sdk/imports/google-vision/media-handler.js', { encoding: 'utf-8' }),
       },
     },
   });
