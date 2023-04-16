@@ -80,7 +80,7 @@ export default async function installPackage() {
       out: {
         data: {
           type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId,
+          to_id: objectTypeLinkId,
           in: {
             data: {
               from_id: packageLinkId,
