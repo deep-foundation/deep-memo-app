@@ -7,15 +7,25 @@ async ({ data: { newLink }, deep, require }) => {
   const os = require('os');
   const { v4: uuid } = require('uuid');
 
-  // const videoTypelinkId = await deep.id("@flakeed/google-vision", "Video");
-  // const photoTypelinkId = await deep.id("@flakeed/google-vision", "Photo");
-
-  // const { data } = await deep.select({
-
-  // });
-
-  // const soundLink = data.filter((link) => link.type_id === soundTypelinkId)
-  // const mimetypeLink = data.filter((link) => link.type_id === mimetypeTypelinkId)
+ async function getPath(deep, newLink) {
+    const ssl = deep.apolloClient.ssl;
+    console.log("ssl",ssl);
+    const path = deep.apolloClient.path;
+    console.log("path",path);
+    const url = `${ssl ? "https://" : "http://"}${path}/file?linkId=${link.id}`;
+    console.log("url",url);
+    const axios = require("axios")
+    const response = await axios({
+      method: 'get',
+      url,
+      headers: {
+        'Authorization': `Bearer ${deep.token}`
+      },
+      responseType: "blob",
+    });
+    return response.data;
+  }
+  const pathfile = await getPath(deep, newLink);
 
   const authFilelinkId = await deep.id("@flakeed/google-vision", "GoogleCloudAuthFile");
   const { data: [{ value: { value: authFile } }] } = await deep.select({ type_id: authFilelinkId });
@@ -37,7 +47,7 @@ async ({ data: { newLink }, deep, require }) => {
           {
             "image": {
               "source": {
-                "imageUri": "https://thumbs.dreamstime.com/b/banner-hello-june-new-season-welcome-card-photo-sunset-field-evening-sky-sun-horizon-text-149326476.jpg"
+                "imageUri": pathfile
               }
             },
             "features": [
