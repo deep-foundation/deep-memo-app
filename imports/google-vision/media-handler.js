@@ -1,4 +1,4 @@
-async ({ require, deep: DeepClient, data: { newLink } }) => {
+async ({ data: { newLink }, deep, require }) => {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const packageLinkId = await deep.id("@flakeed/google-vision");
 
@@ -7,8 +7,8 @@ async ({ require, deep: DeepClient, data: { newLink } }) => {
   const os = require('os');
   const { v4: uuid } = require('uuid');
 
-  const videoTypelinkId = await deep.id("@flakeed/google-vision", "Video");
-  const photoTypelinkId = await deep.id("@flakeed/google-vision", "Photo");
+  // const videoTypelinkId = await deep.id("@flakeed/google-vision", "Video");
+  // const photoTypelinkId = await deep.id("@flakeed/google-vision", "Photo");
 
   // const { data } = await deep.select({
 
@@ -37,7 +37,7 @@ async ({ require, deep: DeepClient, data: { newLink } }) => {
           {
             "image": {
               "source": {
-                "imageUri": ""
+                "imageUri": "https://thumbs.dreamstime.com/b/banner-hello-june-new-season-welcome-card-photo-sunset-field-evening-sky-sun-horizon-text-149326476.jpg"
               }
             },
             "features": [
@@ -70,4 +70,5 @@ async ({ require, deep: DeepClient, data: { newLink } }) => {
     finally {
       fs.rmSync(keyFilePath, { recursive: true, force: true });
     }
+    return detections;
 }
