@@ -25,7 +25,7 @@ export default async function installPackage() {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', 'Package');
   const joinTypeLinkId = await deep.id('@deep-foundation/core', 'Join');
   const valueTypeLinkId = await deep.id('@deep-foundation/core', 'Value');
-  const stringTypeLinkId = await deep.id('@deep-foundation/core', 'String');
+  const objectTypeLinkId = await deep.id('@deep-foundation/core', 'Object');
   const fileTypeLinkId = await deep.id("@deep-foundation/core", "SyncTextFile");
   const supportsId = await deep.id("@deep-foundation/core", "dockerSupportsJs");
   const handlerTypeLinkId = await deep.id("@deep-foundation/core", "Handler");
@@ -64,7 +64,7 @@ export default async function installPackage() {
       out: {
         data: {
           type_id: valueTypeLinkId,
-          to_id: stringTypeLinkId,
+          to_id: objectTypeLinkId,
           in: {
             data: {
               from_id: packageLinkId,
