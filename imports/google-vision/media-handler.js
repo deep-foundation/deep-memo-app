@@ -17,8 +17,9 @@ async ({ data: { newLink }, deep, require }) => {
     console.log("path",path);
     const url = `${ssl ? "https://" : "http://"}${path}/file?linkId=${link.id}`;
     console.log("url",url);
-    const axios = require("axios")
-    const [{ data, loading, error }, refetch] = await axios({
+    const axios = require("axios");
+    console.log("work");
+    const file = await axios({
       method: 'get',
       url,
       headers: {
@@ -26,16 +27,18 @@ async ({ data: { newLink }, deep, require }) => {
       },
       responseType: 'bobl',
     });
-    const [src, setSrc] = useState("test");
-    if (!loading && data) {
-      const reader = new window.FileReader();
-      reader.onload = () => {
-        setSrc(reader.result);
+    console.log("work");
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
+      if ((encoded.length % 4) > 0) {
+        encoded += '='.repeat(4 - (encoded.length % 4));
       }
-      reader.readAsDataURL(data);
-    }
-// console.log('image-client-handler src', src);
-    return src;
+      resolve(encoded);
+    };
+    
+    return resolve;
   }
   const pathfile = await getPath(deep, newLink);
 
