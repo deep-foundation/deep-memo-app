@@ -58,6 +58,16 @@ export default async function installPackage() {
         data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
+          string: { data: { value: "PhotoTranscription" } },
+        }],
+      }
+    },
+    {
+      type_id: typeTypeLinkId,
+      in: {
+        data: [{
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
           string: { data: { value: "GoogleCloudAuthFile" } },
         }],
       },
