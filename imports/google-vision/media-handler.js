@@ -1,11 +1,14 @@
 async ({ data: { newLink }, deep, require }) => {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const packageLinkId = await deep.id("@flakeed/google-vision");
-
+  const React = require('react');
+  const { useState } = require('react');
+  const axios = require("axios");
   const vision = require('@google-cloud/vision');
   const fs = require('fs');
   const os = require('os');
   const { v4: uuid } = require('uuid');
+
 
  async function getPath(deep, link) {
     const ssl = deep.apolloClient.ssl;
@@ -15,15 +18,24 @@ async ({ data: { newLink }, deep, require }) => {
     const url = `${ssl ? "https://" : "http://"}${path}/file?linkId=${link.id}`;
     console.log("url",url);
     const axios = require("axios")
-    const response = await axios({
+    const [{ data, loading, error }, refetch] = await axios({
       method: 'get',
       url,
       headers: {
         'Authorization': `Bearer ${deep.token}`
       },
-      responseType: "blob",
+      responseType: 'bobl',
     });
-    return response.data;
+    const [src, setSrc] = useState("test");
+    if (!loading && data) {
+      const reader = new window.FileReader();
+      reader.onload = () => {
+        setSrc(reader.result);
+      }
+      reader.readAsDataURL(data);
+    }
+// console.log('image-client-handler src', src);
+    return src;
   }
   const pathfile = await getPath(deep, newLink);
 
