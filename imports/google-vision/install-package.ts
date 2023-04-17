@@ -3,8 +3,7 @@ import { generateApolloClient } from '@deep-foundation/hasura/client';
 import * as dotenv from 'dotenv';
 dotenv.config();
 import fs from 'fs';
-export const PACKAGE_NAME = "@flakeed/google-vision"
-
+export const PACKAGE_NAME = "@flakeed/google-vision";
 export default async function installPackage() {
   const apolloClient = generateApolloClient({
     path: process.env.NEXT_PUBLIC_GQL_PATH || '',
@@ -59,7 +58,7 @@ export default async function installPackage() {
         data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          object: { data: { value: "GoogleCloudAuthFile" } },
+          string: { data: { value: "GoogleCloudAuthFile" } },
         }],
       },
       out: {
