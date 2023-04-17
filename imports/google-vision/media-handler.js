@@ -7,10 +7,10 @@ async ({ data: { newLink }, deep, require }) => {
   const os = require('os');
   const { v4: uuid } = require('uuid');
 
- async function getPath(deep, newLink) {
+ async function getPath(deep, link) {
     const ssl = deep.apolloClient.ssl;
     console.log("ssl",ssl);
-    const path = deep.apolloClient.path;
+    const path = deep.apolloClient.path.slice(0, -4);
     console.log("path",path);
     const url = `${ssl ? "https://" : "http://"}${path}/file?linkId=${link.id}`;
     console.log("url",url);
