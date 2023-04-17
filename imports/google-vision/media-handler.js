@@ -42,7 +42,7 @@ async ({ data: { newLink }, deep, require }) => {
     return src;
   });
 }
-
+console.log("pathfile",await getPath(deep, newLink));
   const pathfile = await getPath(deep, newLink);
 
   const authFilelinkId = await deep.id("@flakeed/google-vision", "GoogleCloudAuthFile");
@@ -55,6 +55,7 @@ async ({ data: { newLink }, deep, require }) => {
   const keyFilePath = `${tempDirectory}/key.json`;
   fs.writeFileSync(keyFilePath, JSON.stringify(authFile));
    let detections;
+  let detectedText = ''
    try {
   process.env["GOOGLE_APPLICATION_CREDENTIALS"] = keyFilePath;
 
@@ -84,18 +85,8 @@ async ({ data: { newLink }, deep, require }) => {
   detections = result.responses[0].fullTextAnnotation;
 
   if (detections) {
-    console.log(detections.text);
-
-    await deep.insert({
-      type_id: await deep.id("@flakeed/google-vision", "PhotoTranscription"),
-      string: { data: { value: detections } },
-      in: {
-        data: {
-          type_id: await deep.id("@deep-foundation/core", "Contain"),
-          from_id: newLink.to_id
-        }
-      }
-    });
+    detectedText = detections.text; // Store the detected text in the 'detectedText' variable
+    console.log(detectedText);
   } else {
     console.log("No text detected or error in the response.");
   }
@@ -104,5 +95,17 @@ async ({ data: { newLink }, deep, require }) => {
 } finally {
   fs.rmSync(keyFilePath, { recursive: true, force: true });
 }
-return detections;
+
+await deep.insert({
+  type_id: await deep.id("@flakeed/google-vision", "PhotoTranscription"),
+  string: { data: { value: detectedText } }, // Use 'detectedText' here instead of 'detections'
+  in: {
+    data: {
+      type_id: await deep.id("@deep-foundation/core", "Contain"),
+      from_id: newLink.to_id
+    }
+  }
+});
+
+return detectedText;
 }
