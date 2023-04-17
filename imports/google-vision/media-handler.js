@@ -11,35 +11,38 @@ async ({ data: { newLink }, deep, require }) => {
 
 
  async function getPath(deep, link) {
+  return (async ({ fillSize, style, link }) => {
     const ssl = deep.apolloClient.ssl;
-    console.log("ssl",ssl);
     const path = deep.apolloClient.path.slice(0, -4);
-    console.log("path",path);
     const url = `${ssl ? "https://" : "http://"}${path}/file?linkId=${link.id}`;
-    console.log("url",url);
-    const axios = require("axios");
-    console.log("work");
-    const file = await axios({
+
+    const [{ data, loading, error }, refetch] = await axios({ 
       method: 'get',
       url,
       headers: {
         'Authorization': `Bearer ${deep.token}`
       },
-      responseType: 'bobl',
+      
+      responseType: "blob",
     });
-    console.log("work");
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
-      if ((encoded.length % 4) > 0) {
-        encoded += '='.repeat(4 - (encoded.length % 4));
+
+    const [src, setSrc] = useState("test");
+    if (!loading && data) {
+      const reader = new window.FileReader();
+      reader.onload = () => {
+        setSrc(reader.result);
       }
-      resolve(encoded);
-    };
-    
-    return resolve;
-  }
+      reader.readAsDataURL(data);
+    }
+    console.log(" reader.readAsDataURL(data);", reader.readAsDataURL(data));
+    console.log("data",data);
+
+    // console.log('image-client-handler src', src);
+    console.log("src",src);
+    return src;
+  });
+}
+
   const pathfile = await getPath(deep, newLink);
 
   const authFilelinkId = await deep.id("@flakeed/google-vision", "GoogleCloudAuthFile");
