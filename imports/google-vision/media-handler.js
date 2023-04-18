@@ -1,4 +1,4 @@
-async ({ data: { newLink }, deep, require }) => {
+async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const packageLinkId = await deep.id("@flakeed/google-vision");
   const React = require('react');
@@ -55,46 +55,27 @@ console.log("pathfile",await getPath(deep, newLink));
   const keyFilePath = `${tempDirectory}/key.json`;
   fs.writeFileSync(keyFilePath, JSON.stringify(authFile));
    let detections;
-  let detectedText = ''
-   try {
-  process.env["GOOGLE_APPLICATION_CREDENTIALS"] = keyFilePath;
+  let detectedText = '';
 
-  const client = new vision.ImageAnnotatorClient();
+  try {
+    process.env["GOOGLE_APPLICATION_CREDENTIALS"] = keyFilePath;
 
-  const request = {
-    "requests": [
-      {
-        "image": {
-          "source": {
-            "imageUri": pathfile
-          }
-        },
-        "features": [
-          {
-            "type": "TEXT_DETECTION"
-          }
-        ],
-        "imageContext": {
-          "languageHints": ["en"]
-        }
-      }
-    ]
-  };
+    const client = new vision.ImageAnnotatorClient();
 
-  const [result] = await client.batchAnnotateImages(request);
-  detections = result.responses[0].fullTextAnnotation;
+    const [result] = await client.textDetection(pathfile);
+    detections = result.textAnnotations;
 
-  if (detections) {
-    detectedText = detections.text; // Store the detected text in the 'detectedText' variable
-    console.log(detectedText);
-  } else {
-    console.log("No text detected or error in the response.");
+    if (detections && detections.length > 0) {
+      detectedText = detections[0].description; // Store the detected text in the 'detectedText' variable
+      console.log(detectedText);
+    } else {
+      console.log("No text detected or error in the response.");
+    }
+  } catch (error) {
+    console.error("Error processing image:", error);
+  } finally {
+    fs.rmSync(keyFilePath, { recursive: true, force: true });
   }
-} catch (error) {
-  console.error("Error processing image:", error);
-} finally {
-  fs.rmSync(keyFilePath, { recursive: true, force: true });
-}
 
 await deep.insert({
   type_id: await deep.id("@flakeed/google-vision", "PhotoTranscription"),
@@ -102,7 +83,7 @@ await deep.insert({
   in: {
     data: {
       type_id: await deep.id("@deep-foundation/core", "Contain"),
-      from_id: newLink.to_id
+      from_id: triggeredByLinkId
     }
   }
 });
