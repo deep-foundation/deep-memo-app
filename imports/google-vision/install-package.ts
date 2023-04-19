@@ -33,7 +33,7 @@ export default async function installPackage() {
   const handlerTypeLinkId = await deep.id("@deep-foundation/core", "Handler");
   const handleOperationTypeLinkId = await deep.id("@deep-foundation/core", "HandleInsert");
   const asyncFileTypeLinkId = await deep.id("@deep-foundation/core", "AsyncFile");
-  
+
   const { data: [{ id: packageLinkId }] } = await deep.insert({
     type_id: packageTypeLinkId,
     string: { data: { value: PACKAGE_NAME } },
@@ -57,11 +57,13 @@ export default async function installPackage() {
   const { data: [{ id: packageLinks }] } = await deep.insert([
     {
       type_id: typeTypeLinkId,
+      from_id : userTypeLinkId,
+      to_id:asyncFileTypeLinkId,
       in: {
         data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: "DetectText" } },
+          string: { data: { value: "DetectedText" } },
         }],
       },
       out: {
@@ -72,7 +74,7 @@ export default async function installPackage() {
             data: {
               from_id: packageLinkId,
               type_id: containTypeLinkId,
-              string: { data: { value: 'DetectTextValue' } },
+              string: { data: { value: 'DetectedTextValue' } },
             }
           }
         }
@@ -104,7 +106,7 @@ export default async function installPackage() {
     {
       type_id: typeTypeLinkId,
       from_id: userTypeLinkId,
-      to_id:asyncFileTypeLinkId,
+      to_id: asyncFileTypeLinkId,
       in: {
         data: [{
           type_id: containTypeLinkId,
@@ -116,7 +118,7 @@ export default async function installPackage() {
     {
       type_id: typeTypeLinkId,
       from_id: userTypeLinkId,
-      to_id:asyncFileTypeLinkId,
+      to_id: asyncFileTypeLinkId,
       in: {
         data: [{
           type_id: containTypeLinkId,
@@ -128,7 +130,7 @@ export default async function installPackage() {
     {
       type_id: typeTypeLinkId,
       from_id: userTypeLinkId,
-      to_id:asyncFileTypeLinkId,
+      to_id: asyncFileTypeLinkId,
       in: {
         data: [{
           type_id: containTypeLinkId,
@@ -140,7 +142,7 @@ export default async function installPackage() {
     {
       type_id: typeTypeLinkId,
       from_id: userTypeLinkId,
-      to_id:asyncFileTypeLinkId,
+      to_id: asyncFileTypeLinkId,
       in: {
         data: [{
           type_id: containTypeLinkId,
@@ -152,7 +154,7 @@ export default async function installPackage() {
     {
       type_id: typeTypeLinkId,
       from_id: userTypeLinkId,
-      to_id:asyncFileTypeLinkId,
+      to_id: asyncFileTypeLinkId,
       in: {
         data: [{
           type_id: containTypeLinkId,
@@ -184,7 +186,7 @@ export default async function installPackage() {
               },
               {
                 type_id: handleOperationTypeLinkId,
-                from_id: await deep.id("@deep-foundation/core", "AsyncFile"),
+                from_id: asyncFileTypeLinkId,
                 in: {
                   data: [
                     {
