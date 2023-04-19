@@ -21,6 +21,7 @@ export default async function installPackage() {
   const deep = new DeepClient({ deep: guestDeep, ...admin });
 
   const typeTypeLinkId = await deep.id('@deep-foundation/core', 'Type');
+  const userTypeLinkId = await deep.id('@deep-foundation/core', 'User');
   const containTypeLinkId = await deep.id('@deep-foundation/core', 'Contain');
   const packageTypeLinkId = await deep.id('@deep-foundation/core', 'Package');
   const joinTypeLinkId = await deep.id('@deep-foundation/core', 'Join');
@@ -31,7 +32,8 @@ export default async function installPackage() {
   const supportsId = await deep.id("@deep-foundation/core", "dockerSupportsJs");
   const handlerTypeLinkId = await deep.id("@deep-foundation/core", "Handler");
   const handleOperationTypeLinkId = await deep.id("@deep-foundation/core", "HandleInsert");
-
+  const asyncFileTypeLinkId = await deep.id("@deep-foundation/core", "AsyncFile");
+  
   const { data: [{ id: packageLinkId }] } = await deep.insert({
     type_id: packageTypeLinkId,
     string: { data: { value: PACKAGE_NAME } },
@@ -59,7 +61,7 @@ export default async function installPackage() {
         data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: "PhotoTranscription" } },
+          string: { data: { value: "DetectText" } },
         }],
       },
       out: {
@@ -70,7 +72,7 @@ export default async function installPackage() {
             data: {
               from_id: packageLinkId,
               type_id: containTypeLinkId,
-              string: { data: { value: 'PhotoTranscriptionValue' } },
+              string: { data: { value: 'DetectTextValue' } },
             }
           }
         }
@@ -98,6 +100,66 @@ export default async function installPackage() {
           }
         }
       }
+    },
+    {
+      type_id: typeTypeLinkId,
+      from_id: userTypeLinkId,
+      to_id:asyncFileTypeLinkId,
+      in: {
+        data: [{
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: "DetectText" } },
+        }],
+      },
+    },
+    {
+      type_id: typeTypeLinkId,
+      from_id: userTypeLinkId,
+      to_id:asyncFileTypeLinkId,
+      in: {
+        data: [{
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: "DetectHandwriting" } },
+        }],
+      },
+    },
+    {
+      type_id: typeTypeLinkId,
+      from_id: userTypeLinkId,
+      to_id:asyncFileTypeLinkId,
+      in: {
+        data: [{
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: "DetectTextInFiles" } },
+        }],
+      },
+    },
+    {
+      type_id: typeTypeLinkId,
+      from_id: userTypeLinkId,
+      to_id:asyncFileTypeLinkId,
+      in: {
+        data: [{
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: "DetectLabels" } },
+        }],
+      },
+    },
+    {
+      type_id: typeTypeLinkId,
+      from_id: userTypeLinkId,
+      to_id:asyncFileTypeLinkId,
+      in: {
+        data: [{
+          type_id: containTypeLinkId,
+          from_id: packageLinkId,
+          string: { data: { value: "DetectLogos" } },
+        }],
+      },
     }
   ]);
 
