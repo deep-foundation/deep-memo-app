@@ -1,5 +1,7 @@
 async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
+  const userTypeLinkId = await deep.id('@deep-foundation/core', 'User');
+
   const packageLinkId = await deep.id("@flakeed/google-vision");
   const axios = require("axios");
   const vision = require('@google-cloud/vision');
@@ -65,16 +67,18 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     fs.rmdirSync(tempDirectory);
   }
 
-  await deep.insert({
-    type_id: await deep.id("@flakeed/google-vision", "PhotoTranscription"),
-    string: { data: { value: detectedText } },
-    in: {
-      data: {
-        type_id: await deep.id("@deep-foundation/core", "Contain"),
-        from_id: triggeredByLinkId
-      }
+const detectedTextLinkId = await deep.insert({
+  type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
+  from_id: triggeredByLinkId,
+  to_id:newLink.id,
+  string: { data: { value: detectedText } },
+  in: {
+    data: {
+      type_id: await deep.id("@deep-foundation/core", "Contain"),
+      from_id: triggeredByLinkId
     }
-  });
+  }
+});
 
-  return detectedText;
+return detectedTextLinkId;
 }
