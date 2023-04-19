@@ -4,8 +4,7 @@ import { getIsPackageInstalled } from "../get-is-package-installed";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-export const PACKAGE_NAME = "@deep-foundation/google-speech"
-export const PACKAGE_TYPES = ["GoogleSpeechTranscription", "GoogleCloudAuthFile"]
+export const PACKAGE_NAME = "@deep-foundation/google-speech";
 
 export default async function installPackage() {
 
