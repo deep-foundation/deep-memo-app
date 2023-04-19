@@ -1,73 +1,59 @@
 async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const packageLinkId = await deep.id("@flakeed/google-vision");
-  const React = require('react');
-  const { useState } = require('react');
   const axios = require("axios");
   const vision = require('@google-cloud/vision');
   const fs = require('fs');
   const os = require('os');
   const { v4: uuid } = require('uuid');
+  let detections;
+  let detectedText = '';
 
-
- async function getPath(deep, link) {
-  return (async ({ fillSize, style, link }) => {
+  async function getPath(deep, link) {
     const ssl = deep.apolloClient.ssl;
     const path = deep.apolloClient.path.slice(0, -4);
     const url = `${ssl ? "https://" : "http://"}${path}/file?linkId=${link.id}`;
 
-    const [{ data, loading, error }, refetch] = await axios({ 
+    const { data } = await axios({
       method: 'get',
       url,
       headers: {
         'Authorization': `Bearer ${deep.token}`
       },
-      
-      responseType: "blob",
+      responseType: "arraybuffer",
     });
 
-    const [src, setSrc] = useState("test");
-    if (!loading && data) {
-      const reader = new window.FileReader();
-      reader.onload = () => {
-        setSrc(reader.result);
-      }
-      reader.readAsDataURL(data);
-    }
-    console.log(" reader.readAsDataURL(data);", reader.readAsDataURL(data));
-    console.log("data",data);
+    const baseTempDirectory = os.tmpdir();
+    const randomId = uuid();
+    const tempDirectory = [baseTempDirectory, randomId].join('/');
+    fs.mkdirSync(tempDirectory);
 
-    // console.log('image-client-handler src', src);
-    console.log("src",src);
-    return src;
-  });
-}
-console.log("pathfile",await getPath(deep, newLink));
-  const pathfile = await getPath(deep, newLink);
+    const imageBuffer = Buffer.from(data, 'binary');
+    const tempImagePath = `${tempDirectory}/image.jpg`;
+    fs.writeFileSync(tempImagePath, imageBuffer);
+
+    return { tempDirectory, tempImagePath };
+  }
+  console.log("pathfile", await getPath(deep, newLink));
+  const { tempDirectory, tempImagePath } = await getPath(deep, newLink);
 
   const authFilelinkId = await deep.id("@flakeed/google-vision", "GoogleCloudAuthFile");
   const { data: [{ value: { value: authFile } }] } = await deep.select({ type_id: authFilelinkId });
 
-  const baseTempDirectory = os.tmpdir();
-  const randomId = uuid();
-  const tempDirectory = [baseTempDirectory, randomId].join('/');
-  fs.mkdirSync(tempDirectory);
   const keyFilePath = `${tempDirectory}/key.json`;
   fs.writeFileSync(keyFilePath, JSON.stringify(authFile));
-   let detections;
-  let detectedText = '';
 
   try {
     process.env["GOOGLE_APPLICATION_CREDENTIALS"] = keyFilePath;
 
     const client = new vision.ImageAnnotatorClient();
 
-    const [result] = await client.textDetection(pathfile);
+    const [result] = await client.textDetection(tempImagePath);
     detections = result.textAnnotations;
 
     if (detections && detections.length > 0) {
-      detectedText = detections[0].description; // Store the detected text in the 'detectedText' variable
-      console.log(detectedText);
+      detectedText = detections[0].description;
+      console.log("Detected text from Google Vision API:", detectedText);
     } else {
       console.log("No text detected or error in the response.");
     }
@@ -75,18 +61,20 @@ console.log("pathfile",await getPath(deep, newLink));
     console.error("Error processing image:", error);
   } finally {
     fs.rmSync(keyFilePath, { recursive: true, force: true });
+    fs.unlinkSync(tempImagePath);
+    fs.rmdirSync(tempDirectory);
   }
 
-await deep.insert({
-  type_id: await deep.id("@flakeed/google-vision", "PhotoTranscription"),
-  string: { data: { value: detectedText } }, // Use 'detectedText' here instead of 'detections'
-  in: {
-    data: {
-      type_id: await deep.id("@deep-foundation/core", "Contain"),
-      from_id: triggeredByLinkId
+  await deep.insert({
+    type_id: await deep.id("@flakeed/google-vision", "PhotoTranscription"),
+    string: { data: { value: detectedText } },
+    in: {
+      data: {
+        type_id: await deep.id("@deep-foundation/core", "Contain"),
+        from_id: triggeredByLinkId
+      }
     }
-  }
-});
+  });
 
-return detectedText;
+  return detectedText;
 }
