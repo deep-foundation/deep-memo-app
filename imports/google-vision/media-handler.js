@@ -80,5 +80,5 @@ const detectedTextLinkId = await deep.insert({
   }
 });
 
-return detectedTextLinkId;
+return detectedText;
 }
