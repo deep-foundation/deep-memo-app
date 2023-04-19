@@ -1,0 +1,1 @@
+export const CONVERT_AUDIO_PACKAGE_NAME = "@deep-foundation/convert-audio"
