@@ -16,6 +16,7 @@ export default async function insertConvertHandler(deep: DeepClient) {
     const os = require('os');
     const { v4: uuid } = require('uuid');
   
+    const soundTypelinkId = await deep.id("@deep-foundation/sound", "Sound");
     const formatTypelinkId = await deep.id("@deep-foundation/sound", "Format");
     const mimetypeTypelinkId = await deep.id("@deep-foundation/sound", "MIME/type");
   
@@ -38,17 +39,17 @@ export default async function insertConvertHandler(deep: DeepClient) {
   
     const soundLink = newLink;
     const mimetypeLink = data.filter((link) => link.type_id === mimetypeTypelinkId);
-    const formatLink = data.filter((link) => link.type_id === fromatTypelinkId);
+    const formatLink = data.filter((link) => link.type_id === formatTypelinkId);
   
-    let converted = await AudioConverter.convert(soundLink.value.value, targetAudioFormat);
+    let converted = await AudioConverter.convert(soundLink.value.value, 'wav');
   
     await deep.insert({
-      type_id: await deep.id("@deep-foundation/google-speech", "GoogleSpeechTranscription"),
-      string: { data: { value: transcription } },
+      type_id: soundTypelinkId,
+      object: { data: { value: converted } },
       in: {
         data: {
           type_id: await deep.id("@deep-foundation/core", "Contain"),
-          from_id: newLink.to_id
+          from_id: newLink.from_id
         }
       }
     })
