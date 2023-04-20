@@ -186,7 +186,7 @@ export default async function installPackage() {
               },
               {
                 type_id: handleOperationTypeLinkId,
-                from_id: asyncFileTypeLinkId,
+                from_id: await deep.id("@flakeed/google-vision", "DetectText") || await deep.id("@flakeed/google-vision", "DetectHandwriting") || await deep.id("@flakeed/google-vision", "DetectTextInFiles") || await deep.id("@flakeed/google-vision", "DetectLabels") || await deep.id("@flakeed/google-vision", "DetectLogos"),
                 in: {
                   data: [
                     {
