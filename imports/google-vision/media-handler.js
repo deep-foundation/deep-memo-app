@@ -49,16 +49,15 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
 
   try {
     process.env["GOOGLE_APPLICATION_CREDENTIALS"] = keyFilePath;
-    if (newLink.id === detectTextTypeLinkId) {
+    if (newLink.type_id === detectTextTypeLinkId) {
       await processTextDetection(tempImagePath);
-    } else if (newLink.id === detectHandwritingTypeLinkId) {
+    } else if (newLink.type_id === detectHandwritingTypeLinkId) {
       await processHandwritingDetection(tempImagePath);
-    } else if (newLink.id === detectTextInFilesTypeLinkId) {
+    } else if (newLink.type_id === detectTextInFilesTypeLinkId) {
       await processTextIfFilesDetection(tempImagePath);
-    } else if (newLink.id === detectLabelsTypeLinkId) {
+    } else if (newLink.type_id === detectLabelsTypeLinkId) {
       await proccesLabelsDetection(tempImagePath);
-    }
-    else if (newLink.id === detectLogosTypeLinkId) {
+    } else if (newLink.type_id === detectLogosTypeLinkId) {
       await proccesLogosDetection(tempImagePath);
     } else {
       console.error("Invalid type ID.");
