@@ -57,8 +57,8 @@ export default async function installPackage() {
   const { data: [{ id: packageLinks }] } = await deep.insert([
     {
       type_id: typeTypeLinkId,
-      from_id : userTypeLinkId,
-      to_id:asyncFileTypeLinkId,
+      from_id: userTypeLinkId,
+      to_id: asyncFileTypeLinkId,
       in: {
         data: [{
           type_id: containTypeLinkId,
@@ -186,7 +186,59 @@ export default async function installPackage() {
               },
               {
                 type_id: handleOperationTypeLinkId,
-                from_id: await deep.id("@flakeed/google-vision", "DetectText") || await deep.id("@flakeed/google-vision", "DetectHandwriting") || await deep.id("@flakeed/google-vision", "DetectTextInFiles") || await deep.id("@flakeed/google-vision", "DetectLabels") || await deep.id("@flakeed/google-vision", "DetectLogos"),
+                from_id: await deep.id("@flakeed/google-vision", "DetectText"),
+                in: {
+                  data: [
+                    {
+                      type_id: containTypeLinkId,
+                      from_id: packageLinkId,
+                      string: { data: { value: "HandleAsyncFile" } },
+                    },
+                  ],
+                },
+              },
+              {
+                type_id: handleOperationTypeLinkId,
+                from_id: await deep.id("@flakeed/google-vision", "DetectHandwriting"),
+                in: {
+                  data: [
+                    {
+                      type_id: containTypeLinkId,
+                      from_id: packageLinkId,
+                      string: { data: { value: "HandleAsyncFile" } },
+                    },
+                  ],
+                },
+              },
+              {
+                type_id: handleOperationTypeLinkId,
+                from_id: await deep.id("@flakeed/google-vision", "DetectTextInFiles"),
+                in: {
+                  data: [
+                    {
+                      type_id: containTypeLinkId,
+                      from_id: packageLinkId,
+                      string: { data: { value: "HandleAsyncFile" } },
+                    },
+                  ],
+                },
+              },
+              {
+                type_id: handleOperationTypeLinkId,
+                from_id: await deep.id("@flakeed/google-vision", "DetectLabels"),
+                in: {
+                  data: [
+                    {
+                      type_id: containTypeLinkId,
+                      from_id: packageLinkId,
+                      string: { data: { value: "HandleAsyncFile" } },
+                    },
+                  ],
+                },
+              },
+              {
+                type_id: handleOperationTypeLinkId,
+                from_id: await deep.id("@flakeed/google-vision", "DetectLogos"),
                 in: {
                   data: [
                     {
