@@ -74,7 +74,7 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
     from_id: triggeredByLinkId,
     to_id: newLink.to_id,
-    string: { data: { value: detectedText } },
+    string: { data: { value: detectedText.text } },
     in: {
       data: {
         type_id: await deep.id("@deep-foundation/core", "Contain"),
@@ -100,10 +100,9 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
 
   async function processHandwritingDetection(tempImagePath) {
     const client = new vision.ImageAnnotatorClient();
-
-    detections = await client.documentTextDetection(tempImagePath);
-    detectedText = detections.fullTextAnnotation;
-    console.log(fullTextAnnotation.text);
+    const [result] = await client.documentTextDetection(tempImagePath);
+    detectedText = result.fullTextAnnotation;
+    console.log(detectedText.text);
     return detectedText;
   }
 
