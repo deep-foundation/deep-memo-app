@@ -114,7 +114,7 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
         from_id: triggeredByLinkId,
         to_id: newLink.to_id,
-        string: { data: { value: detectedText.text } },
+        string: { data: { value: JSON.stringify(detectedText) } },
         in: {
           data: {
             type_id: await deep.id("@deep-foundation/core", "Contain"),
@@ -184,10 +184,11 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
 
   async function proccesLogosDetection(tempImagePath) {
     const client = new vision.ImageAnnotatorClient();
-    detections = await client.logoDetection(tempImagePath);
-    detectedText = detections.logoAnnotations;
+    const [result] = await client.logoDetection(tempImagePath);
+    const logos = result.logoAnnotations;
     console.log('Logos:');
     logos.forEach(logo => console.log(logo));
+    detectedText = logos.map(logo => logo.description);
     return detectedText;
   }
 
