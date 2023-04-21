@@ -51,14 +51,77 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     process.env["GOOGLE_APPLICATION_CREDENTIALS"] = keyFilePath;
     if (newLink.type_id === detectTextTypeLinkId) {
       await processTextDetection(tempImagePath);
+
+      await deep.insert({
+        type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
+        from_id: triggeredByLinkId,
+        to_id: newLink.to_id,
+        string: { data: { value: detectedText } },
+        in: {
+          data: {
+            type_id: await deep.id("@deep-foundation/core", "Contain"),
+            from_id: triggeredByLinkId
+          }
+        }
+      });
     } else if (newLink.type_id === detectHandwritingTypeLinkId) {
       await processHandwritingDetection(tempImagePath);
+
+      await deep.insert({
+        type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
+        from_id: triggeredByLinkId,
+        to_id: newLink.to_id,
+        string: { data: { value: detectedText.text } },
+        in: {
+          data: {
+            type_id: await deep.id("@deep-foundation/core", "Contain"),
+            from_id: triggeredByLinkId
+          }
+        }
+      });
     } else if (newLink.type_id === detectTextInFilesTypeLinkId) {
       await processTextIfFilesDetection(tempImagePath);
+      await deep.insert({
+        type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
+        from_id: triggeredByLinkId,
+        to_id: newLink.to_id,
+        string: { data: { value: detectedText } },
+        in: {
+          data: {
+            type_id: await deep.id("@deep-foundation/core", "Contain"),
+            from_id: triggeredByLinkId
+          }
+        }
+      });
     } else if (newLink.type_id === detectLabelsTypeLinkId) {
       await proccesLabelsDetection(tempImagePath);
+      await deep.insert({
+        type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
+        from_id: triggeredByLinkId,
+        to_id: newLink.to_id,
+        string: { data: { value: JSON.stringify(detectedText) } },
+        in: {
+          data: {
+            type_id: await deep.id("@deep-foundation/core", "Contain"),
+            from_id: triggeredByLinkId
+          }
+        }
+      });
     } else if (newLink.type_id === detectLogosTypeLinkId) {
       await proccesLogosDetection(tempImagePath);
+
+      await deep.insert({
+        type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
+        from_id: triggeredByLinkId,
+        to_id: newLink.to_id,
+        string: { data: { value: detectedText.text } },
+        in: {
+          data: {
+            type_id: await deep.id("@deep-foundation/core", "Contain"),
+            from_id: triggeredByLinkId
+          }
+        }
+      });
     } else {
       console.error("Invalid type ID.");
     }
@@ -69,19 +132,6 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     fs.unlinkSync(tempImagePath);
     fs.rmdirSync(tempDirectory);
   }
-
-  await deep.insert({
-    type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
-    from_id: triggeredByLinkId,
-    to_id: newLink.to_id,
-    string: { data: { value: detectedText.text } },
-    in: {
-      data: {
-        type_id: await deep.id("@deep-foundation/core", "Contain"),
-        from_id: triggeredByLinkId
-      }
-    }
-  });
 
   async function processTextDetection(tempImagePath) {
     const client = new vision.ImageAnnotatorClient();
@@ -108,24 +158,27 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
 
   //** 
   async function processTextIfFilesDetection(tempImagePath) {
-    const clientOptions = { apiEndpoint: 'eu-vision.googleapis.com' };
-
-    const client = new vision.ImageAnnotatorClient(clientOptions);
-
-    detections = await client.textDetection(tempImagePath);
-    detectedText = detections.textAnnotations;
-    console.log('Text:');
-    labels.forEach(label => console.log(label.description));
-    return detectedText;
+      async function setEndpoint() {
+        const clientOptions = { apiEndpoint: 'eu-vision.googleapis.com' };
+        const client = new vision.ImageAnnotatorClient(clientOptions);
+        const [result] = await client.textDetection(tempImagePath);
+        detectedText = result.textAnnotations;
+        console.log('Text:');
+        detectedText.forEach(label => console.log(label.description));
+        return detectedText.forEach(label => label.description);
+      }
+    
+      detectedText = await setEndpoint();
+      return detectedText;
   }
 
   async function proccesLabelsDetection(tempImagePath) {
     const client = new vision.ImageAnnotatorClient();
-
-    detections = await client.labelDetection(tempImagePath);
-    detectedText = detections.labelAnnotations;
+    const [result] = await client.labelDetection(tempImagePath);
+    const labels = result.labelAnnotations;
     console.log('Labels:');
     labels.forEach(label => console.log(label.description));
+    detectedText = labels.map(label => label.description);
     return detectedText;
   }
 
