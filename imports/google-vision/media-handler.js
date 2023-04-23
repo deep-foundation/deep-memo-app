@@ -41,18 +41,19 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
       }, 
       {
         table: 'files', 
-        returning: `link_id name`
+        returning: `link_id name mime_type`
       });
     console.log("fileNameSelect:", fileNameSelect);
     const fileName = fileNameSelect.data[0].name;
+    const fileType = fileNameSelect.data[0].mime_type;
     const imageBuffer = Buffer.from(data, 'binary');
     const tempPath = `${tempDirectory}/${fileName}`;
     fs.writeFileSync(tempPath, imageBuffer);
 
-    return { tempDirectory, tempPath };
+    return { tempDirectory, tempPath, fileType };
   }
   console.log("pathfile", await getPath(deep, newLink));
-  const { tempDirectory, tempPath } = await getPath(deep, newLink);
+  const { tempDirectory, tempPath, fileType } = await getPath(deep, newLink);
 
   const authFilelinkId = await deep.id("@flakeed/google-vision", "GoogleCloudAuthFile");
   const { data: [{ value: { value: authFile } }] } = await deep.select({ type_id: authFilelinkId });
@@ -170,22 +171,53 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
   }
 
   //** 
-  async function processTextIfFilesDetection(tempPath) {
-    async function setEndpoint() {
-      const clientOptions = {apiEndpoint: 'eu-vision.googleapis.com'};
-      const client = new vision.ImageAnnotatorClient(clientOptions);
-      const [result] = await client.textDetection(tempPath);
-      const detectedText = result.textAnnotations;
-      console.log('Text:');
-      detectedText.forEach(label => console.log(label.description));
-      return detectedText.map(label => label.description);
-    }
-    detectedText = await setEndpoint();
-    console.log("processTextIfFilesDetection detectedText:", detectedText);
-    detectedText = detectedText.join(' ');
-    return detectedText;
-}
+  // async function processTextIfFilesDetection(tempPath) {
+  //   const client = new vision.ImageAnnotatorClient();
+  //   const [result] = await client.annotateImage(tempPath);
+  //   const detectedTextAnnotations = result.textAnnotations;
   
+  //   console.log('Text:');
+  //   detectedTextAnnotations.forEach(label => console.log(label.description));
+  //   detectedText = detectedTextAnnotations.map(label => label.description).join(' ');
+  //   return detectedText;
+  // }
+
+  async function processTextIfFilesDetection(tempPath,fileType){
+    const client = new vision.ImageAnnotatorClient();
+
+const gcsSourceUri = `gs://${tempPath}`;
+const gcsDestinationUri = `gs://${tempPath}/`;
+
+const inputConfig = {
+  mimeType: fileType,
+  gcsSource: {
+    uri: gcsSourceUri,
+  },
+};
+const outputConfig = {
+  gcsDestination: {
+    uri: gcsDestinationUri,
+  },
+};
+const features = [{type: 'DOCUMENT_TEXT_DETECTION'}];
+const request = {
+  requests: [
+    {
+      inputConfig: inputConfig,
+      features: features,
+      outputConfig: outputConfig,
+    },
+  ],
+};
+
+const [operation] = await client.asyncBatchAnnotateFiles(request);
+const [filesResponse] = await operation.promise();
+const destinationUri = filesResponse.responses[0].outputConfig.gcsDestination.uri;
+console.log('Json saved to: ' + destinationUri);
+detectedText=destinationUri;
+return detectedText;
+  }  
+
   async function proccesLabelsDetection(tempPath) {
     const client = new vision.ImageAnnotatorClient();
     const [result] = await client.labelDetection(tempPath);
