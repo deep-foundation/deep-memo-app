@@ -26,20 +26,33 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
       },
       responseType: "arraybuffer",
     });
+    console.log("link_id:", link.to_id);
 
     const baseTempDirectory = os.tmpdir();
     const randomId = uuid();
     const tempDirectory = [baseTempDirectory, randomId].join('/');
     fs.mkdirSync(tempDirectory);
 
+    const fileNameSelect = await deep.select(
+      {
+        link_id: {
+          _eq: link.to_id
+        }
+      }, 
+      {
+        table: 'files', 
+        returning: `link_id name`
+      });
+    console.log("fileNameSelect:", fileNameSelect);
+    const fileName = fileNameSelect.data[0].name;
     const imageBuffer = Buffer.from(data, 'binary');
-    const tempImagePath = `${tempDirectory}/image.jpg`;
-    fs.writeFileSync(tempImagePath, imageBuffer);
+    const tempPath = `${tempDirectory}/${fileName}`;
+    fs.writeFileSync(tempPath, imageBuffer);
 
-    return { tempDirectory, tempImagePath };
+    return { tempDirectory, tempPath };
   }
   console.log("pathfile", await getPath(deep, newLink));
-  const { tempDirectory, tempImagePath } = await getPath(deep, newLink);
+  const { tempDirectory, tempPath } = await getPath(deep, newLink);
 
   const authFilelinkId = await deep.id("@flakeed/google-vision", "GoogleCloudAuthFile");
   const { data: [{ value: { value: authFile } }] } = await deep.select({ type_id: authFilelinkId });
@@ -50,7 +63,7 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
   try {
     process.env["GOOGLE_APPLICATION_CREDENTIALS"] = keyFilePath;
     if (newLink.type_id === detectTextTypeLinkId) {
-      await processTextDetection(tempImagePath);
+      await processTextDetection(tempPath);
 
       await deep.insert({
         type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
@@ -65,7 +78,7 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         }
       });
     } else if (newLink.type_id === detectHandwritingTypeLinkId) {
-      await processHandwritingDetection(tempImagePath);
+      await processHandwritingDetection(tempPath);
 
       await deep.insert({
         type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
@@ -80,7 +93,7 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         }
       });
     } else if (newLink.type_id === detectTextInFilesTypeLinkId) {
-      await processTextIfFilesDetection(tempImagePath);
+      await processTextIfFilesDetection(tempPath);
       await deep.insert({
         type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
         from_id: triggeredByLinkId,
@@ -94,7 +107,7 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         }
       });
     } else if (newLink.type_id === detectLabelsTypeLinkId) {
-      await proccesLabelsDetection(tempImagePath);
+      await proccesLabelsDetection(tempPath);
       await deep.insert({
         type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
         from_id: triggeredByLinkId,
@@ -108,7 +121,7 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         }
       });
     } else if (newLink.type_id === detectLogosTypeLinkId) {
-      await proccesLogosDetection(tempImagePath);
+      await proccesLogosDetection(tempPath);
 
       await deep.insert({
         type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
@@ -129,14 +142,14 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     console.error("Error processing image:", error);
   } finally {
     fs.rmSync(keyFilePath, { recursive: true, force: true });
-    fs.unlinkSync(tempImagePath);
+    fs.unlinkSync(tempPath);
     fs.rmdirSync(tempDirectory);
   }
 
-  async function processTextDetection(tempImagePath) {
+  async function processTextDetection(tempPath) {
     const client = new vision.ImageAnnotatorClient();
 
-    const [result] = await client.textDetection(tempImagePath);
+    const [result] = await client.textDetection(tempPath);
     detections = result.textAnnotations;
 
     if (detections && detections.length > 0) {
@@ -148,33 +161,34 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     return detectedText;
   }
 
-  async function processHandwritingDetection(tempImagePath) {
+  async function processHandwritingDetection(tempPath) {
     const client = new vision.ImageAnnotatorClient();
-    const [result] = await client.documentTextDetection(tempImagePath);
+    const [result] = await client.documentTextDetection(tempPath);
     detectedText = result.fullTextAnnotation;
     console.log(detectedText.text);
     return detectedText;
   }
 
   //** 
-  async function processTextIfFilesDetection(tempImagePath) {
-      async function setEndpoint() {
-        const clientOptions = { apiEndpoint: 'eu-vision.googleapis.com' };
-        const client = new vision.ImageAnnotatorClient(clientOptions);
-        const [result] = await client.textDetection(tempImagePath);
-        detectedText = result.textAnnotations;
-        console.log('Text:');
-        detectedText.forEach(label => console.log(label.description));
-        return detectedText.forEach(label => label.description);
-      }
-    
-      detectedText = await setEndpoint();
-      return detectedText;
-  }
-
-  async function proccesLabelsDetection(tempImagePath) {
+  async function processTextIfFilesDetection(tempPath) {
+    async function setEndpoint() {
+      const clientOptions = {apiEndpoint: 'eu-vision.googleapis.com'};
+      const client = new vision.ImageAnnotatorClient(clientOptions);
+      const [result] = await client.textDetection(tempPath);
+      const detectedText = result.textAnnotations;
+      console.log('Text:');
+      detectedText.forEach(label => console.log(label.description));
+      return detectedText.map(label => label.description);
+    }
+    detectedText = await setEndpoint();
+    console.log("processTextIfFilesDetection detectedText:", detectedText);
+    detectedText = detectedText.join(' ');
+    return detectedText;
+}
+  
+  async function proccesLabelsDetection(tempPath) {
     const client = new vision.ImageAnnotatorClient();
-    const [result] = await client.labelDetection(tempImagePath);
+    const [result] = await client.labelDetection(tempPath);
     const labels = result.labelAnnotations;
     console.log('Labels:');
     labels.forEach(label => console.log(label.description));
@@ -182,9 +196,9 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     return detectedText;
   }
 
-  async function proccesLogosDetection(tempImagePath) {
+  async function proccesLogosDetection(tempPath) {
     const client = new vision.ImageAnnotatorClient();
-    const [result] = await client.logoDetection(tempImagePath);
+    const [result] = await client.logoDetection(tempPath);
     const logos = result.logoAnnotations;
     console.log('Logos:');
     logos.forEach(logo => console.log(logo));
