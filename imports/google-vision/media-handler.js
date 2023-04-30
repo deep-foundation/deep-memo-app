@@ -177,7 +177,7 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     const storage = new Storage();
     const client = new vision.ImageAnnotatorClient();
 
-    const bucketName = 'bucket';
+    const bucketName = 'media-handler-vision';
     const fileName = selectedFileName;
     const outputPrefix = 'results';
 
