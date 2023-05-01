@@ -170,18 +170,17 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     console.log(detectedText.text);
     return detectedText;
   }
-  
   async function processTextIfFilesDetection(selectedFileType, selectedFileName) {
     const vision = require('@google-cloud/vision').v1;
     const client = new vision.ImageAnnotatorClient();
     const storage = new Storage();
-  
+
     const bucketName = 'media-handler-vision';
     const fileName = selectedFileName;
-  
+
     const gcsSourceUri = `gs://${bucketName}/${fileName}`;
     const gcsDestinationUri = `gs://${bucketName}/${selectedFileName}-output.json`;
-  
+
     const inputConfig = {
       mimeType: selectedFileType,
       gcsSource: {
@@ -203,49 +202,45 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         },
       ],
     };
-  
+
     const [operation] = await client.asyncBatchAnnotateFiles(request);
     const [filesResponse] = await operation.promise();
     const destinationUri = filesResponse.responses[0].outputConfig.gcsDestination.uri;
     console.log('Json saved to: ' + destinationUri);
-  
-    // Download the JSON file
+
     const outputFile = storage.bucket(bucketName).file(`${selectedFileName}-output.json`);
-    console.log(`Output JSON file saved to: ${outputFile}`);
-  
+
     const localOutputPath = './downloaded-result.json';
     await outputFile.download({ destination: localOutputPath });
-    console.log(`Output JSON file downloaded from: ${outputFile} to: ${localOutputPath}`);
-  
-    // Read the JSON file and extract the detected text
-  const outputFileContent = await fs.promises.readFile(localOutputPath, 'utf-8');
-  const outputJson = JSON.parse(outputFileContent);
-  const responses = outputJson.responses;
-  detectedText = '';
 
-  responses.forEach(response => {
-    const pages = response.fullTextAnnotation.pages;
-    pages.forEach(page => {
-      const blocks = page.blocks;
-      blocks.forEach(block => {
-        const paragraphs = block.paragraphs;
-        paragraphs.forEach(paragraph => {
-          const words = paragraph.words;
-          words.forEach(word => {
-            const symbols = word.symbols;
-            symbols.forEach(symbol => {
-              detectedText += symbol.text;
+    const outputFileContent = await fs.promises.readFile(localOutputPath, 'utf-8');
+    const outputJson = JSON.parse(outputFileContent);
+    const responses = outputJson.responses;
+    detectedText = '';
+
+    responses.forEach(response => {
+      const pages = response.fullTextAnnotation.pages;
+      pages.forEach(page => {
+        const blocks = page.blocks;
+        blocks.forEach(block => {
+          const paragraphs = block.paragraphs;
+          paragraphs.forEach(paragraph => {
+            const words = paragraph.words;
+            words.forEach(word => {
+              const symbols = word.symbols;
+              symbols.forEach(symbol => {
+                detectedText += symbol.text;
+              });
+              detectedText += ' ';
             });
-            detectedText += ' ';
           });
+          detectedText += '\n';
         });
-        detectedText += '\n';
       });
     });
-  });
 
-  return detectedText;
-}
+    return detectedText;
+  }
 
 
   async function proccesLabelsDetection(tempPath) {
