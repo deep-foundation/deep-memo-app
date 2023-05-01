@@ -6,6 +6,7 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
   const detectLogosTypeLinkId = await deep.id("@flakeed/google-vision", "DetectLogos");
   const axios = require("axios");
   const vision = require('@google-cloud/vision');
+  const { Storage } = require('@google-cloud/storage');
   const fs = require('fs');
   const os = require('os');
   const { v4: uuid } = require('uuid');
@@ -169,21 +170,18 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     console.log(detectedText.text);
     return detectedText;
   }
-
+  
   async function processTextIfFilesDetection(selectedFileType, selectedFileName) {
     const vision = require('@google-cloud/vision').v1;
-    const { Storage } = require('@google-cloud/storage');
-
-    const storage = new Storage();
     const client = new vision.ImageAnnotatorClient();
-
+    const storage = new Storage();
+  
     const bucketName = 'media-handler-vision';
     const fileName = selectedFileName;
-    const outputPrefix = 'results';
-
+  
     const gcsSourceUri = `gs://${bucketName}/${fileName}`;
-    const gcsDestinationUri = `gs://${bucketName}/${outputPrefix}/`;
-
+    const gcsDestinationUri = `gs://${bucketName}/${selectedFileName}-output.json`;
+  
     const inputConfig = {
       mimeType: selectedFileType,
       gcsSource: {
@@ -205,26 +203,50 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         },
       ],
     };
-
+  
     const [operation] = await client.asyncBatchAnnotateFiles(request);
     const [filesResponse] = await operation.promise();
     const destinationUri = filesResponse.responses[0].outputConfig.gcsDestination.uri;
     console.log('Json saved to: ' + destinationUri);
-
-    const outputBucket = storage.bucket(bucketName);
-    const outputFile = outputBucket.file(`${outputPrefix}/output-1-to-1.json`);
-    const localOutputPath = './output-1-to-1.json';
+  
+    // Download the JSON file
+    const outputFile = storage.bucket(bucketName).file(`${selectedFileName}-output.json`);
+    console.log(`Output JSON file saved to: ${outputFile}`);
+  
+    const localOutputPath = './downloaded-result.json';
     await outputFile.download({ destination: localOutputPath });
+    console.log(`Output JSON file downloaded from: ${outputFile} to: ${localOutputPath}`);
+  
+    // Read the JSON file and extract the detected text
+  const outputFileContent = await fs.promises.readFile(localOutputPath, 'utf-8');
+  const outputJson = JSON.parse(outputFileContent);
+  const responses = outputJson.responses;
+  detectedText = '';
 
-    console.log(`Output JSON file downloaded to: ${localOutputPath}`);
+  responses.forEach(response => {
+    const pages = response.fullTextAnnotation.pages;
+    pages.forEach(page => {
+      const blocks = page.blocks;
+      blocks.forEach(block => {
+        const paragraphs = block.paragraphs;
+        paragraphs.forEach(paragraph => {
+          const words = paragraph.words;
+          words.forEach(word => {
+            const symbols = word.symbols;
+            symbols.forEach(symbol => {
+              detectedText += symbol.text;
+            });
+            detectedText += ' ';
+          });
+        });
+        detectedText += '\n';
+      });
+    });
+  });
 
-    const outputFileContent = await fs.readFile(localOutputPath, 'utf-8');
-    const outputJson = JSON.parse(outputFileContent);
-    const detectedText = outputJson.responses[0].fullTextAnnotation.text;
+  return detectedText;
+}
 
-    console.log('Detected text:', detectedText);
-    return detectedText;
-  }
 
   async function proccesLabelsDetection(tempPath) {
     const client = new vision.ImageAnnotatorClient();
