@@ -11,48 +11,8 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
   const os = require('os');
   const { v4: uuid } = require('uuid');
   let detections;
-  let detectedText = '';
+  let detectedText='';
 
-  async function getPath(deep, link) {
-    const ssl = deep.apolloClient.ssl;
-    const path = deep.apolloClient.path.slice(0, -4);
-    console.log("url", `${ssl ? "https://" : "http://"}${path}/file?linkId=${link.to_id}`);
-    const url = `${ssl ? "https://" : "http://"}${path}/file?linkId=${link.to_id}`;
-
-    const { data } = await axios({
-      method: 'get',
-      url,
-      headers: {
-        'Authorization': `Bearer ${deep.token}`
-      },
-      responseType: "arraybuffer",
-    });
-    console.log("link_id:", link.to_id);
-
-    const baseTempDirectory = os.tmpdir();
-    const randomId = uuid();
-    const tempDirectory = [baseTempDirectory, randomId].join('/');
-    fs.mkdirSync(tempDirectory);
-
-    const fileNameSelect = await deep.select(
-      {
-        link_id: {
-          _eq: link.to_id
-        }
-      },
-      {
-        table: 'files',
-        returning: `link_id name mimeType`
-      });
-    console.log("fileNameSelect:", fileNameSelect);
-    const fileName = fileNameSelect.data[0].name;
-    const fileType = fileNameSelect.data[0].mimeType;
-    const imageBuffer = Buffer.from(data, 'binary');
-    const tempPath = `${tempDirectory}/${fileName}`;
-    fs.writeFileSync(tempPath, imageBuffer);
-
-    return { tempDirectory, tempPath, fileType, fileName };
-  }
   console.log("pathfile", await getPath(deep, newLink));
   const { tempDirectory, tempPath, fileType, fileName } = await getPath(deep, newLink);
 
@@ -65,7 +25,8 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
   try {
     process.env["GOOGLE_APPLICATION_CREDENTIALS"] = keyFilePath;
     if (newLink.type_id === detectTextTypeLinkId) {
-      await processTextDetection(tempPath);
+      let detectedText = '';
+      detectedText = await processTextDetection(tempPath);
 
       await deep.insert({
         type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
@@ -80,7 +41,8 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         }
       });
     } else if (newLink.type_id === detectHandwritingTypeLinkId) {
-      await processHandwritingDetection(tempPath);
+      let detectedText = '';
+      detectedText = await processHandwritingDetection(tempPath);
 
       await deep.insert({
         type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
@@ -95,21 +57,23 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         }
       });
     } else if (newLink.type_id === detectTextInFilesTypeLinkId) {
-      await processTextIfFilesDetection(fileType, fileName);
-      await deep.insert({
-        type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
-        from_id: triggeredByLinkId,
-        to_id: newLink.to_id,
-        string: { data: { value: detectedText } },
-        in: {
-          data: {
-            type_id: await deep.id("@deep-foundation/core", "Contain"),
-            from_id: triggeredByLinkId
-          }
-        }
-      });
+      let detectedText='';
+      detectedText=await processTextIfFilesDetection(fileType, fileName);
+      // await deep.insert({
+      //   type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
+      //   from_id: triggeredByLinkId,
+      //   to_id: newLink.to_id,
+      //   string: { data: { value: detectedText } },
+      //   in: {
+      //     data: {
+      //       type_id: await deep.id("@deep-foundation/core", "Contain"),
+      //       from_id: triggeredByLinkId
+      //     }
+      //   }
+      // });
     } else if (newLink.type_id === detectLabelsTypeLinkId) {
-      await proccesLabelsDetection(tempPath);
+      let detectedText = '';
+      detectedText = await proccesLabelsDetection(tempPath);
       await deep.insert({
         type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
         from_id: triggeredByLinkId,
@@ -123,7 +87,8 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         }
       });
     } else if (newLink.type_id === detectLogosTypeLinkId) {
-      await proccesLogosDetection(tempPath);
+      let detectedText = '';
+      detectedText = await proccesLogosDetection(tempPath);
 
       await deep.insert({
         type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
@@ -170,78 +135,78 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     console.log(detectedText.text);
     return detectedText;
   }
+  
   async function processTextIfFilesDetection(selectedFileType, selectedFileName) {
-    const vision = require('@google-cloud/vision').v1;
-    const client = new vision.ImageAnnotatorClient();
-    const storage = new Storage();
+    // const vision = require('@google-cloud/vision').v1;
+    // const client = new vision.ImageAnnotatorClient();
+    // const storage = new Storage();
 
-    const bucketName = 'media-handler-vision';
-    const fileName = selectedFileName;
+    // const bucketName = 'media-handler-vision';
+    // const fileName = selectedFileName;
 
-    const gcsSourceUri = `gs://${bucketName}/${fileName}`;
-    const gcsDestinationUri = `gs://${bucketName}/${selectedFileName}-output.json`;
+    // const gcsSourceUri = `gs://${bucketName}/${fileName}`;
+    // const gcsDestinationUri = `gs://${bucketName}/${selectedFileName}-output.json`;
 
-    const inputConfig = {
-      mimeType: selectedFileType,
-      gcsSource: {
-        uri: gcsSourceUri,
-      },
-    };
-    const outputConfig = {
-      gcsDestination: {
-        uri: gcsDestinationUri,
-      },
-    };
-    const features = [{ type: 'DOCUMENT_TEXT_DETECTION' }];
-    const request = {
-      requests: [
-        {
-          inputConfig: inputConfig,
-          features: features,
-          outputConfig: outputConfig,
-        },
-      ],
-    };
+    // const inputConfig = {
+    //   mimeType: selectedFileType,
+    //   gcsSource: {
+    //     uri: gcsSourceUri,
+    //   },
+    // };
+    // const outputConfig = {
+    //   gcsDestination: {
+    //     uri: gcsDestinationUri,
+    //   },
+    // };
+    // const features = [{ type: 'DOCUMENT_TEXT_DETECTION' }];
+    // const request = {
+    //   requests: [
+    //     {
+    //       inputConfig: inputConfig,
+    //       features: features,
+    //       outputConfig: outputConfig,
+    //     },
+    //   ],
+    // };
 
-    const [operation] = await client.asyncBatchAnnotateFiles(request);
-    const [filesResponse] = await operation.promise();
-    const destinationUri = filesResponse.responses[0].outputConfig.gcsDestination.uri;
-    console.log('Json saved to: ' + destinationUri);
+    // const [operation] = await client.asyncBatchAnnotateFiles(request);
+    // const [filesResponse] = await operation.promise();
+    // const destinationUri = filesResponse.responses[0].outputConfig.gcsDestination.uri;
+    // console.log('Json saved to: ' + destinationUri);
 
-    const outputFile = storage.bucket(bucketName).file(`${selectedFileName}-output.json`);
+    // const outputFile = storage.bucket(bucketName).file(`${selectedFileName}-output.json`);
 
-    const localOutputPath = './downloaded-result.json';
-    await outputFile.download({ destination: localOutputPath });
+    // const localOutputPath = './downloaded-result.json';
+    // await outputFile.download({ destination: localOutputPath });
 
-    const outputFileContent = await fs.promises.readFile(localOutputPath, 'utf-8');
-    const outputJson = JSON.parse(outputFileContent);
-    const responses = outputJson.responses;
-    detectedText = '';
+    // const outputFileContent = await fs.promises.readFile(localOutputPath, 'utf-8');
+    // const outputJson = JSON.parse(outputFileContent);
+    // const responses = outputJson.responses;
+    // detectedText = '';
 
-    responses.forEach(response => {
-      const pages = response.fullTextAnnotation.pages;
-      pages.forEach(page => {
-        const blocks = page.blocks;
-        blocks.forEach(block => {
-          const paragraphs = block.paragraphs;
-          paragraphs.forEach(paragraph => {
-            const words = paragraph.words;
-            words.forEach(word => {
-              const symbols = word.symbols;
-              symbols.forEach(symbol => {
-                detectedText += symbol.text;
-              });
-              detectedText += ' ';
-            });
-          });
-          detectedText += '\n';
-        });
-      });
-    });
-
+    // responses.forEach(response => {
+    //   const pages = response.fullTextAnnotation.pages;
+    //   pages.forEach(page => {
+    //     const blocks = page.blocks;
+    //     blocks.forEach(block => {
+    //       const paragraphs = block.paragraphs;
+    //       paragraphs.forEach(paragraph => {
+    //         const words = paragraph.words;
+    //         words.forEach(word => {
+    //           const symbols = word.symbols;
+    //           symbols.forEach(symbol => {
+    //             detectedText += symbol.text;
+    //           });
+    //           detectedText += ' ';
+    //         });
+    //       });
+    //       detectedText += '\n';
+    //     });
+    //   });
+    // });
+    detectedText="Eror!!! This feature is currently not available.";
     return detectedText;
   }
-
 
   async function proccesLabelsDetection(tempPath) {
     const client = new vision.ImageAnnotatorClient();
@@ -261,6 +226,47 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     logos.forEach(logo => console.log(logo));
     detectedText = logos.map(logo => logo.description);
     return detectedText;
+  }
+
+  async function getPath(deep, link) {
+    const ssl = deep.apolloClient.ssl;
+    const path = deep.apolloClient.path.slice(0, -4);
+    console.log("url", `${ssl ? "https://" : "http://"}${path}/file?linkId=${link.to_id}`);
+    const url = `${ssl ? "https://" : "http://"}${path}/file?linkId=${link.to_id}`;
+
+    const { data } = await axios({
+      method: 'get',
+      url,
+      headers: {
+        'Authorization': `Bearer ${deep.token}`
+      },
+      responseType: "arraybuffer",
+    });
+    console.log("link_id:", link.to_id);
+
+    const baseTempDirectory = os.tmpdir();
+    const randomId = uuid();
+    const tempDirectory = [baseTempDirectory, randomId].join('/');
+    fs.mkdirSync(tempDirectory);
+
+    const fileNameSelect = await deep.select(
+      {
+        link_id: {
+          _eq: link.to_id
+        }
+      },
+      {
+        table: 'files',
+        returning: `link_id name mimeType`
+      });
+    console.log("fileNameSelect:", fileNameSelect);
+    const fileName = fileNameSelect.data[0].name;
+    const fileType = fileNameSelect.data[0].mimeType;
+    const imageBuffer = Buffer.from(data, 'binary');
+    const tempPath = `${tempDirectory}/${fileName}`;
+    fs.writeFileSync(tempPath, imageBuffer);
+
+    return { tempDirectory, tempPath, fileType, fileName };
   }
 
   return detectedText;
