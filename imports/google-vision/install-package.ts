@@ -192,7 +192,7 @@ export default async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
-                      string: { data: { value: "HandleAsyncFile" } },
+                      string: { data: { value: "HandleAsyncFileDetectText" } },
                     },
                   ],
                 },
@@ -205,7 +205,7 @@ export default async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
-                      string: { data: { value: "HandleAsyncFile" } },
+                      string: { data: { value: "HandleAsyncFileDetectHandwriting" } },
                     },
                   ],
                 },
@@ -218,7 +218,7 @@ export default async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
-                      string: { data: { value: "HandleAsyncFile" } },
+                      string: { data: { value: "HandleAsyncFileDetectTextInFiles" } },
                     },
                   ],
                 },
@@ -231,7 +231,7 @@ export default async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
-                      string: { data: { value: "HandleAsyncFile" } },
+                      string: { data: { value: "HandleAsyncFileDetectLabels" } },
                     },
                   ],
                 },
@@ -244,7 +244,7 @@ export default async function installPackage() {
                     {
                       type_id: containTypeLinkId,
                       from_id: packageLinkId,
-                      string: { data: { value: "HandleAsyncFile" } },
+                      string: { data: { value: "HandleAsyncFileDetectLogos" } },
                     },
                   ],
                 },
