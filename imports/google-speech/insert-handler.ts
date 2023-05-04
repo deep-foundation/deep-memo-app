@@ -1,6 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 
-export default async function insertSoundHandler(deep: DeepClient) {
+export default async function insertGoogleSpeechHandler(deep: DeepClient) {
   const fileTypeLinkId = await deep.id("@deep-foundation/core", "SyncTextFile");
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain");
   const supportsId = await deep.id("@deep-foundation/core", "dockerSupportsJs");
@@ -16,6 +16,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
     const { v4: uuid } = require('uuid');
   
     const soundTypelinkId = await deep.id("@deep-foundation/sound", "Sound");
+    const formatTypelinkId = await deep.id("@deep-foundation/sound", "Format");
     const mimetypeTypelinkId = await deep.id("@deep-foundation/sound", "MIME/type");
   
     const { data } = await deep.select({
@@ -28,6 +29,7 @@ export default async function insertSoundHandler(deep: DeepClient) {
             _in:
               [
                 soundTypelinkId,
+                formatTypelinkId,
                 mimetypeTypelinkId
               ]
           }
@@ -35,8 +37,9 @@ export default async function insertSoundHandler(deep: DeepClient) {
       },
     });
   
-    const soundLink = data.filter((link) => link.type_id === soundTypelinkId)
-    const mimetypeLink = data.filter((link) => link.type_id === mimetypeTypelinkId)
+    const soundLink = data.filter((link) => link.type_id === soundTypelinkId);
+    const mimetypeLink = data.filter((link) => link.type_id === mimetypeTypelinkId);
+    const formatLink = data.filter((link) => link.type_id === formatTypelinkId);
   
     const authFilelinkId = await deep.id("@deep-foundation/google-speech", "GoogleCloudAuthFile");
     const { data: [{ value: { value: authFile } }] } = await deep.select({ type_id: authFilelinkId });
@@ -58,11 +61,13 @@ export default async function insertSoundHandler(deep: DeepClient) {
       const audio = {
         content: soundLink[0].value.value,
       };
+
       const config = {
         encoding: mimetypeLink[0].value.value === 'audio/webm;codecs=opus' ? 'WEBM_OPUS' : 'LINEAR16',
         sampleRateHertz: 48000,
         languageCode: 'ru-RU',
       };
+
       const request = {
         audio: audio,
         config: config,
@@ -71,11 +76,11 @@ export default async function insertSoundHandler(deep: DeepClient) {
       const [response] = await client.recognize(request);
       const transcription = response.results
         .map(result => result.alternatives[0].transcript)
-        .join('\\n');
-    
+        .join('\n');
+
       await deep.insert({
-        type_id: await deep.id("@deep-foundation/google-speech", "GoogleSpeechTranscription"),
-        string: { data: { value: transcription } },
+        type_id: await deep.id("@deep-foundation/google-speech", "Transcription"),
+        string: { data: { value: transcription ? transcription : "No voice detected." } },
         in: {
           data: {
             type_id: await deep.id("@deep-foundation/core", "Contain"),

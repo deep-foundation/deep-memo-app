@@ -3,7 +3,7 @@ import { useLocalStore } from '@deep-foundation/store/local';
 import { DeepProvider, useDeep } from '@deep-foundation/deeplinks/imports/client';
 import { Provider } from '../imports/provider';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import initializePackage, { PACKAGE_NAME } from '../imports/capacitor-voice-recorder/install-package';
+import installPackage, { PACKAGE_NAME } from '../imports/capacitor-voice-recorder/install-package';
 import checkDeviceSupport from '../imports/capacitor-voice-recorder/check-device-support';
 import checkAudioRecPermission from '../imports/capacitor-voice-recorder/check-permission';
 import getAudioRecPermission from '../imports/capacitor-voice-recorder/get-permission';
@@ -11,7 +11,6 @@ import getRecordingStatus from '../imports/capacitor-voice-recorder/get-recordin
 import startAudioRec from '../imports/capacitor-voice-recorder/strart-recording';
 import stopAudioRec from '../imports/capacitor-voice-recorder/stop-recording';
 import uploadRecords from '../imports/capacitor-voice-recorder/upload-records';
-import installPackage from '../imports/capacitor-voice-recorder/install-package';
 
 export const delay = (time) => new Promise(res => setTimeout(() => res(null), time));
 
@@ -62,8 +61,8 @@ function Page() {
 
   const fetchRecords = async () => {
     const recordTypelinkId = await deep.id(PACKAGE_NAME, "Record");
-    const soundTypelinkId = await deep.id(PACKAGE_NAME, "Sound");
-    const mimetypeTypelinkId = await deep.id(PACKAGE_NAME, "MIME/type");
+    const soundTypelinkId = await deep.id("@deep-foundation/sound", "Sound");
+    const mimetypeTypelinkId = await deep.id("@deep-foundation/sound", "MIME/type");
     const { data: recordLinks } = await deep.select({
       type_id: recordTypelinkId
     });
@@ -89,7 +88,7 @@ function Page() {
       })
       const soundLink = data.filter((link) => link.type_id === soundTypelinkId)
       const mimetypeLink = data.filter((link) => link.type_id === mimetypeTypelinkId)
-      records = [...records, { sound: soundLink[0].value.value, mimetype: mimetypeLink[0].value.value }]
+      records = [...records, { id: soundLink[0].id, sound: soundLink[0].value.value, mimetype: mimetypeLink[0].value.value }]
     }
     setRecords(records);
   }
@@ -145,7 +144,7 @@ function Page() {
     <Button onClick={async () => await fetchRecords()}>
       LOAD RECORDS
     </Button>
-    {records?.map((r) => <audio key={Math.random().toString()} controls src={`data:${r.mimetype};base64,${r.sound}`} />)}
+    {records?.map((r) => <audio key={r.id} controls src={`data:${r.mimetype};base64,${r.sound}`} />)}
   </Stack>
 }
 

@@ -2,6 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { generateApolloClient } from '@deep-foundation/hasura/client';
 import { getIsPackageInstalled } from "../get-is-package-installed";
 import * as dotenv from 'dotenv';
+import insertGoogleSpeechHandler from "./insert-handler";
 dotenv.config();
 
 export const PACKAGE_NAME = "@deep-foundation/google-speech";
@@ -63,7 +64,7 @@ export default async function installPackage() {
         data: [{
           type_id: containTypeLinkId,
           from_id: packageLinkId,
-          string: { data: { value: "GoogleSpeechTranscription" } },
+          string: { data: { value: "Transcription" } },
         }],
       },
     },
@@ -116,6 +117,7 @@ export default async function installPackage() {
       }
     });
 
-    console.log("sound-handler package installed");
-  } else console.log("sound-handler package already exists");
+    console.log("google-speech package installed");
+  } else console.log("google-speech package already exists");
+  await insertGoogleSpeechHandler(deep);
 }
