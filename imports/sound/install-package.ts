@@ -1,10 +1,11 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
+import insertAudioMetadataHandler from "./insert-handler";
 
 export const PACKAGE_NAME = "@deep-foundation/sound";
 export const PACKAGE_TYPES =
-  ["Sound", "Encoding", "Format", "Duration", "MIME/type"];
+  ["Sound", "Codec", "Format", "Duration", "MIME/type", "SampleRate"];
 
-export default async function initializePackage(deep: DeepClient, deviceLinkId) {
+export default async function initializePackage(deep: DeepClient) {
   const packageTypeLinkId = await deep.id('@deep-foundation/core', "Package")
   const containTypeLinkId = await deep.id("@deep-foundation/core", "Contain")
   const joinTypeLinkId = await deep.id("@deep-foundation/core", "Join")
@@ -29,7 +30,6 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
       }]
     },
   })
-  
   const { data: [{ id: pacakgeTypeLinkId }] } = await deep.insert(PACKAGE_TYPES.map((TYPE) => ({
     type_id: typeTypeLinkId,
     in: {
@@ -41,4 +41,5 @@ export default async function initializePackage(deep: DeepClient, deviceLinkId) 
     }
   })))
   console.log("sound package installed");
+  await insertAudioMetadataHandler(deep);
 }
