@@ -25,7 +25,6 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
   try {
     process.env["GOOGLE_APPLICATION_CREDENTIALS"] = keyFilePath;
     if (newLink.type_id === detectTextTypeLinkId) {
-      let detectedText = '';
       detectedText = await processTextDetection(tempPath);
 
       await deep.insert({
@@ -41,7 +40,6 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         }
       });
     } else if (newLink.type_id === detectHandwritingTypeLinkId) {
-      let detectedText = '';
       detectedText = await processHandwritingDetection(tempPath);
 
       await deep.insert({
@@ -57,22 +55,20 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         }
       });
     } else if (newLink.type_id === detectTextInFilesTypeLinkId) {
-      let detectedText='';
       detectedText=await processTextIfFilesDetection(fileType, fileName);
-      // await deep.insert({
-      //   type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
-      //   from_id: triggeredByLinkId,
-      //   to_id: newLink.to_id,
-      //   string: { data: { value: detectedText } },
-      //   in: {
-      //     data: {
-      //       type_id: await deep.id("@deep-foundation/core", "Contain"),
-      //       from_id: triggeredByLinkId
-      //     }
-      //   }
-      // });
+      await deep.insert({
+        type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
+        from_id: triggeredByLinkId,
+        to_id: newLink.to_id,
+        string: { data: { value: detectedText } },
+        in: {
+          data: {
+            type_id: await deep.id("@deep-foundation/core", "Contain"),
+            from_id: triggeredByLinkId
+          }
+        }
+      });
     } else if (newLink.type_id === detectLabelsTypeLinkId) {
-      let detectedText = '';
       detectedText = await proccesLabelsDetection(tempPath);
       await deep.insert({
         type_id: await deep.id("@flakeed/google-vision", "DetectedText"),
@@ -87,7 +83,6 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
         }
       });
     } else if (newLink.type_id === detectLogosTypeLinkId) {
-      let detectedText = '';
       detectedText = await proccesLogosDetection(tempPath);
 
       await deep.insert({
@@ -136,77 +131,92 @@ async ({ data: { newLink, triggeredByLinkId }, deep, require }) => {
     return detectedText;
   }
   
-  async function processTextIfFilesDetection(selectedFileType, selectedFileName) {
-    // const vision = require('@google-cloud/vision').v1;
-    // const client = new vision.ImageAnnotatorClient();
-    // const storage = new Storage();
+async function processTextIfFilesDetection(selectedFileType, selectedFileName) {
+  const vision = require('@google-cloud/vision').v1;
+  const client = new vision.ImageAnnotatorClient();
+  const storage = new Storage();
+  const {promisify} = require('util');
+  const glob = promisify(require('glob'));
 
-    // const bucketName = 'media-handler-vision';
-    // const fileName = selectedFileName;
+  const bucketName = 'media-handler-vision';
+  const fileName = selectedFileName;
 
-    // const gcsSourceUri = `gs://${bucketName}/${fileName}`;
-    // const gcsDestinationUri = `gs://${bucketName}/${selectedFileName}-output.json`;
+  const gcsSourceUri = `gs://${bucketName}/${fileName}`;
+  
+  const inputConfig = {
+    mimeType: selectedFileType,
+    gcsSource: {
+      uri: gcsSourceUri,
+    },
+  };
+  console.log("inputConfig",inputConfig)
+  const features = [{ type: 'DOCUMENT_TEXT_DETECTION' }];
+  
+  let allResponses = [];
 
-    // const inputConfig = {
-    //   mimeType: selectedFileType,
-    //   gcsSource: {
-    //     uri: gcsSourceUri,
-    //   },
-    // };
-    // const outputConfig = {
-    //   gcsDestination: {
-    //     uri: gcsDestinationUri,
-    //   },
-    // };
-    // const features = [{ type: 'DOCUMENT_TEXT_DETECTION' }];
-    // const request = {
-    //   requests: [
-    //     {
-    //       inputConfig: inputConfig,
-    //       features: features,
-    //       outputConfig: outputConfig,
-    //     },
-    //   ],
-    // };
+  const pagesCount = 100; 
+  const pagesPerBatch = 5; 
+  const numberOfBatches = Math.ceil(pagesCount / pagesPerBatch);
 
-    // const [operation] = await client.asyncBatchAnnotateFiles(request);
-    // const [filesResponse] = await operation.promise();
-    // const destinationUri = filesResponse.responses[0].outputConfig.gcsDestination.uri;
-    // console.log('Json saved to: ' + destinationUri);
+  for (let i = 0; i < numberOfBatches; i++) {
+    const gcsDestinationUri = `gs://${bucketName}/${selectedFileName}-output-${i}.json`;
+console.log("gcsDestinationUri",gcsDestinationUri)
+    const outputConfig = {
+      gcsDestination: {
+        uri: gcsDestinationUri,
+      },
+    };
+    console.log("outputConfig",outputConfig)
 
-    // const outputFile = storage.bucket(bucketName).file(`${selectedFileName}-output.json`);
+    const request = {
+      requests: [
+        {
+          inputConfig: inputConfig,
+          features: features,
+          outputConfig: outputConfig,
+        },
+      ],
+    };
+    console.log("request",request)
 
-    // const localOutputPath = './downloaded-result.json';
-    // await outputFile.download({ destination: localOutputPath });
+    const [operation] = await client.asyncBatchAnnotateFiles(request);
+    await operation.promise();
+    console.log("operation",operation)
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    setTimeout(async () => {
+      const jsonFiles = await glob(`${selectedFileName}-output-${i}.json*`);
+console.log("jsonFiles",jsonFiles)
+      await Promise.all(jsonFiles.map(async (jsonFile) => {
+        console.log("4")
+        const outputFile = storage.bucket(bucketName).file(jsonFile);
+        console.log("outputFile",outputFile)
+        const localOutputPath = `./${jsonFile}`;
+        await outputFile.download({ destination: localOutputPath });
 
-    // const outputFileContent = await fs.promises.readFile(localOutputPath, 'utf-8');
-    // const outputJson = JSON.parse(outputFileContent);
-    // const responses = outputJson.responses;
-    // detectedText = '';
-
-    // responses.forEach(response => {
-    //   const pages = response.fullTextAnnotation.pages;
-    //   pages.forEach(page => {
-    //     const blocks = page.blocks;
-    //     blocks.forEach(block => {
-    //       const paragraphs = block.paragraphs;
-    //       paragraphs.forEach(paragraph => {
-    //         const words = paragraph.words;
-    //         words.forEach(word => {
-    //           const symbols = word.symbols;
-    //           symbols.forEach(symbol => {
-    //             detectedText += symbol.text;
-    //           });
-    //           detectedText += ' ';
-    //         });
-    //       });
-    //       detectedText += '\n';
-    //     });
-    //   });
-    // });
-    detectedText="Eror!!! This feature is currently not available.";
-    return detectedText;
+        const outputFileContent = await fs.promises.readFile(localOutputPath, 'utf8');
+        console.log("outputFileContent",outputFileContent)
+        console.log("5")
+        const outputJson = JSON.parse(outputFileContent);
+        console.log("outputJson",outputJson)
+        const responses = outputJson.responses;
+        console.log("responses",responses)
+        responses.forEach(response => {
+          const text = response.fullTextAnnotation.text;
+          allResponses.push(text);
+          console.log("3")
+        });
+      }));
+    }, 5000);
   }
+console.log("allResponses",allResponses)
+  fs.writeFileSync('./allPages.json', JSON.stringify(allResponses));
+
+  return allResponses.join('');
+}
+
+
+
+
 
   async function proccesLabelsDetection(tempPath) {
     const client = new vision.ImageAnnotatorClient();
