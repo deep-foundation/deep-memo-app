@@ -27,6 +27,8 @@ export function Page({ renderChildren }: PageParam) {
         <WithDeep
           renderChildren={({ deep }) => {
             console.log({ deep });
+            const _package = new CapacitorDevicePackage({ deep });
+            console.log({_package})
             return (
               <WithPackagesInstalled
               deep={deep}
