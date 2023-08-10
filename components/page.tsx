@@ -183,10 +183,17 @@ function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
       renderIfLoading={() => <Text>Initializing device...</Text>}
       renderIfNotInserted={() => <Text>Initializing device...</Text>}
       insertDeviceCallback={async () => {
-        const {deviceLink} = await insertDevice({
+        const [deviceLinkId] = await deep.reserve(1);
+        const serialOperations = await getDeviceInsertSerialOperations({
           deep,
+          reservedLinkIds:{
+            deviceLinkId: deviceLinkId
+          }
         });
-        setDeviceLinkId(deviceLink.id)
+        await deep.serial({
+          operations: serialOperations
+        })
+        setDeviceLinkId(deviceLinkId)
       }}
     >
       {renderChildren({ deviceLinkId })}
