@@ -49,6 +49,67 @@ export function Page({ renderChildren }: PageParam) {
                       {packageNames.map((packageName) => (
                         <Button
                           onClick={async () => {
+                            const containTypeLinkId = await deep.id(
+                              '@deep-foundation/core',
+                              'Contain'
+                            );
+                            const reservedLinkIds = await deep.reserve(2  )
+                            const packageQueryLinkId = reservedLinkIds.pop()!;
+                            const installLinkId = reservedLinkIds.pop()!;
+                            await deep.serial({
+                              operations: [
+                                {
+                                  type: 'insert',
+                                  table: 'links',
+                                  objects: {
+                                    id: packageQueryLinkId,
+                                    type_id: await deep.id(
+                                      '@deep-foundation/core',
+                                      'PackageQuery'
+                                    ),
+                                  }
+                                },
+                                {
+                                  type: 'insert',
+                                  table: 'strings',
+                                  objects: {
+                                    link_id: packageQueryLinkId,
+                                    value: packageName
+                                  }
+                                },
+                                {
+                                  type: 'insert',
+                                  table: 'links',
+                                  objects: {
+                                    type_id: containTypeLinkId,
+                                    from_id: deep.linkId,
+                                    to_id: packageQueryLinkId
+                                  }
+                                },
+                                {
+                                  type: 'insert',
+                                  table: 'links',
+                                  objects: {
+                                    id: installLinkId,
+                                    type_id: await deep.id(
+                                      '@deep-foundation/npm-packager',
+                                      'Install'
+                                    ),
+                                    from_id: deep.linkId,
+                                    to_id: packageQueryLinkId
+                                  }
+                                },
+                                {
+                                  type: 'insert',
+                                  table: 'links',
+                                  objects: {
+                                    type_id: containTypeLinkId,
+                                    from_id: deep.linkId,
+                                    to_id: installLinkId
+                                  }
+                                },
+                              ]
+                            })
                             await deep.insert([
                               {
                                 type_id: await deep.id(
