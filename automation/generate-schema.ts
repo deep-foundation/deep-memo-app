@@ -1,6 +1,6 @@
 import * as TJS from 'typescript-json-schema';
 import * as path from 'path'
-import * as fs from 'fs'
+import fsExtra from 'fs-extra'
 import _ from 'lodash';
 import {deepMapObject} from '@freephoenix888/deep-map-object';
 import yargs from 'yargs/yargs';
@@ -8,32 +8,40 @@ import { hideBin } from 'yargs/helpers';
 import {capitalCase} from 'case-anything'
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
+import debug from 'debug';
 
 
-main()
+generateJsonSchema()
 
-async function main () {
+async function generateJsonSchema () {
+  const log = debug(generateJsonSchema.name)
   const cliOptions = await parseCliOptions();
   const settings: TJS.PartialArgs = {
     required: true,
     titles: true
   };
   
-  // const compilerOptions: TJS.CompilerOptions = {
-  //   strictNullChecks: false,
-  //   skipLibCheck: true
-  // };
+  const compilerOptions: TJS.CompilerOptions = {
+    strictNullChecks: false,
+    skipLibCheck: true
+  };
  
-  const program = TJS.getProgramFromFiles([cliOptions.interfaceFilePath]);
+  const program = TJS.getProgramFromFiles([cliOptions.interfaceFilePath], compilerOptions);
   
   let schema = TJS.generateSchema(program, cliOptions.interfaceName, settings); 
   if(!schema) {
     throw new Error("Failed to generate schema")
   }
   
-  schema = await deepMapObject(schema, ({key, value}) => ({newKey: key, newValue: (key === 'title') ? capitalCase(value) : value}));
+
+  log({schema})
+  schema = await deepMapObject(schema, ({key, value}) => {
+    log({key, value})
+    return {newKey: key, newValue: (key === 'title' && typeof value === 'string') ? capitalCase(value) : value}
+  });
   if(cliOptions.outputJsonFilePath) {
-    fs.writeFileSync(path.resolve(cliOptions.outputJsonFilePath), JSON.stringify(schema, null, 2));
+    fsExtra.mkdirSync(path.dirname(cliOptions.outputJsonFilePath), {recursive: true});
+    fsExtra.writeFileSync(cliOptions.outputJsonFilePath, JSON.stringify(schema, null, 2));
   } else {
     console.log(JSON.stringify(schema, null, 2));
   }
