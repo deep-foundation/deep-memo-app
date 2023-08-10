@@ -17,6 +17,11 @@ import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 
 function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number}) {
 
+  useEffect(() => {
+    self["Device"] = Device
+    debug.enable('@deep-foundation/capacitor-device:*');
+  })
+
   return (
     <Stack alignItems={"center"}>
       <NavBar/>
