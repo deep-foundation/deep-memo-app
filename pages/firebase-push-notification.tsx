@@ -374,6 +374,7 @@ function ServiceAccountInsertionModal({
                   href={
                     'https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk'
                   }
+                  isExternal
                 >
                   https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk
                 </Link>
@@ -452,6 +453,7 @@ function WebPushCertificateInsertionModal({
               href={
                 'https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging'
               }
+              isExternal
             >
               https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging
             </Link>
