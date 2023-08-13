@@ -189,21 +189,22 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
   return (
     <WithPermissions platform={platform}>
       <WithServiceAccount deep={deep}>
-        <Stack
-          justifyContent={'center'}
-          maxWidth={'768px'}
-          margin={[0, 'auto']}
-          spacing={4}
-        >
-          <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
-          
-          
-          <WebPushCertificateInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
-          <DeviceRegistrationCard deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} platform={platform} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} />
-          <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
-          <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
-          {/* {notifyInsertionCard} */}
-        </Stack>
+        <WithWebPushCertificate deep={deep}>
+          <Stack
+              justifyContent={'center'}
+              maxWidth={'768px'}
+              margin={[0, 'auto']}
+              spacing={4}
+            >
+              <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
+              
+              
+              <DeviceRegistrationCard deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} platform={platform} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} />
+              <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
+              <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
+              {/* {notifyInsertionCard} */}
+            </Stack>
+        </WithWebPushCertificate>
       </WithServiceAccount>
     </WithPermissions>
     
@@ -373,7 +374,7 @@ function WithServiceAccount({
       </>
     ),
   };
-  
+
   return serviceAccountLinks.length > 0 ? children : (
     <Card>
       <Heading>
@@ -465,21 +466,76 @@ function WithServiceAccount({
   );
 }
 
-function WebPushCertificateInsertionModal({
+function WithWebPushCertificate({
   deep,
-  deviceLinkId,
+  children,
 }: {
   deep: DeepClient;
-  deviceLinkId: number;
+  children: JSX.Element;
 }) {
+  const toast = useToast();
+  const _package = new Package({deep})
+
+  const {data: webPushCertificateLinks} = deep.useDeepSubscription({
+    type_id: {
+      _id: [_package.name, _package.WebPushCertificate.name],
+    },
+    in: {
+      type_id: {
+        _id: ['@deep-foundation/core', 'Contain'],
+      },
+      from_id: deep.linkId,
+    }
+  })
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [webPushCertificate, setWebPushCertificate] = useState<string>('');
   const [
     shouldMakeWebPushCertificateActive,
     setShouldMakeWebPushCertificateActive,
   ] = useState<boolean>(true);
-  return (
-    <>
+
+  function showToastOnSuccess() {
+    toast({
+      title: "Success",
+      description: "Service Account Inserted Successfully!",
+      status: "success",
+      duration: null,
+      isClosable: true,
+      position: "top-right",
+    });
+  }
+
+  function showToastOnError({error}: {error: Error}) {
+    toast({
+      title: "Error",
+      description: `Failed to Insert Service Account! ${error.message}`,
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+      position: "top-right",
+    });
+  }
+
+  return webPushCertificateLinks.length > 0 ? children : (
+    <Card>
+      <Heading>
+        Web Push Certificates
+      </Heading>
+      <Stack>
+        {
+          webPushCertificateLinks.length === 0 ? <Text>
+          No Web Push Certificates
+        </Text> : webPushCertificateLinks?.map((webPushCertificateLink) => {
+            return (
+              <Text>
+                {webPushCertificateLink.value.value}
+              </Text>
+            );
+          })
+        }
+      </Stack>
+
       <Button onClick={onOpen}>Insert Web Push Certificate</Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -506,14 +562,19 @@ function WebPushCertificateInsertionModal({
           </Checkbox>
           <Button
             onClick={async () => {
-              const {serialOperations} = await getWebPushCertificateInsertSerialOperations({
-                deep,
-                webPushCertificate,
-                shouldMakeActive: shouldMakeWebPushCertificateActive,
-              });
-              await deep.serial({
-                operations: serialOperations,
-              })
+              try {
+                const {serialOperations} = await getWebPushCertificateInsertSerialOperations({
+                  deep,
+                  webPushCertificate,
+                  shouldMakeActive: shouldMakeWebPushCertificateActive,
+                });
+                await deep.serial({
+                  operations: serialOperations,
+                })
+                showToastOnSuccess()
+              } catch (error) {
+                showToastOnError({error})
+              }
             }}
           >
             Insert Web Push Certificate
@@ -541,7 +602,7 @@ function WebPushCertificateInsertionModal({
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </Card>
   );
 }
 
