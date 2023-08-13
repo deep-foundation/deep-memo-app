@@ -44,7 +44,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
-import { FirebaseApp, initializeApp } from 'firebase/app';
+import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
 import { Device as CapacitorDevice } from '@capacitor/device';
 import {
   getMessaging,
@@ -73,6 +73,8 @@ import { PushNotifications } from '@capacitor/push-notifications';
 import { CapacitorDevicePackage, getDevice, DeviceInfo } from '@deep-foundation/capacitor-device';
 import { DeviceComponent } from '@deep-foundation/capacitor-device';
 const schema = require('../imports/firebase-push-notification/schema.json') as RJSFSchema;
+import debug from 'debug'
+import Hjson from 'hjson';
 
 
 export default function PushNotificationsPage() {
@@ -90,44 +92,6 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
       CapacitorStoreKeys[CapacitorStoreKeys.DeviceRegistrationToken],
       undefined
     );
-
-  const [platform, setPlatform] = useState(undefined);
-
-  const [firebaseApplication, setFirebaseApplication] = useState<
-    FirebaseApp | undefined
-  >(undefined);
-  const [firebaseMessaging, setFirebaseMessaging] = useState<
-    Messaging | undefined
-  >(undefined);
-
-  useEffect(() => {
-    if (platform === 'web') {
-      const firebaseApplication = initializeApp({
-        apiKey: 'AIzaSyAdW-DEUZuYcN-1snWNcL7QvtkNdibT_vY',
-        authDomain: 'deep-97e93.firebaseapp.com',
-        projectId: 'deep-97e93',
-        storageBucket: 'deep-97e93.appspot.com',
-        messagingSenderId: '430972811028',
-        appId: '1:430972811028:web:7c43130f8166c437c03401',
-        measurementId: 'G-NJ1R8HDWLK',
-      });
-      self['firebaseApplication'] = firebaseApplication;
-      setFirebaseApplication(firebaseApplication);
-
-      const firebaseMessaging = getMessaging(firebaseApplication);
-      self['firebaseMessaging'] = firebaseMessaging;
-      setFirebaseMessaging(firebaseMessaging);
-    }
-  }, [platform]);
-
-  useEffect(() => {
-    new Promise(async () => {
-      const deviceInfo = await CapacitorDevice.getInfo();
-      setPlatform(deviceInfo.platform);
-    });
-  }, []);
-
-
 
   const {
     data: pushNotificationLinks,
@@ -187,26 +151,134 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
   const [imageUrl, setImageUrl] = useState<string>('');
 
   return (
-    <WithPermissions platform={platform}>
-      <WithServiceAccount deep={deep}>
-        <WithWebPushCertificate deep={deep}>
-          <WithDeviceRegistration deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} >
-            <Stack
-                  justifyContent={'center'}
-                  maxWidth={'768px'}
-                  margin={[0, 'auto']}
-                  spacing={4}
-                >
-                  <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
-                  <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
-                  <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
-                  {/* {notifyInsertionCard} */}
-                </Stack>
-          </WithDeviceRegistration>
-        </WithWebPushCertificate>
-      </WithServiceAccount>
-    </WithPermissions>
+    <WithPlatform renderChildren={({platform}) => (
+      <WithFirebaseApplication platform={platform} renderChildren={({firebaseApplication,firebaseMessaging}) => (
+        <WithPermissions platform={platform}>
+          <WithServiceAccount deep={deep}>
+            <WithWebPushCertificate deep={deep}>
+              <WithDeviceRegistration deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} >
+                <Stack
+                      justifyContent={'center'}
+                      maxWidth={'768px'}
+                      margin={[0, 'auto']}
+                      spacing={4}
+                    >
+                      <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
+                      <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
+                      <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
+                      {/* {notifyInsertionCard} */}
+                    </Stack>
+              </WithDeviceRegistration>
+            </WithWebPushCertificate>
+          </WithServiceAccount>
+        </WithPermissions>
+      )} />
+    )} />
   );
+}
+
+interface WithPlatformOptions {
+  renderChildren: (options: {platform: DeviceInfo['platform']|null}) => JSX.Element
+}
+
+function WithPlatform(options: WithPlatformOptions) {
+  const [platform, setPlatform] = useState(undefined);
+
+  useEffect(() => {
+    new Promise(async () => {
+      const deviceInfo = await CapacitorDevice.getInfo();
+      setPlatform(deviceInfo.platform);
+    });
+  }, []);
+
+  return platform ? options.renderChildren({platform}) : null;
+}
+
+interface WithFirebaseApplicationOptions {
+  renderChildren: (options: {firebaseApplication: FirebaseApp|null, firebaseMessaging: Messaging|null}) => JSX.Element,
+  platform: DeviceInfo['platform']
+}
+
+function WithFirebaseApplication(options: WithFirebaseApplicationOptions) {
+  const toast = useToast();
+  const {renderChildren, platform} = options;
+  const [firebaseConfigInput, setFirebaseConfigInput] = useState<string>('');
+  const [firebaseConfig, setFirebaseConfig] = useLocalStore<object|undefined>(CapacitorStoreKeys[CapacitorStoreKeys.FirebaseConfig], undefined)
+  const [firebaseApplication, setFirebaseApplication] = useState<
+  FirebaseApp | undefined
+>(undefined);
+const [firebaseMessaging, setFirebaseMessaging] = useState<
+  Messaging | undefined
+>(undefined);
+
+useEffect(() => {
+  const log = debug(`${WithFirebaseApplication.name}:${onFirebaseConfigInputSubmit.name}`);
+  log({firebaseConfig})
+  if(!firebaseConfig) {
+    return;
+  }
+  try {
+    let firebaseApplication: FirebaseApp;
+    const firebaseApplications = getApps()
+    log({firebaseApplications})
+    if (firebaseApplications.length > 0) {
+      firebaseApplication = firebaseApplications[0];
+    } else {
+      firebaseApplication = initializeApp(firebaseConfig);
+    }
+      log({firebaseApplication})
+      const firebaseMessaging = getMessaging(firebaseApplication);
+      log({firebaseMessaging})
+
+      self['firebaseApplication'] = firebaseApplication;
+      self['firebaseMessaging'] = firebaseMessaging;
+      setFirebaseApplication(firebaseApplication);
+      setFirebaseMessaging(firebaseMessaging);
+
+      toast({
+        title: 'Firebase Application Initialized',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      })
+  } catch (error) {
+    toast({
+      title: 'Firebase Application Initialization Failed',
+      description: error.message,
+      status: 'error',
+      duration: null,
+      isClosable: true,
+    })
+  }
+}, [firebaseConfig])
+
+  function onFirebaseConfigInputSubmit() {
+    const log = debug(`${WithFirebaseApplication.name}:${onFirebaseConfigInputSubmit.name}`);
+    try {
+      const firebaseConfig = Hjson.parse(firebaseConfigInput);
+      log({firebaseConfig})
+      setFirebaseConfig(firebaseConfig)
+    } catch (error) {
+      toast({
+        title: 'Firebase Config Is Not Valid',
+        description: error.message,
+        status: 'error',
+        duration: null,
+        isClosable: true,
+      })
+    }
+  }
+
+  if(platform !== 'web') {
+    return renderChildren({firebaseApplication: null, firebaseMessaging: null});
+  } else {
+    return (firebaseApplication || firebaseMessaging) ? renderChildren({firebaseApplication,firebaseMessaging}) : (
+      <Stack>
+        <Input value={firebaseConfigInput} onChange={(event) => setFirebaseConfigInput(event.target.value)} />
+        <Button onClick={onFirebaseConfigInputSubmit}>Set Firebase Config</Button>
+      </Stack>
+    )
+  }
 }
 
 function InsertPushNotificationModal({

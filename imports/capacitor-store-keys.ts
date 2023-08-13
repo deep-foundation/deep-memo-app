@@ -19,5 +19,6 @@ export enum CapacitorStoreKeys {
    Images,
    Sounds,
    GraphQlPath,
-   NetworkConnectionStatuses
+   NetworkConnectionStatuses,
+   FirebaseConfig
 }
