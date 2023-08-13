@@ -41,6 +41,7 @@ import {
   ModalFooter,
   HStack,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { FirebaseApp, initializeApp } from 'firebase/app';
@@ -72,6 +73,7 @@ import { PushNotifications } from '@capacitor/push-notifications';
 import { CapacitorDevicePackage, getDevice, DeviceInfo } from '@deep-foundation/capacitor-device';
 import { DeviceComponent } from '@deep-foundation/capacitor-device';
 const schema = require('../imports/firebase-push-notification/schema.json') as RJSFSchema;
+
 
 export default function PushNotificationsPage() {
   return (
@@ -186,21 +188,23 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
 
   return (
     <WithPermissions platform={platform}>
-      <Stack
-        justifyContent={'center'}
-        maxWidth={'768px'}
-        margin={[0, 'auto']}
-        spacing={4}
-      >
-        <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
-        
-        <ServiceAccountInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
-        <WebPushCertificateInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
-        <DeviceRegistrationCard deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} platform={platform} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} />
-        <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
-        <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
-        {/* {notifyInsertionCard} */}
-      </Stack>
+      <WithServiceAccount deep={deep}>
+        <Stack
+          justifyContent={'center'}
+          maxWidth={'768px'}
+          margin={[0, 'auto']}
+          spacing={4}
+        >
+          <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
+          
+          
+          <WebPushCertificateInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
+          <DeviceRegistrationCard deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} platform={platform} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} />
+          <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
+          <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
+          {/* {notifyInsertionCard} */}
+        </Stack>
+      </WithServiceAccount>
     </WithPermissions>
     
   );
@@ -251,13 +255,50 @@ function InsertPushNotificationModal({
   );
 }
 
-function ServiceAccountInsertionModal({
+function WithServiceAccount({
   deep,
-  deviceLinkId,
+  children,
 }: {
   deep: DeepClient;
-  deviceLinkId: number;
+  children: JSX.Element;
 }) {
+  const toast = useToast();
+  const _package = new Package({deep})
+
+  const {data: serviceAccountLinks} = deep.useDeepSubscription({
+    type_id: {
+      _id: [_package.name, _package.ServiceAccount.name],
+    },
+    in: {
+      type_id: {
+        _id: ['@deep-foundation/core', 'Contain'],
+      },
+      from_id: deep.linkId,
+    }
+  })
+
+  function showToastOnSuccess() {
+    toast({
+      title: "Success",
+      description: "Service Account Inserted Successfully!",
+      status: "success",
+      duration: null,
+      isClosable: true,
+      position: "top-right",
+    });
+  }
+
+  function showToastOnError({error}: {error: Error}) {
+    toast({
+      title: "Error",
+      description: `Failed to Insert Service Account! ${error.message}`,
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+      position: "top-right",
+    });
+  }
+
   enum ServiceAccountObtainingWay {
     File,
     Text,
@@ -275,19 +316,26 @@ function ServiceAccountInsertionModal({
     [ServiceAccountObtainingWay.File]: (
       <Button
         onClick={async () => {
-          const pickFilesResult = await FilePicker.pickFiles({
-            types: ['application/json'],
-          });
-          const {serialOperations} = await getServiceAccountInsertSerialOperations({
-            deep,
-            serviceAccount: JSON.parse(
-              await pickFilesResult.files[0].blob.text()
-            ),
-            shouldMakeActive: shouldMakeServiceAccountActive,
-          });
-          await deep.serial({
-            operations: serialOperations,
-          })
+          try {
+            const pickFilesResult = await FilePicker.pickFiles({
+              types: ['application/json'],
+            });
+            const { serialOperations } = await getServiceAccountInsertSerialOperations({
+              deep,
+              serviceAccount: JSON.parse(
+                await pickFilesResult.files[0].blob.text()
+              ),
+              shouldMakeActive: shouldMakeServiceAccountActive,
+            });
+      
+            await deep.serial({
+              operations: serialOperations,
+            });
+      
+            showToastOnSuccess()
+          } catch (error) {
+            showToastOnError({error})
+          }
         }}
       >
         Insert Service Account
@@ -304,6 +352,7 @@ function ServiceAccountInsertionModal({
         ></Textarea>
         <Button
           onClick={async () => {
+            try {
             const {serialOperations} = await getServiceAccountInsertSerialOperations({
               deep,
               serviceAccount: JSON.parse(serviceAccount),
@@ -312,6 +361,11 @@ function ServiceAccountInsertionModal({
             await deep.serial({
               operations: serialOperations,
             })
+
+            showToastOnSuccess()
+          } catch (error) {
+            showToastOnError({error})
+          }
           }}
         >
           Insert Service Account
@@ -319,8 +373,25 @@ function ServiceAccountInsertionModal({
       </>
     ),
   };
-  return (
-    <>
+  
+  return serviceAccountLinks.length > 0 ? children : (
+    <Card>
+      <Heading>
+        Service Accounts
+      </Heading>
+      <Stack>
+        {
+          serviceAccountLinks.length === 0 ? <Text>
+          No Service Accounts
+        </Text> : serviceAccountLinks?.map((serviceAccountLink) => {
+            return (
+              <Text>
+                {serviceAccountLink.value.value.project_id}
+              </Text>
+            );
+          })
+        }
+      </Stack>
       <Button onClick={onOpen}>Insert Service Account</Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -390,7 +461,7 @@ function ServiceAccountInsertionModal({
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </Card>
   );
 }
 
