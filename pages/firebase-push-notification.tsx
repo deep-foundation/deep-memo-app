@@ -185,21 +185,24 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
   const [imageUrl, setImageUrl] = useState<string>('');
 
   return (
-    <Stack
-      justifyContent={'center'}
-      maxWidth={'768px'}
-      margin={[0, 'auto']}
-      spacing={4}
-    >
-      <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
-      <PermissionsCard platform={platform} />
-      <ServiceAccountInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
-      <WebPushCertificateInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
-      <DeviceRegistrationCard deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} platform={platform} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} />
-      <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
-      <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
-      {/* {notifyInsertionCard} */}
-    </Stack>
+    <WithPermissions platform={platform}>
+      <Stack
+        justifyContent={'center'}
+        maxWidth={'768px'}
+        margin={[0, 'auto']}
+        spacing={4}
+      >
+        <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
+        
+        <ServiceAccountInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
+        <WebPushCertificateInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
+        <DeviceRegistrationCard deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} platform={platform} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} />
+        <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
+        <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
+        {/* {notifyInsertionCard} */}
+      </Stack>
+    </WithPermissions>
+    
   );
 }
 
@@ -513,10 +516,12 @@ function DeviceRegistrationCard({
 </Card>
 }
 
-function PermissionsCard({
-  platform
+function WithPermissions({
+  platform,
+  children
 }: {
   platform: DeviceInfo['platform'];
+  children: JSX.Element
 }) {
   const [isPermissionsGranted, setIsPermissionsGranted] = useState(undefined);
 
@@ -536,14 +541,14 @@ function PermissionsCard({
       setIsPermissionsGranted(isPermissionsGranted);
     });
   }, [platform]);
-  return <Card>
+  return isPermissionsGranted ? children : <Card>
   <CardHeader>
     <Heading size="md">Permissions</Heading>
   </CardHeader>
   <CardBody>
     <Stack>
       <Text suppressHydrationWarning>
-        Permissions are {!isPermissionsGranted && 'not'} granted
+        Notification permissions are {!isPermissionsGranted && 'not'} granted
       </Text>
       <Button
         isDisabled={!platform}
