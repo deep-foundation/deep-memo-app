@@ -52,13 +52,12 @@ import {
   onMessage,
 } from 'firebase/messaging';
 import { FilePicker } from '@capawesome/capacitor-file-picker';
-import { PushNotificationComponent } from '@deep-foundation/firebase-push-notification';
+import { getNotifyInsertSerialOperations, PushNotificationComponent } from '@deep-foundation/firebase-push-notification';
 // import {  } from '@deep-foundation/capacitor-device';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import {
   BatteryInfo,
   Device,
-  DeviceInfo,
   GetLanguageCodeResult,
   LanguageTag,
 } from '@capacitor/device';
@@ -70,7 +69,7 @@ import { RJSFSchema } from '@rjsf/utils';
 import Form from '@rjsf/chakra-ui';
 import { getPushNotification,  registerDevice, requestPermissions, PushNotificationInfo, checkPermissions, getPushNotificationInsertSerialOperations, getServiceAccountInsertSerialOperations, getWebPushCertificateInsertSerialOperations, getDeviceRegistrationTokenInsertSerialOperations, Package } from '@deep-foundation/firebase-push-notification';
 import { PushNotifications } from '@capacitor/push-notifications';
-import { CapacitorDevicePackage, getDevice } from '@deep-foundation/capacitor-device';
+import { CapacitorDevicePackage, getDevice, DeviceInfo } from '@deep-foundation/capacitor-device';
 import { DeviceComponent } from '@deep-foundation/capacitor-device';
 const schema = require('../imports/firebase-push-notification/schema.json') as RJSFSchema;
 
@@ -144,8 +143,9 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
     },
   });
 
+  type PushNotification = PushNotificationInfo & {linkId: number};
   const [pushNotifications, setPushNotifications] = useState<
-    PushNotificationInfo[] | undefined
+  PushNotification[] | undefined
   >(undefined);
   useEffect(() => {
     if (isPushNotificationLinksSubscriptionLoading) {
@@ -154,11 +154,23 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
     new Promise(async () => {
       const pushNotifications = [];
       for (const pushNotificationLink of pushNotificationLinks) {
-        const pushNotification = await getPushNotification({
-          deep,
-          pushNotificationLinkId: pushNotificationLink.id,
-        });
-        pushNotifications.push(pushNotification);
+        try {
+          const pushNotificationInfo = await getPushNotification({
+            deep,
+            pushNotificationLinkId: pushNotificationLink.id,
+          });
+          const pushNotification = {
+            ...pushNotificationInfo,
+            linkId: pushNotificationLink.id,
+          }
+          pushNotifications.push({
+            ...pushNotification,
+            linkId: pushNotificationLink.id,
+          });
+        } catch (error) {
+          console.error(error)
+          continue;
+        }
       }
       setPushNotifications(pushNotifications);
     });
@@ -185,7 +197,7 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
       <WebPushCertificateInsertionModal deep={deep} deviceLinkId={deviceLinkId} />
       <DeviceRegistrationCard deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} platform={platform} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} />
       <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
-      
+      <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
       {/* {notifyInsertionCard} */}
     </Stack>
   );
@@ -215,7 +227,7 @@ function InsertPushNotificationModal({
               onSubmit={async (arg) => {
                 const {serialOperations} = await getPushNotificationInsertSerialOperations({
                   deep,
-                  containerLinkId: deviceLinkId,
+                  containerLinkId: deep.linkId,
                   pushNotification: arg.formData,
                 });
                 await deep.serial({
@@ -616,14 +628,20 @@ function NotifyInsertionButton({ deep, pushNotifications }: { deep: DeepClient; 
     new Promise(async () => {
       const devices = [];
       for (const deviceLink of deviceLinks) {
-        const device = await getDevice({
-          deep,
-          deviceLinkId: deviceLink.id,
-        });
-        devices.push({
-          ...device,
-          linkId: deviceLink.id,
-        });
+        try {
+          const device = await getDevice({
+            deep,
+            deviceLinkId: deviceLink.id,
+          });
+          devices.push({
+            ...device,
+            linkId: deviceLink.id,
+          });
+        } catch (error) {
+          console.error(error)
+          continue;
+        }
+
       }
       setDevices(devices);
     });
@@ -656,30 +674,54 @@ function NotifyInsertionButton({ deep, pushNotifications }: { deep: DeepClient; 
             <ModalHeader>Insert</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <HStack>
+              <HStack divider={<StackDivider />}>
                 <Stack>
-                  {pushNotifications.map((pushNotification, i) => {
+                  {pushNotifications && pushNotifications.map((pushNotification, i) => {
                     const isActive = pushNotificationToNotifyLinkId === pushNotification.linkId;
                     return <PushNotificationComponent
                     key={i}
                     pushNotification={pushNotification}
                     cardProps={{
                       ...(isActive && {
-                        dropShadow: 'lg',
+                        boxShadow: "outline",
                       }),
+                      onClick: () => {
+                        setPushNotificationToNotifyLinkId(isActive ? undefined : pushNotification.linkId)
+                      }
                     }}
                   />
                   })}
+                  {/* <Button>
+                    ABC1
+                  </Button>
+                  <Button>
+                    ABC2
+                  </Button>
+                  <Button>
+                    ABC3
+                  </Button> */}
                 </Stack>
                 <Stack>
-                  {devices.map((device, i) => {
+                  {devices && devices.map((device) => {
                     const isActive = deviceToNotifyLinkId === device.linkId;
-                    return <DeviceComponent key={i} device={device} cardProps={{
+                    return <DeviceComponent key={device.linkId} device={device} cardProps={{
                       ...(isActive && {
-                        dropShadow: 'lg'
-                      })
+                        boxShadow: "outline",
+                      }),
+                      onClick: () => {
+                        setDeviceToNotifyLinkId(isActive ? undefined : device.linkId)
+                      }
                     }} />
                   })}
+                                    {/* <Button>
+                    ABC1
+                  </Button>
+                  <Button>
+                    ABC2
+                  </Button>
+                  <Button>
+                    ABC3
+                  </Button> */}
                 </Stack>
               </HStack>
             </ModalBody>
@@ -692,7 +734,17 @@ function NotifyInsertionButton({ deep, pushNotifications }: { deep: DeepClient; 
               >
                 Close
               </Button>
-              <Button variant="ghost">Secondary Action</Button>
+              <Button variant="ghost" isDisabled={!pushNotificationToNotifyLinkId || !deviceToNotifyLinkId} onClick={async () => {
+                const {serialOperations: notifyInsertSerialOperations} = await getNotifyInsertSerialOperations({
+                  deep,
+                  deviceLinkId: deviceToNotifyLinkId,
+                  pushNotificationLinkId: pushNotificationToNotifyLinkId,
+                  containerLinkId: deep.linkId
+                })
+                await deep.serial({
+                  operations: notifyInsertSerialOperations
+                })
+              }}>Notify</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
