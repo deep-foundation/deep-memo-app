@@ -650,7 +650,7 @@ function WithDeviceRegistration({
       title: "Error",
       description: `Failed to Register Device! ${error.message}`,
       status: "error",
-      duration: 3000,
+      duration: null,
       isClosable: true,
       position: "top-right",
     });
@@ -782,6 +782,30 @@ function GeneralInfoCard(
 }
 
 function NotifyInsertionButton({ deep, pushNotifications }: { deep: DeepClient; pushNotifications: Array<PushNotificationInfo&{linkId: number}>}) {
+  const toast = useToast();
+
+  const showToastOnSuccess = () => {
+    toast({
+      title: "Success",
+      description: "Notify Link Inserted Successfully!",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+      position: "top-right",
+    });
+  }
+
+  const showToastOnError = ({error}: {error: Error}) => {
+    toast({
+      title: "Error",
+      description: `Failed to Insert Notify Link! ${error.message}`,
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+      position: "top-right",
+    });
+  }
+
   const devicePackage = new CapacitorDevicePackage({deep});
     const {
     data: deviceLinks,
@@ -916,15 +940,20 @@ function NotifyInsertionButton({ deep, pushNotifications }: { deep: DeepClient; 
                 Close
               </Button>
               <Button variant="ghost" isDisabled={!pushNotificationToNotifyLinkId || !deviceToNotifyLinkId} onClick={async () => {
-                const {serialOperations: notifyInsertSerialOperations} = await getNotifyInsertSerialOperations({
-                  deep,
-                  deviceLinkId: deviceToNotifyLinkId,
-                  pushNotificationLinkId: pushNotificationToNotifyLinkId,
-                  containerLinkId: deep.linkId
-                })
-                await deep.serial({
-                  operations: notifyInsertSerialOperations
-                })
+                try {
+                  const {serialOperations: notifyInsertSerialOperations} = await getNotifyInsertSerialOperations({
+                    deep,
+                    deviceLinkId: deviceToNotifyLinkId,
+                    pushNotificationLinkId: pushNotificationToNotifyLinkId,
+                    containerLinkId: deep.linkId
+                  })
+                  await deep.serial({
+                    operations: notifyInsertSerialOperations
+                  })
+                  showToastOnSuccess()
+                } catch (error) {
+                  showToastOnError({error})
+                }
               }}>Notify</Button>
             </ModalFooter>
           </ModalContent>
