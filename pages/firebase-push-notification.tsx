@@ -190,24 +190,22 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
     <WithPermissions platform={platform}>
       <WithServiceAccount deep={deep}>
         <WithWebPushCertificate deep={deep}>
-          <Stack
-              justifyContent={'center'}
-              maxWidth={'768px'}
-              margin={[0, 'auto']}
-              spacing={4}
-            >
-              <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
-              
-              
-              <DeviceRegistrationCard deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} platform={platform} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} />
-              <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
-              <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
-              {/* {notifyInsertionCard} */}
-            </Stack>
+          <WithDeviceRegistration deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} >
+            <Stack
+                  justifyContent={'center'}
+                  maxWidth={'768px'}
+                  margin={[0, 'auto']}
+                  spacing={4}
+                >
+                  <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
+                  <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
+                  <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
+                  {/* {notifyInsertionCard} */}
+                </Stack>
+          </WithDeviceRegistration>
         </WithWebPushCertificate>
       </WithServiceAccount>
     </WithPermissions>
-    
   );
 }
 
@@ -606,42 +604,86 @@ function WithWebPushCertificate({
   );
 }
 
-function DeviceRegistrationCard({
+function WithDeviceRegistration({
   deep,
   deviceLinkId,
   firebaseMessaging,
-  platform,
-  onDeviceRegistrationTokenLinkIdChange
+  onDeviceRegistrationTokenLinkIdChange,
+  children
 }: {
   deep: DeepClient;
   deviceLinkId: number;
   firebaseMessaging: Messaging;
-  platform: DeviceInfo['platform'];
   onDeviceRegistrationTokenLinkIdChange: (deviceRegistrationTokenLinkId: number) => void;
+  children: JSX.Element;
 }) {
-  return <Card>
+  const _package = new Package({deep})
+  const toast = useToast();
+
+  const {data: deviceRegistrationTokenLinks} = deep.useDeepSubscription({
+    type_id: {
+      _id: [_package.name, _package.DeviceRegistrationToken.name],
+    },
+    in: {
+      type_id: {
+        _id: ['@deep-foundation/core', 'Contain'],
+      },
+      from_id: deviceLinkId,
+    }
+  })
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  function showToastOnSuccess() {
+    toast({
+      title: "Success",
+      description: "Device Registered Successfully!",
+      status: "success",
+      duration: null,
+      isClosable: true,
+      position: "top-right",
+    });
+  }
+
+  function showToastOnError({error}: {error: Error}) {
+    toast({
+      title: "Error",
+      description: `Failed to Register Device! ${error.message}`,
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+      position: "top-right",
+    });
+  }
+
+  return deviceRegistrationTokenLinks.length > 0 ? children : <Card>
   <CardHeader>
     <Heading size="md">Register Device</Heading>
   </CardHeader>
   <CardBody>
     <Button
       onClick={async () => {
-        await registerDevice({
-          deep,
-          deviceLinkId,
-          firebaseMessaging,
-          callback: async ({ deviceRegistrationToken }) => {
-            const {serialOperations, linkIds} =  await getDeviceRegistrationTokenInsertSerialOperations({
-              deep,
-              containerLinkId: deviceLinkId,
-              deviceRegistrationToken
-            })
-            await deep.serial({
-              operations: serialOperations,
-            })
-            onDeviceRegistrationTokenLinkIdChange(linkIds.deviceRegistrationTokenLinkId);
-          },
-        });
+        try {
+          await registerDevice({
+            deep,
+            deviceLinkId,
+            firebaseMessaging,
+            callback: async ({ deviceRegistrationToken }) => {
+              const {serialOperations, linkIds} =  await getDeviceRegistrationTokenInsertSerialOperations({
+                deep,
+                containerLinkId: deviceLinkId,
+                deviceRegistrationToken
+              })
+              await deep.serial({
+                operations: serialOperations,
+              })
+              onDeviceRegistrationTokenLinkIdChange(linkIds.deviceRegistrationTokenLinkId);
+            },
+          });
+          showToastOnSuccess()
+        } catch (error) {
+          showToastOnError({error})
+        }
       }}
     >
       Register
