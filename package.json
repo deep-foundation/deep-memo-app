@@ -85,6 +85,7 @@
     "firebase": "^9.19.1",
     "framer-motion": "^6.5.1",
     "generate-schema": "^2.6.0",
+    "hjson": "^3.2.2",
     "next": "^13.4.7",
     "next-env": "^1.1.1",
     "next-pwa": "^5.6.0",
@@ -96,6 +97,7 @@
   "devDependencies": {
     "@capacitor/cli": "^5.0.0",
     "@types/debug": "^4.1.8",
+    "@types/hjson": "^2.4.3",
     "@types/react": "^18.0.33",
     "@types/serviceworker": "^0.0.62",
     "buffer": "^6.0.3",
