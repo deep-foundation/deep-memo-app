@@ -14,7 +14,7 @@ import {
   Button,
   ChakraProvider,
   Input,
-  Link,
+  Link as ChakraLink,
   Stack,
   Text,
   Divider,
@@ -75,6 +75,8 @@ import { DeviceComponent } from '@deep-foundation/capacitor-device';
 const schema = require('../imports/firebase-push-notification/schema.json') as RJSFSchema;
 import debug from 'debug'
 import Hjson from 'hjson';
+import { Link } from '@deep-foundation/deeplinks/imports/minilinks';
+
 
 
 export default function PushNotificationsPage() {
@@ -86,12 +88,6 @@ export default function PushNotificationsPage() {
 function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number}) {
 
   const _package = new Package({deep});
-
-  const [deviceRegistrationTokenLinkId, setDeviceRegistrationTokenLinkId] =
-    useLocalStore(
-      CapacitorStoreKeys[CapacitorStoreKeys.DeviceRegistrationToken],
-      undefined
-    );
 
   const {
     data: pushNotificationLinks,
@@ -156,25 +152,48 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
         <WithPermissions platform={platform}>
           <WithServiceAccount deep={deep}>
             <WithWebPushCertificate deep={deep}>
-              <WithDeviceRegistration deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} onDeviceRegistrationTokenLinkIdChange={setDeviceRegistrationTokenLinkId} >
-                <Stack
+              <WithDeviceRegistration deep={deep} deviceLinkId={deviceLinkId} firebaseMessaging={firebaseMessaging} renderChildren={({deviceRegistrationTokenLink}) => (
+                <WithToastPuhsNotifications firebaseMessaging={firebaseMessaging}>
+                  <Stack
                       justifyContent={'center'}
                       maxWidth={'768px'}
                       margin={[0, 'auto']}
                       spacing={4}
                     >
-                      <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLinkId} platform={platform} />
+                      <GeneralInfoCard deep={deep} deviceLinkId={deviceLinkId} deviceRegistrationTokenLinkId={deviceRegistrationTokenLink.id} platform={platform} />
                       <InsertPushNotificationModal deep={deep} deviceLinkId={deviceLinkId} />
                       <NotifyInsertionButton deep={deep} pushNotifications={pushNotifications} />
                       {/* {notifyInsertionCard} */}
                     </Stack>
-              </WithDeviceRegistration>
+                </WithToastPuhsNotifications>
+              )} />
             </WithWebPushCertificate>
           </WithServiceAccount>
         </WithPermissions>
       )} />
     )} />
   );
+}
+
+export interface WithToastPuhsNotificationsOptions {
+  firebaseMessaging: Messaging,
+  children: JSX.Element,
+}
+
+function WithToastPuhsNotifications(options: WithToastPuhsNotificationsOptions) {
+  const toast = useToast();
+
+  onMessage(options.firebaseMessaging, (payload) => {
+    toast({
+      title: payload.notification.title,
+      description: payload.notification.body,
+      status: 'info',
+      duration: null,
+      isClosable: true,
+    });
+  });
+
+  return options.children;
 }
 
 interface WithPlatformOptions {
@@ -235,12 +254,14 @@ useEffect(() => {
       setFirebaseApplication(firebaseApplication);
       setFirebaseMessaging(firebaseMessaging);
 
-      toast({
-        title: 'Firebase Application Initialized',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      })
+      if(firebaseConfigInput !== '') {
+        toast({
+          title: 'Firebase Application Initialized',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        })
+      }
   } catch (error) {
     toast({
       title: 'Firebase Application Initialization Failed',
@@ -512,14 +533,14 @@ function WithServiceAccount({
               {layoutsByObtainintWays[serviceAccountObtainingWay]}
               <Text>
                 Service Account can be found on{' '}
-                <Link
+                <ChakraLink
                   href={
                     'https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk'
                   }
                   isExternal
                 >
                   https://console.firebase.google.com/u/0/project/PROJECT_ID/settings/serviceaccounts/adminsdk
-                </Link>
+                </ChakraLink>
                 . Do not forget to change PROJECT_ID in URL to your project id
               </Text>
             </Stack>
@@ -651,14 +672,14 @@ function WithWebPushCertificate({
           </Button>
           <Text>
             WebPushCertificate can be found on{' '}
-            <Link
+            <ChakraLink
               href={
                 'https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging'
               }
               isExternal
             >
               https://console.firebase.google.com/project/PROJECT_ID/settings/cloudmessaging
-            </Link>
+            </ChakraLink>
             . Do not forget to change PROJECT_ID in URL to your project id
           </Text>
           <Text>Required to notificate web clients</Text>
@@ -680,17 +701,18 @@ function WithDeviceRegistration({
   deep,
   deviceLinkId,
   firebaseMessaging,
-  onDeviceRegistrationTokenLinkIdChange,
-  children
+  renderChildren
 }: {
   deep: DeepClient;
   deviceLinkId: number;
   firebaseMessaging: Messaging;
-  onDeviceRegistrationTokenLinkIdChange: (deviceRegistrationTokenLinkId: number) => void;
-  children: JSX.Element;
+  renderChildren: (options: {deviceRegistrationTokenLink: Link<number>}) => JSX.Element;
 }) {
+  const log = debug(WithDeviceRegistration.name)
   const _package = new Package({deep})
   const toast = useToast();
+
+  const [deviceRegistrationTokenLink, setDeviceRegistrationTokenLink] = useState<Link<number>|undefined>(undefined);
 
   const {data: deviceRegistrationTokenLinks} = deep.useDeepSubscription({
     type_id: {
@@ -704,7 +726,21 @@ function WithDeviceRegistration({
     }
   })
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  useEffect(() => {
+    new Promise(async () => {
+      log({deviceRegistrationTokenLinks})
+      if(deviceRegistrationTokenLinks.length === 0) {
+        return;
+      }
+      const deviceRegistrationTokenLink = deviceRegistrationTokenLinks[0];
+      log({deviceRegistrationTokenLink})
+      if(!deviceRegistrationTokenLink.value?.value) {
+        showToastOnError({error: new Error(`${await deep.name(deviceRegistrationTokenLink.type_id)} ${deviceRegistrationTokenLink.id} does not have a value`)})
+      } else {
+        setDeviceRegistrationTokenLink(deviceRegistrationTokenLink)
+      }
+    })
+  }, [deviceRegistrationTokenLinks])
 
   function showToastOnSuccess() {
     toast({
@@ -728,7 +764,7 @@ function WithDeviceRegistration({
     });
   }
 
-  return deviceRegistrationTokenLinks.length > 0 ? children : <Card>
+  return deviceRegistrationTokenLink ? renderChildren({deviceRegistrationTokenLink: deviceRegistrationTokenLink}) : <Card>
   <CardHeader>
     <Heading size="md">Register Device</Heading>
   </CardHeader>
@@ -740,21 +776,24 @@ function WithDeviceRegistration({
             deep,
             deviceLinkId,
             firebaseMessaging,
-            callback: async ({ deviceRegistrationToken }) => {
-              const {serialOperations, linkIds} =  await getDeviceRegistrationTokenInsertSerialOperations({
-                deep,
-                containerLinkId: deviceLinkId,
-                deviceRegistrationToken
-              })
-              await deep.serial({
-                operations: serialOperations,
-              })
-              onDeviceRegistrationTokenLinkIdChange(linkIds.deviceRegistrationTokenLinkId);
-            },
+            callback: registerDeviceCallback,
           });
           showToastOnSuccess()
         } catch (error) {
           showToastOnError({error})
+        }
+        async function  registerDeviceCallback ({ deviceRegistrationToken }) {
+          const log = debug(`${WithDeviceRegistration.name}:${registerDevice.name}:${registerDeviceCallback.name}`)
+          log({deviceRegistrationToken})
+          const {serialOperations} =  await getDeviceRegistrationTokenInsertSerialOperations({
+            deep,
+            containerLinkId: deviceLinkId,
+            deviceRegistrationToken
+          })
+          log({serialOperations})
+          await deep.serial({
+            operations: serialOperations,
+          })
         }
       }}
     >
@@ -838,13 +877,13 @@ function GeneralInfoCard(
   <CardBody>
     <Stack>
       <Text suppressHydrationWarning>
-        Deep link id: {deep.linkId ?? ' '}
+        Deep ChakraLink id: {deep.linkId ?? ' '}
       </Text>
       <Text suppressHydrationWarning>
-        Device link id: {deviceLinkId ?? ' '}
+        Device ChakraLink id: {deviceLinkId ?? ' '}
       </Text>
       <Text suppressHydrationWarning>
-        Device registration token link id:{' '}
+        Device registration token ChakraLink id:{' '}
         {deviceRegistrationTokenLinkId ?? ' '}
       </Text>
       <Text suppressHydrationWarning>Platform: {platform ?? ' '}</Text>
@@ -859,7 +898,7 @@ function NotifyInsertionButton({ deep, pushNotifications }: { deep: DeepClient; 
   const showToastOnSuccess = () => {
     toast({
       title: "Success",
-      description: "Notify Link Inserted Successfully!",
+      description: "Notify ChakraLink Inserted Successfully!",
       status: "success",
       duration: 3000,
       isClosable: true,
@@ -870,7 +909,7 @@ function NotifyInsertionButton({ deep, pushNotifications }: { deep: DeepClient; 
   const showToastOnError = ({error}: {error: Error}) => {
     toast({
       title: "Error",
-      description: `Failed to Insert Notify Link! ${error.message}`,
+      description: `Failed to Insert Notify ChakraLink! ${error.message}`,
       status: "error",
       duration: 3000,
       isClosable: true,
@@ -1044,17 +1083,17 @@ function NotifyInsertionButton({ deep, pushNotifications }: { deep: DeepClient; 
   //   </CardHeader>
   //   <CardBody>
 
-  //       <label htmlFor={"pushNotificationToNotifyLinkIdNumberInput"}>Push Notification Link Id To Notify</label>
+  //       <label htmlFor={"pushNotificationToNotifyLinkIdNumberInput"}>Push Notification ChakraLink Id To Notify</label>
   //     <NumberInput value={pushNotificationToNotifyLinkId} onChange={(value) => {
   //       setPushNotificationToNotifyLinkId(value !== '' ? parseInt(value) : undefined)
   //     }}>
-  //       <NumberInputField id={"pushNotificationToNotifyLinkIdNumberInput"} placeholder='Device Link Id To Notify'/>
+  //       <NumberInputField id={"pushNotificationToNotifyLinkIdNumberInput"} placeholder='Device ChakraLink Id To Notify'/>
   //     </NumberInput>
-  //     <label htmlFor={"pushNotificationToNotifyLinkIdNumberInput"}>Device Link Id To Notify Link Id</label>
+  //     <label htmlFor={"pushNotificationToNotifyLinkIdNumberInput"}>Device ChakraLink Id To Notify ChakraLink Id</label>
   //     <NumberInput  value={deviceToNotifyLinkId} onChange={(value) => {
   //       setDeviceToNotifyLinkId(value !== '' ? parseInt(value) : undefined)
   //     }}>
-  //       <NumberInputField placeholder='Device Link Id To Be Notified'/>
+  //       <NumberInputField placeholder='Device ChakraLink Id To Be Notified'/>
   //     </NumberInput>
   //     <Button
   //       onClick={async () => {
