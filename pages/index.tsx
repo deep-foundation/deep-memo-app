@@ -114,8 +114,8 @@ function Pages() {
         Call History
       </Link>
 
-      <Link as={NextLink} href="/contacts">
-        Contacts
+      <Link as={NextLink} href="/contact">
+        Contact
       </Link>
 
       <Link as={NextLink} href="/network">
