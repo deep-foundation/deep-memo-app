@@ -18,6 +18,8 @@ import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
 import { NavBar } from '../components/navbar';
 import { Page } from '../components/page';
+import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
+import { useLocalStore } from '@deep-foundation/store/local';
 
 interface ContentParam {
   deep: DeepClient;
@@ -37,6 +39,56 @@ function Content({ deep, deviceLinkId }: ContentParam) {
       await deep.guest();
     });
   }, [deep]);
+
+  const [
+    isActionSheetSubscriptionEnabled,
+    setIsActionSheetSubscriptionEnabled,
+  ] = useLocalStore<boolean|undefined>(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsActionSheetSubscriptionEnabled],
+    undefined
+  );
+  const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] =
+    useLocalStore<boolean|undefined>(
+      CapacitorStoreKeys[CapacitorStoreKeys.IsDialogSubscriptionEnabled],
+      undefined
+    );
+  const [
+    isScreenReaderSubscriptionEnabled,
+    setIsScreenReaderSubscriptionEnabled,
+  ] = useLocalStore<boolean|undefined>(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsScreenReaderSubscriptionEnabled],
+    undefined
+  );
+  const [isHapticsSubscriptionEnabled, setIsHapticsSubscriptionEnabled] =
+    useLocalStore<boolean|undefined>(
+      CapacitorStoreKeys[CapacitorStoreKeys.IsHapticsSubscriptionEnabled],
+      undefined
+    );
+  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore<boolean|undefined>(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
+    undefined
+  );
+  const [lastContactsSyncTime, setLastContactsSyncTime] = useLocalStore<number|undefined>(
+    CapacitorStoreKeys[CapacitorStoreKeys.ContactsLastSyncTime],
+    undefined
+  );
+  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useLocalStore<boolean|undefined>(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsCallHistorySyncEnabled],
+    undefined
+  );
+  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useLocalStore<number | undefined>(
+    CapacitorStoreKeys[CapacitorStoreKeys.CallHistoryLastSyncTime],
+    undefined
+  );
+  const [isNetworkSubscriptionEnabled, setIsNetworkSubscriptionEnabled] =
+    useLocalStore<boolean|undefined>(
+      CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled],
+      false
+    );
+  const [isVoiceRecorderEnabled, setIsVoiceRecorderEnabled] = useLocalStore<boolean|undefined>(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsVoiceRecorderEnabled],
+    undefined
+  );
 
   const generalInfoCard = (
     <Card>
@@ -60,7 +112,18 @@ function Content({ deep, deviceLinkId }: ContentParam) {
       <Heading as={'h1'}>DeepMemo</Heading>
       {generalInfoCard}
       <>
-        <WithSubscriptions deep={deep} />
+        <WithSubscriptions 
+        deep={deep}
+        deviceLinkId={deviceLinkId}
+        isContactsSyncEnabled={isContactsSyncEnabled}
+        lastContactsSyncTime={lastContactsSyncTime}
+        onLastContactsSyncTimeChange={setLastContactsSyncTime}
+        isCallHistorySyncEnabled={isCallHistorySyncEnabled}
+        lastCallHistorySyncTime={lastCallHistorySyncTime}
+        onLastCallHistorySyncTimeChange={setLastCallHistorySyncTime}
+        isNetworkSubscriptionEnabled={isNetworkSubscriptionEnabled}
+        isVoiceRecorderEnabled={isVoiceRecorderEnabled}
+        />
         <Pages />
       </>
     </Stack>
