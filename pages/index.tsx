@@ -83,7 +83,6 @@ function Content({ deep, deviceLinkId }: ContentParam) {
         isNetworkSubscriptionEnabled={isNetworkSubscriptionEnabled}
         isVoiceRecorderEnabled={isVoiceRecorderEnabled}
         />
-        <Pages />
       </>
     </Stack>
   );

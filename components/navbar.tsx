@@ -7,6 +7,9 @@ export function NavBar({ }) {
     <Link as={NextLink} href='/'>
       Home
     </Link>
+    <Link as={NextLink} href="/settings">
+        Settings
+    </Link>
     </HStack>
   </>
 }
