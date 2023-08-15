@@ -126,10 +126,6 @@ function Pages() {
         Camera
       </Link>
 
-      <Link as={NextLink} href="/audiorecord">
-        Audiorecord
-      </Link>
-
       <Link as={NextLink} href="/motion">
         Motion
       </Link>
