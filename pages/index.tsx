@@ -40,30 +40,6 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     });
   }, [deep]);
 
-  const [
-    isActionSheetSubscriptionEnabled,
-    setIsActionSheetSubscriptionEnabled,
-  ] = useLocalStore<boolean|undefined>(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsActionSheetSubscriptionEnabled],
-    undefined
-  );
-  const [isDialogSubscriptionEnabled, setIsDialogSubscriptionEnabled] =
-    useLocalStore<boolean|undefined>(
-      CapacitorStoreKeys[CapacitorStoreKeys.IsDialogSubscriptionEnabled],
-      undefined
-    );
-  const [
-    isScreenReaderSubscriptionEnabled,
-    setIsScreenReaderSubscriptionEnabled,
-  ] = useLocalStore<boolean|undefined>(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsScreenReaderSubscriptionEnabled],
-    undefined
-  );
-  const [isHapticsSubscriptionEnabled, setIsHapticsSubscriptionEnabled] =
-    useLocalStore<boolean|undefined>(
-      CapacitorStoreKeys[CapacitorStoreKeys.IsHapticsSubscriptionEnabled],
-      undefined
-    );
   const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore<boolean|undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
     undefined
