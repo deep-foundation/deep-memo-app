@@ -15,10 +15,6 @@ import { WithHapticsSubscription } from '../haptics/with-haptics-vibrate-subscri
 import { WithScreenReaderSubscription } from '../screen-reader/with-screen-reader-subscription';
 
 export function WithSubscriptions({ deep }: { deep: DeepClient }) {
-  const [adminLinkId, setAdminLinkId] = useLocalStore<number|undefined>(
-    CapacitorStoreKeys[CapacitorStoreKeys.AdminLinkId],
-    undefined
-  );
   const [deviceLinkId, setDeviceLinkId] = useLocalStore<number|undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
