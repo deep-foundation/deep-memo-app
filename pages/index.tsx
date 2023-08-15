@@ -66,27 +66,10 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     undefined
   );
 
-  const generalInfoCard = (
-    <Card>
-      <CardHeader>
-        <Heading as={'h2'}>General Info</Heading>
-      </CardHeader>
-      <CardBody>
-        <Text suppressHydrationWarning>
-          Authentication Link Id: {deep.linkId ?? ' '}
-        </Text>
-        <Text suppressHydrationWarning>
-          Device Link Id: {deviceLinkId ?? ' '}
-        </Text>
-      </CardBody>
-    </Card>
-  );
-
   return (
     <Stack alignItems={'center'}>
       <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
-      {generalInfoCard}
       <>
         <WithSubscriptions 
         deep={deep}
