@@ -14,11 +14,7 @@ import { WithDialogSubscription } from '../dialog/with-dialog-subscription';
 import { WithHapticsSubscription } from '../haptics/with-haptics-vibrate-subscription';
 import { WithScreenReaderSubscription } from '../screen-reader/with-screen-reader-subscription';
 
-export function WithSubscriptions({ deep }: { deep: DeepClient }) {
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore<number|undefined>(
-    CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
-    undefined
-  );
+export function WithSubscriptions({ deep, deviceLinkId }: { deep: DeepClient, deviceLinkId: number }) {
   const [
     isActionSheetSubscriptionEnabled,
     setIsActionSheetSubscriptionEnabled,
