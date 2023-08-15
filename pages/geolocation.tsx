@@ -22,7 +22,9 @@ function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number})
   return (
     <Stack alignItems={"center"}>
       <NavBar/>
-      
+      <Text>
+        Not implemented yet
+      </Text>
     </Stack>
   );
 }
