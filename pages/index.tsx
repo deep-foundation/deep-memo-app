@@ -70,8 +70,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     <Stack alignItems={'center'}>
       <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
-      <>
-        <WithSubscriptions 
+      <WithSubscriptions 
         deep={deep}
         deviceLinkId={deviceLinkId}
         isContactsSyncEnabled={isContactsSyncEnabled}
@@ -83,7 +82,6 @@ function Content({ deep, deviceLinkId }: ContentParam) {
         isNetworkSubscriptionEnabled={isNetworkSubscriptionEnabled}
         isVoiceRecorderEnabled={isVoiceRecorderEnabled}
         />
-      </>
     </Stack>
   );
 }
