@@ -20,5 +20,10 @@ export enum CapacitorStoreKeys {
    Sounds,
    GraphQlPath,
    NetworkConnectionStatuses,
-   FirebaseConfig
+   FirebaseConfig,
+   IsMotionSyncEnabled,
+   IsNetworkSyncEnabled,
+   IsVoiceRecorderSyncEnabled,
+   IsCameraSyncEnabled,
+   IsDeviceSyncEnabled
 }

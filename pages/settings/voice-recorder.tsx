@@ -15,26 +15,26 @@ import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { Page } from '../../components/page';
 
 function Content() {
-  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
+  const [isVoiceRecorderSyncEnabled, setIsVoiceRecorderSyncEnabled] = useLocalStore(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsVoiceRecorderSyncEnabled],
     undefined
   );
 
   return (
     <Card>
           <CardHeader>
-            <Heading>Contacts</Heading>
+            <Heading>VoiceRecorder</Heading>
           </CardHeader>
           <CardBody>
             <FormControl display="flex" alignItems="center">
-              <FormLabel htmlFor="sync-contacts-switch" mb="0">
-                Sync Contacts
+              <FormLabel htmlFor="sync-voicerecorder-switch" mb="0">
+                Sync VoiceRecorder
               </FormLabel>
               <Switch
-                id="sync-contacts-switch"
-                isChecked={isContactsSyncEnabled}
+                id="sync-voicerecorder-switch"
+                isChecked={isVoiceRecorderSyncEnabled}
                 onChange={(event) => {
-                  setIsContactsSyncEnabled(event.target.checked);
+                  setIsVoiceRecorderSyncEnabled(event.target.checked);
                 }}
               />
             </FormControl>
@@ -43,8 +43,8 @@ function Content() {
   );
 }
 
-export default function ContactsSettingsPage() {
+export default function VoiceRecorderSettingsPage() {
   return (
-    <Page renderChildren={({deep,deviceLinkId}) => <Content/>} />
+    <Page renderChildren={({deep,deviceLinkId}) => <Content />} />
   );
 }

@@ -15,26 +15,26 @@ import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { Page } from '../../components/page';
 
 function Content() {
-  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
+  const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useLocalStore(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSyncEnabled],
     undefined
   );
 
   return (
     <Card>
           <CardHeader>
-            <Heading>Contacts</Heading>
+            <Heading>Network</Heading>
           </CardHeader>
           <CardBody>
             <FormControl display="flex" alignItems="center">
-              <FormLabel htmlFor="sync-contacts-switch" mb="0">
-                Sync Contacts
+              <FormLabel htmlFor="sync-network-switch" mb="0">
+                Sync Network
               </FormLabel>
               <Switch
-                id="sync-contacts-switch"
-                isChecked={isContactsSyncEnabled}
+                id="sync-network-switch"
+                isChecked={isNetworkSyncEnabled}
                 onChange={(event) => {
-                  setIsContactsSyncEnabled(event.target.checked);
+                  setIsNetworkSyncEnabled(event.target.checked);
                 }}
               />
             </FormControl>
@@ -43,8 +43,8 @@ function Content() {
   );
 }
 
-export default function ContactsSettingsPage() {
+export default function NetworkSettingsPage() {
   return (
-    <Page renderChildren={({deep,deviceLinkId}) => <Content/>} />
+    <Page renderChildren={({deep,deviceLinkId}) => <Content />} />
   );
 }

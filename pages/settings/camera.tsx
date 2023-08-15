@@ -15,26 +15,26 @@ import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { Page } from '../../components/page';
 
 function Content() {
-  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
+  const [isCameraSyncEnabled, setIsCameraSyncEnabled] = useLocalStore(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsCameraSyncEnabled],
     undefined
   );
 
   return (
     <Card>
           <CardHeader>
-            <Heading>Contacts</Heading>
+            <Heading>Camera</Heading>
           </CardHeader>
           <CardBody>
             <FormControl display="flex" alignItems="center">
-              <FormLabel htmlFor="sync-contacts-switch" mb="0">
-                Sync Contacts
+              <FormLabel htmlFor="sync-camera-switch" mb="0">
+                Sync Camera
               </FormLabel>
               <Switch
-                id="sync-contacts-switch"
-                isChecked={isContactsSyncEnabled}
+                id="sync-camera-switch"
+                isChecked={isCameraSyncEnabled}
                 onChange={(event) => {
-                  setIsContactsSyncEnabled(event.target.checked);
+                  setIsCameraSyncEnabled(event.target.checked);
                 }}
               />
             </FormControl>
@@ -43,8 +43,8 @@ function Content() {
   );
 }
 
-export default function ContactsSettingsPage() {
+export default function CameraSettingsPage() {
   return (
-    <Page renderChildren={({deep,deviceLinkId}) => <Content/>} />
+    <Page renderChildren={({deep,deviceLinkId}) => <Content />} />
   );
 }

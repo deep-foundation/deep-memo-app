@@ -15,26 +15,26 @@ import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { Page } from '../../components/page';
 
 function Content() {
-  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
+  const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useLocalStore(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsMotionSyncEnabled],
     undefined
   );
 
   return (
     <Card>
           <CardHeader>
-            <Heading>Contacts</Heading>
+            <Heading>Motion</Heading>
           </CardHeader>
           <CardBody>
             <FormControl display="flex" alignItems="center">
-              <FormLabel htmlFor="sync-contacts-switch" mb="0">
-                Sync Contacts
+              <FormLabel htmlFor="sync-motion-switch" mb="0">
+                Sync Motion
               </FormLabel>
               <Switch
-                id="sync-contacts-switch"
-                isChecked={isContactsSyncEnabled}
+                id="sync-motion-switch"
+                isChecked={isMotionSyncEnabled}
                 onChange={(event) => {
-                  setIsContactsSyncEnabled(event.target.checked);
+                  setIsMotionSyncEnabled(event.target.checked);
                 }}
               />
             </FormControl>
@@ -43,8 +43,8 @@ function Content() {
   );
 }
 
-export default function ContactsSettingsPage() {
+export default function MotionSettingsPage() {
   return (
-    <Page renderChildren={({deep,deviceLinkId}) => <Content/>} />
+    <Page renderChildren={({deep,deviceLinkId}) => <Content />} />
   );
 }
