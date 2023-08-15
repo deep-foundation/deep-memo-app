@@ -118,30 +118,6 @@ function Pages() {
         Contacts
       </Link>
 
-      <Link as={NextLink} href="/telegram">
-        Telegarm
-      </Link>
-
-      <Link as={NextLink} href="/action-sheet">
-        Action Sheet
-      </Link>
-
-      <Link as={NextLink} href="/dialog">
-        Dialog
-      </Link>
-
-      <Link as={NextLink} href="/screen-reader">
-        Screen Reader
-      </Link>
-
-      <Link as={NextLink} href="/openai-completion">
-        OpenAI Completion
-      </Link>
-
-      <Link as={NextLink} replace href="/browser-extension">
-        Browser Extension
-      </Link>
-
       <Link as={NextLink} href="/network">
         Network
       </Link>
@@ -152,14 +128,6 @@ function Pages() {
 
       <Link as={NextLink} href="/audiorecord">
         Audiorecord
-      </Link>
-
-      <Link as={NextLink} href="/haptics">
-        Haptics
-      </Link>
-
-      <Link as={NextLink} href="/firebase-push-notification">
-        Firebase Push Notification
       </Link>
 
       <Link as={NextLink} href="/motion">
