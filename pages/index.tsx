@@ -65,6 +65,10 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     CapacitorStoreKeys[CapacitorStoreKeys.IsVoiceRecorderEnabled],
     undefined
   );
+  const [isLoggerEnabled, setIsLoggerEnabled] = useLocalStore(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
+    undefined
+  );
 
   return (
     <Stack alignItems={'center'}>
