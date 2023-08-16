@@ -26,5 +26,6 @@ export enum CapacitorStoreKeys {
    IsVoiceRecorderSyncEnabled,
    IsCameraSyncEnabled,
    IsDeviceSyncEnabled,
-   IsGeolocationSyncEnabled
+   IsGeolocationSyncEnabled,
+   IsLoggerEnabled
 }
