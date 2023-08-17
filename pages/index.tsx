@@ -20,6 +20,7 @@ import { NavBar } from '../components/navbar';
 import { Page } from '../components/page';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { useLocalStore } from '@deep-foundation/store/local';
+import { Monitoring } from '../components/monitoring';
 
 interface ContentParam {
   deep: DeepClient;
@@ -91,6 +92,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
         isVoiceRecorderEnabled={isVoiceRecorderEnabled}
         isMotionSyncEnabled={isMotionSyncEnabled}
         />
+        <Monitoring deep={deep} />
     </Stack>
   );
 }
