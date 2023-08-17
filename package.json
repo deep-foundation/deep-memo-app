@@ -57,7 +57,7 @@
     "@chakra-ui/react": "^2.5.5",
     "@deep-foundation/capacitor-camera": "^1.1.2",
     "@deep-foundation/capacitor-device": "^17.0.3",
-    "@deep-foundation/capacitor-motion": "^4.0.0",
+    "@deep-foundation/capacitor-motion": "^4.1.0",
     "@deep-foundation/capacitor-network": "^0.1.2",
     "@deep-foundation/capacitor-voice-recorder": "^1.1.3",
     "@deep-foundation/deeplinks": "^0.0.278",
