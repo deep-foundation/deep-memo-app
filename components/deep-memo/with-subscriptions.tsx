@@ -6,6 +6,7 @@ import { saveAllContacts } from '../../imports/contact/contact';
 import { useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { WithMotionSubscription } from '@deep-foundation/capacitor-motion';
+import Recorder from "@deep-foundation/capacitor-voice-recorder";
 
 export function WithSubscriptions({
    deep, 
@@ -35,6 +36,7 @@ export function WithSubscriptions({
       const toast = useToast();
 
   useEffect(() => {
+    let returnFn: () => void;
     new Promise(async () => {
       const currentTime = new Date().getTime();
       if (isContactsSyncEnabled) {
@@ -85,7 +87,21 @@ export function WithSubscriptions({
       if (isNetworkSubscriptionEnabled) {
         // TODO
       }
+      if(isVoiceRecorderEnabled) {
+        const startTime = await Recorder.startRecording()
+        const timeout = setTimeout(async () => {
+          await Recorder.stopRecording({
+            deep,
+            containerLinkId: deep.linkId!,
+            startTime
+          })
+        })
+        returnFn = () => {
+          clearTimeout(timeout)
+        }
+      }
     })
+    return returnFn
   })
 
   return (
