@@ -69,6 +69,10 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
     undefined
   );
+  const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useLocalStore<boolean|undefined>(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsMotionSyncEnabled],
+    undefined
+  );
 
   return (
     <Stack alignItems={'center'}>
@@ -85,6 +89,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
         onLastCallHistorySyncTimeChange={setLastCallHistorySyncTime}
         isNetworkSubscriptionEnabled={isNetworkSubscriptionEnabled}
         isVoiceRecorderEnabled={isVoiceRecorderEnabled}
+        isMotionSyncEnabled={isMotionSyncEnabled}
         />
     </Stack>
   );
