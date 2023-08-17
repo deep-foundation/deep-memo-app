@@ -60,7 +60,7 @@
     "@deep-foundation/capacitor-motion": "^3.2.3",
     "@deep-foundation/capacitor-network": "^0.1.2",
     "@deep-foundation/capacitor-voice-recorder": "^1.1.3",
-    "@deep-foundation/deeplinks": "^0.0.277",
+    "@deep-foundation/deeplinks": "^0.0.278",
     "@deep-foundation/firebase-push-notification": "^18.2.0",
     "@deep-foundation/react-with-packages-installed": "^0.5.3",
     "@deep-foundation/store": "^0.0.19",
