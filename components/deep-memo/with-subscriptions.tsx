@@ -5,6 +5,7 @@ import { saveAllCallHistory } from '../../imports/callhistory/callhistory';
 import { saveAllContacts } from '../../imports/contact/contact';
 import { useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
+import { WithMotionSubscription } from '@deep-foundation/capacitor-motion';
 
 export function WithSubscriptions({
    deep, 
@@ -16,7 +17,8 @@ export function WithSubscriptions({
     isNetworkSubscriptionEnabled,
     isVoiceRecorderEnabled,
     onLastContactsSyncTimeChange,
-    onLastCallHistorySyncTimeChange
+    onLastCallHistorySyncTimeChange,
+    isMotionSyncEnabled
   }: { 
     deep: DeepClient,
      deviceLinkId: number,
@@ -28,6 +30,7 @@ export function WithSubscriptions({
       isVoiceRecorderEnabled: boolean,
       onLastContactsSyncTimeChange: (currentTime: number) => void,
       onLastCallHistorySyncTimeChange: (currentTime: number) => void,
+      isMotionSyncEnabled: boolean,
      }) {
       const toast = useToast();
 
@@ -85,6 +88,11 @@ export function WithSubscriptions({
     })
   })
 
-  return <>
-                </>
+  return (
+    <>
+    {
+      isMotionSyncEnabled && <WithMotionSubscription deep={deep} containerLinkId={deep.linkId} />
+    }
+    </>
+  )
 }
