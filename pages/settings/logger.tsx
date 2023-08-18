@@ -17,6 +17,7 @@ import { ChangeEvent, useState } from 'react';
 import { deepCopy } from '@firebase/util';
 import {SerialTransitionsBuilder} from '@deep-foundation/deeplinks/imports/experimental/serial-transitions-builder'
 import { PackagesInMinilinks } from '../../imports/packages-in-minilinks';
+import { SettingContent } from '../../components/setting-page';
 
 function Content(options: ContentOptions) {
   const {deep} = options;
@@ -153,7 +154,9 @@ function Content(options: ContentOptions) {
 
 export default function LoggerSettingsPage() {
   return (
-    <Page renderChildren={({deep,deviceLinkId}) => <Content deep={deep} />} />
+    <Page renderChildren={({deep,deviceLinkId}) => <SettingContent>
+    <Content deep={deep} />
+  </SettingContent>} />
   );
 }
 

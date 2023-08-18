@@ -13,6 +13,7 @@ import { useLocalStore } from '@deep-foundation/store/local';
 import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { Page } from '../../components/page';
+import { SettingContent } from '../../components/setting-page';
 
 function Content() {
   const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useLocalStore(
@@ -45,6 +46,8 @@ function Content() {
 
 export default function NetworkSettingsPage() {
   return (
-    <Page renderChildren={({deep,deviceLinkId}) => <Content />} />
+    <Page renderChildren={({deep,deviceLinkId}) => <SettingContent>
+    <Content/>
+  </SettingContent>} />
   );
 }

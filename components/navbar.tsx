@@ -1,8 +1,8 @@
 import { HStack, Link } from '@chakra-ui/react';
 import NextLink from 'next/link';
 
-export function NavBar({ }) {
-  return <>
+export function NavBar({ } = {}) {
+  return (
     <HStack>
     <Link as={NextLink} href='/'>
       Home
@@ -11,5 +11,5 @@ export function NavBar({ }) {
         Settings
     </Link>
     </HStack>
-  </>
+  )
 }
