@@ -1,25 +1,44 @@
 import { useDeep } from "@deep-foundation/deeplinks/imports/client";
 import { useState, useEffect } from "react";
 import { Login } from "./login";
+import { useToast } from "@chakra-ui/react";
 
 export function LoginOrContent({ gqlPath, setGqlPath, children }: { gqlPath: string | undefined, setGqlPath: (gqlPath: string | undefined) => void, children: JSX.Element }) {
+  const toast = useToast();
   const deep = useDeep();
   const [isAuthorized, setIsAuthorized] = useState(undefined);
 
   useEffect(() => {
+    new Promise(async () => {
+      
     self["deep"] = deep
     if (deep.linkId !== 0) {
-      setIsAuthorized(true);
+      try {
+        await deep.select({id: 1})
+        setIsAuthorized(true);
+      } catch (error) {
+        setGqlPath(undefined);
+        await deep.logout();
+        toast({
+          title: "Login failed",
+          description: error.message,
+          status: "error",
+          duration: null,
+          isClosable: true,
+        })
+      }
     } else {
       setIsAuthorized(false);
     }
+    })
   }, [deep]);
 
   return isAuthorized && gqlPath ? children : (
     <Login
-      onSubmit={(arg) => {
-        setGqlPath(arg.gqlPath);
-        deep.login({
+      onSubmit={async (arg) => {
+        const gqlPathUrl = new URL(arg.gqlPath);
+        setGqlPath(gqlPathUrl.host + gqlPathUrl.pathname + gqlPathUrl.search + gqlPathUrl.hash);
+        await deep.login({
           token: arg.token
         })
       }}
