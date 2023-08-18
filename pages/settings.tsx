@@ -3,6 +3,7 @@ import { DeepClient, DeepProvider } from "@deep-foundation/deeplinks/imports/cli
 import { Provider } from "../imports/provider";
 import NextLink from 'next/link';
 import { Page } from "../components/page";
+import { SettingContent } from "../components/setting-page";
 
 
 function Content() {
@@ -32,6 +33,8 @@ function Content() {
 
 export default function SettingsPage() {
   return (
-    <Page renderChildren={({ deep, deviceLinkId }) => <Content />} />
+    <Page renderChildren={({ deep, deviceLinkId }) => <SettingContent>
+    <Content/>
+  </SettingContent>} />
   );
 }
