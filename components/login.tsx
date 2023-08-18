@@ -13,7 +13,7 @@ export function Login(arg: { onSubmit: (arg: { gqlPath: string, token: string })
     <CardBody>
       <FormControl id="gql-path">
         <FormLabel>GraphQL Path</FormLabel>
-        <Input type="text" onChange={(newGqlPath) => {
+        <Input type="text" placeholder={"3006-deepfoundation-dev.gitpod.io/gql"} onChange={(newGqlPath) => {
           setGqlPath(newGqlPath.target.value)
         }} />
       </FormControl>
