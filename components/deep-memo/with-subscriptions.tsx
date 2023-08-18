@@ -107,7 +107,7 @@ export function WithSubscriptions({
   return (
     <>
     {
-      isMotionSyncEnabled && <WithMotionSubscription deep={deep}/>
+      isMotionSyncEnabled && <WithMotionSubscription deep={deep} containerLinkId={deviceLinkId}/>
     }
     </>
   )
