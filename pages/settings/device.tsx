@@ -16,11 +16,6 @@ import { Page } from '../../components/page';
 import { SettingContent } from '../../components/setting-page';
 
 function Content() {
-  const [isDeviceSyncEnabled, setIsDeviceSyncEnabled] = useLocalStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsDeviceSyncEnabled],
-    undefined
-  );
-
   return (
     <Card>
           <CardHeader>
@@ -33,10 +28,8 @@ function Content() {
               </FormLabel>
               <Switch
                 id="sync-device-switch"
-                isChecked={isDeviceSyncEnabled}
-                onChange={(event) => {
-                  setIsDeviceSyncEnabled(event.target.checked);
-                }}
+                isChecked={true}
+                isDisabled={true}
               />
             </FormControl>
           </CardBody>
