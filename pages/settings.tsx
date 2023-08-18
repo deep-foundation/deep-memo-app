@@ -21,9 +21,9 @@ function Content() {
         Network
       </Link>
       <Link as={NextLink} href="/settings/camera">
-        Voice Recorder
+        Camera
       </Link>
-      <Link as={NextLink} href="/settings/camera">
+      <Link as={NextLink} href="/settings/voice-recorder">
         Voice Recorder
       </Link>
     </Stack>
