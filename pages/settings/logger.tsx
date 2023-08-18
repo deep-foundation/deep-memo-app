@@ -7,6 +7,7 @@ import {
   FormLabel,
   Heading,
   Switch,
+  useToast,
 } from '@chakra-ui/react';
 import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/client';
 import { useLocalStore } from '@deep-foundation/store/local';
@@ -18,8 +19,12 @@ import { deepCopy } from '@firebase/util';
 import {SerialTransitionsBuilder} from '@deep-foundation/deeplinks/imports/experimental/serial-transitions-builder'
 import { PackagesInMinilinks } from '../../imports/packages-in-minilinks';
 import { SettingContent } from '../../components/setting-page';
+import { MutationInputLink } from '@deep-foundation/deeplinks/imports/client_types';
+import debug from 'debug'
 
 function Content(options: ContentOptions) {
+  const log = debug(`deep-foundation:pages:settings:logger:content`)
+  const toast = useToast();
   const {deep} = options;
   const [isLoggerEnabled, setIsLoggerEnabled] = useLocalStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
@@ -89,12 +94,27 @@ function Content(options: ContentOptions) {
         })
       } else {
         const handleInsertTypeLinkId = deep.idLocal(PackagesInMinilinks['@deep-foundation/core'], "HandleInsert")
-        const handleUpdateTypeLinkId = deep.idLocal("@deep-foundation/core", "HandleUpdate")
-        const handleDeleteTypeLinkId = deep.idLocal("@deep-foundation/core", "HandleDelete")
-        const containTypeLinkId = deep.idLocal("@deep-foundation/core", "Contain")
-        await deep.insert([
+        const insertHandlerTypeLinkId = deep.idLocal(PackagesInMinilinks['@deep-foundation/logger'], "InsertHandler")
+        const handleUpdateTypeLinkId = deep.idLocal(PackagesInMinilinks['@deep-foundation/core'], "HandleUpdate")
+        const updateHandlerTypeLinkId = deep.idLocal(PackagesInMinilinks['@deep-foundation/logger'], "UpdateHandler")
+        const handleDeleteTypeLinkId = deep.idLocal(PackagesInMinilinks['@deep-foundation/core'], "HandleDelete")
+        const deleteHandlerTypeLinkId = deep.idLocal(PackagesInMinilinks['@deep-foundation/logger'], "DeleteHandler")
+        const deviceTypeLinkId = deep.idLocal(PackagesInMinilinks['@deep-foundation/capacitor-device'], "Device");
+        const motionTypeLinkId = deep.idLocal(PackagesInMinilinks['@deep-foundation/capacitor-motion'], "Motion");
+        const positionTypeLinkId = deep.idLocal(PackagesInMinilinks['@deep-foundation/capacitor-geolocation'], "Position");
+        const networkTypeLinkId = deep.idLocal(PackagesInMinilinks['@deep-foundation/capacitor-network'], "Network");
+        const typesLinkIdsToLog = [
+          deviceTypeLinkId,
+          motionTypeLinkId,
+          positionTypeLinkId,
+          networkTypeLinkId
+        ]
+        const containTypeLinkId = deep.idLocal(PackagesInMinilinks['@deep-foundation/core'], "Contain")
+        const insertData: Array<MutationInputLink> = typesLinkIdsToLog.flatMap(typeLinkId => [
           {
             type_id: handleInsertTypeLinkId,
+            from_id: typeLinkId,
+            to_id: insertHandlerTypeLinkId,
             in: {
               data: {
                 type_id: containTypeLinkId,
@@ -104,6 +124,8 @@ function Content(options: ContentOptions) {
           },
           {
             type_id: handleUpdateTypeLinkId,
+            from_id: typeLinkId,
+            to_id: updateHandlerTypeLinkId,
             in: {
               data: {
                 type_id: containTypeLinkId,
@@ -113,6 +135,8 @@ function Content(options: ContentOptions) {
           },
           {
             type_id: handleDeleteTypeLinkId,
+            from_id: typeLinkId,
+            to_id: deleteHandlerTypeLinkId,
             in: {
               data: {
                 type_id: containTypeLinkId,
@@ -120,10 +144,20 @@ function Content(options: ContentOptions) {
               }
             }
           }
-        ])
+        
+        ]);
+        log({insertData})
+        await deep.insert(insertData)
       }
       setIsLoggerEnabled(!isLoggerEnabled);
     } catch (error) {
+      toast({
+        title: 'Failed to toggle logger',
+        description: error.message,
+        status: 'error',
+        duration: null,
+        isClosable: true,
+      })
     } finally {
       setIsLoading(false);
     }
