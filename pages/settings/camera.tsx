@@ -7,6 +7,7 @@ import {
   FormLabel,
   Heading,
   Switch,
+  useToast,
 } from '@chakra-ui/react';
 import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/client';
 import { useLocalStore } from '@deep-foundation/store/local';
@@ -14,8 +15,10 @@ import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { Page } from '../../components/page';
 import { SettingContent } from '../../components/setting-page';
+import {Camera} from '@capacitor/camera'
 
 function Content() {
+  const toast = useToast();
   const [isCameraSyncEnabled, setIsCameraSyncEnabled] = useLocalStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsCameraSyncEnabled],
     undefined
@@ -34,8 +37,19 @@ function Content() {
               <Switch
                 id="sync-camera-switch"
                 isChecked={isCameraSyncEnabled}
-                onChange={(event) => {
-                  setIsCameraSyncEnabled(event.target.checked);
+                onChange={async (event) => {
+                  const permissionsResult = await Camera.requestPermissions()
+                  if(permissionsResult.camera!=='granted' || permissionsResult.photos !== 'granted') {
+                    toast({
+                      title: 'Camera permissions required',
+                      description: 'Please enable camera permissions in your device settings',
+                      status: 'error',
+                      duration: null,
+                      isClosable: true,
+                    })
+                  } else {
+                    setIsCameraSyncEnabled(event.target.checked);
+                  }
                 }}
               />
             </FormControl>
