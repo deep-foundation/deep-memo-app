@@ -1,4 +1,4 @@
-export const PackagesInMinilinks = {
+export const REQUIRED_PACKAGES = {
   "@deep-foundation/core": "@deep-foundation/core",
   "@deep-foundation/capacitor-device": "@deep-foundation/capacitor-device",
   "@deep-foundation/capacitor-motion": "@deep-foundation/capacitor-motion",
