@@ -12,6 +12,7 @@ import {
   DeepProvider,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
+import { WithMinilinksApplied } from './with-minilinks-applied';
 
 export interface PageParam {
   renderChildren: (param: {
@@ -140,12 +141,14 @@ export function Page({ renderChildren }: PageParam) {
                   <Text>Checking if deep packages are installed...</Text>
                 )}
               >
-                <WithDeviceLinkId
-                  deep={deep}
-                  renderChildren={({ deviceLinkId }) =>
-                    renderChildren({ deep, deviceLinkId })
-                  }
-                />
+                <WithMinilinksApplied deep={deep}>
+                  <WithDeviceLinkId
+                    deep={deep}
+                    renderChildren={({ deviceLinkId }) =>
+                      renderChildren({ deep, deviceLinkId })
+                    }
+                  />
+                </WithMinilinksApplied>
               </WithPackagesInstalled>
             );
           }}
