@@ -27,6 +27,9 @@ function Content() {
       <Link as={NextLink} href="/settings/voice-recorder">
         Voice Recorder
       </Link>
+      <Link as={NextLink} href="/settings/logger">
+        Logger
+      </Link>
     </Stack>
   )
 }
