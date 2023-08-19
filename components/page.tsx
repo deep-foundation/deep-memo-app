@@ -10,9 +10,12 @@ import { CapacitorDevicePackage, WithDeviceInsertionIfDoesNotExistAndSavingData,
 import {
   DeepClient,
   DeepProvider,
+  SerialOperation,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import { WithMinilinksApplied } from './with-minilinks-applied';
+import { REQUIRED_PACKAGES } from '../imports/required-packages';
+import { createSerialOperation } from '@deep-foundation/deeplinks/imports/gql';
 
 export interface PageParam {
   renderChildren: (param: {
@@ -50,85 +53,7 @@ export function Page({ renderChildren }: PageParam) {
                       {packageNames.map((packageName) => (
                         <Button
                           onClick={async () => {
-                            const containTypeLinkId = await deep.id(
-                              '@deep-foundation/core',
-                              'Contain'
-                            );
-                            const reservedLinkIds = await deep.reserve(2  )
-                            const packageQueryLinkId = reservedLinkIds.pop()!;
-                            const installLinkId = reservedLinkIds.pop()!;
-                            await deep.serial({
-                              operations: [
-                                {
-                                  type: 'insert',
-                                  table: 'links',
-                                  objects: {
-                                    id: packageQueryLinkId,
-                                    type_id: await deep.id(
-                                      '@deep-foundation/core',
-                                      'PackageQuery'
-                                    ),
-                                  }
-                                },
-                                {
-                                  type: 'insert',
-                                  table: 'strings',
-                                  objects: {
-                                    link_id: packageQueryLinkId,
-                                    value: packageName
-                                  }
-                                },
-                                {
-                                  type: 'insert',
-                                  table: 'links',
-                                  objects: {
-                                    type_id: containTypeLinkId,
-                                    from_id: deep.linkId,
-                                    to_id: packageQueryLinkId
-                                  }
-                                },
-                                {
-                                  type: 'insert',
-                                  table: 'links',
-                                  objects: {
-                                    id: installLinkId,
-                                    type_id: await deep.id(
-                                      '@deep-foundation/npm-packager',
-                                      'Install'
-                                    ),
-                                    from_id: deep.linkId,
-                                    to_id: packageQueryLinkId
-                                  }
-                                },
-                                {
-                                  type: 'insert',
-                                  table: 'links',
-                                  objects: {
-                                    type_id: containTypeLinkId,
-                                    from_id: deep.linkId,
-                                    to_id: installLinkId
-                                  }
-                                },
-                              ]
-                            })
-                            await deep.insert([
-                              {
-                                type_id: await deep.id(
-                                  '@deep-foundation/npm-packager',
-                                  'Install'
-                                ),
-                                from_id: deep.linkId,
-                                to: {
-                                  data: {
-                                    type_id: await deep.id(
-                                      '@deep-foundation/core',
-                                      'PackageQuery'
-                                    ),
-                                    string: { data: { value: packageName } },
-                                  },
-                                },
-                              },
-                            ]);
+                            await installRequiredPackages({deep})
                           }}
                         >
                           Install {packageName}
@@ -202,4 +127,87 @@ function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
       {renderChildren({ deviceLinkId })}
     </WithDeviceInsertionIfDoesNotExistAndSavingData> : null
   );
+}
+
+interface InstallRequiredPackagesOptions {
+  deep: DeepClient;
+}
+
+async function installRequiredPackages(options: InstallRequiredPackagesOptions) {
+  const {deep} = options;
+  const operations = await makeInstallPackagesOperations({
+    deep,
+    packageNames: Object.values(REQUIRED_PACKAGES)
+  })
+  return await deep.serial({
+    operations 
+  })
+}
+
+interface InstallPackageOptions {
+  deep: DeepClient;
+  packageNames: Array<string>;
+}
+
+async function makeInstallPackagesOperations(options: InstallPackageOptions): Promise<Array<SerialOperation>> {
+  const { deep, packageNames } = options;
+  const containTypeLinkId = deep.idLocal(
+    REQUIRED_PACKAGES['@deep-foundation/core'],
+    'Contain'
+  );
+  const reservedLinkIds = await deep.reserve(2  )
+  const packageQueryLinkId = reservedLinkIds.pop()!;
+  const installLinkId = reservedLinkIds.pop()!;
+  return packageNames.flatMap((packageName) => [
+    createSerialOperation({
+      type: 'insert',
+      table: 'links',
+      objects: {
+        id: packageQueryLinkId,
+        type_id: deep.idLocal(
+          REQUIRED_PACKAGES['@deep-foundation/core'],
+          'PackageQuery'
+        ),
+      }
+    }),
+    createSerialOperation({
+      type: 'insert',
+      table: 'strings',
+      objects: {
+        link_id: packageQueryLinkId,
+        value: packageName
+      }
+    }),
+    createSerialOperation({
+      type: 'insert',
+      table: 'links',
+      objects: {
+        type_id: containTypeLinkId,
+        from_id: deep.linkId,
+        to_id: packageQueryLinkId
+      }
+    }),
+    createSerialOperation({
+      type: 'insert',
+      table: 'links',
+      objects: {
+        id: installLinkId,
+        type_id: deep.idLocal(
+          REQUIRED_PACKAGES['@deep-foundation/npm-packager'],
+          'Install'
+        ),
+        from_id: deep.linkId,
+        to_id: packageQueryLinkId
+      }
+    }),
+    createSerialOperation({
+      type: 'insert',
+      table: 'links',
+      objects: {
+        type_id: containTypeLinkId,
+        from_id: deep.linkId,
+        to_id: installLinkId
+      }
+    }),
+  ])
 }
