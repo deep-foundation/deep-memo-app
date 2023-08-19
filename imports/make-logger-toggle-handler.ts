@@ -1,9 +1,9 @@
 import { ToastId, UseToastOptions } from "@chakra-ui/react";
-import { ChangeEvent } from "react";
+import { ChangeEvent, SyntheticEvent } from "react";
 
 export function makeLoggerToggleHandler(options: MakeLoggerToggleHandlerOptions) {
   const { isLoggerEnabled, setIsLoggerEnabled, setIsLoading, toast } = options;
-  return async function toggleLoggerHandler(event: ChangeEvent<HTMLElement>) {
+  return async function toggleLoggerHandler(event: SyntheticEvent) {
     event.preventDefault();
 
     setIsLoading(true)
