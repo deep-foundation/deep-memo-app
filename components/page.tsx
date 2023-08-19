@@ -2,8 +2,7 @@ import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-inst
 import { DEEP_MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
 import { ProvidersAndLoginOrContent } from './providers-and-login-or-content';
 import { StoreProvider } from './store-provider';
-import { ErrorAlert } from './error-alert';
-import { Button, CircularProgress, Stack, Text, VStack } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, CircularProgress, List, ListItem, Stack, Text, VStack } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { CapacitorDevicePackage, WithDeviceInsertionIfDoesNotExistAndSavingData, getDeviceInsertSerialOperations } from '@deep-foundation/capacitor-device';
@@ -16,6 +15,7 @@ import {
 import { WithMinilinksApplied } from './with-minilinks-applied';
 import { REQUIRED_PACKAGES } from '../imports/required-packages';
 import { createSerialOperation } from '@deep-foundation/deeplinks/imports/gql';
+import error from 'next/error';
 
 export interface PageParam {
   renderChildren: (param: {
@@ -37,18 +37,24 @@ export function Page({ renderChildren }: PageParam) {
               <WithPackagesInstalled
               deep={deep}
                 packageNames={[DEEP_MEMO_PACKAGE_NAME, ...Object.values(REQUIRED_PACKAGES)]}
-                renderIfError={(error) => <ErrorAlert error={error} />}
+                renderIfError={(error) => <Alert status="error">
+                <AlertIcon />
+                <AlertTitle>Failed to check whether required packages are installed</AlertTitle>
+                <AlertDescription>{error.message}</AlertDescription>
+              </Alert>}
                 renderIfNotInstalled={(packageNames) => (
-                  <>
-                    <ErrorAlert
-                      error={
-                        new Error(
-                          `Install these deep packages to proceed: ${packageNames.join(
-                            ', '
-                          )}`
-                        )
-                      }
-                    />
+                  <VStack height="100vh" justifyContent={"center"}>
+                       <Alert status="error">
+                        <AlertIcon />
+                        <AlertTitle>Required packages are not installed</AlertTitle>
+                        <AlertDescription>
+                          <List>
+                            {packageNames.map((packageName) => (
+                              <ListItem>{packageName}</ListItem>
+                            ))}
+                          </List>
+                        </AlertDescription>
+                      </Alert>
                     <Stack>
                       {packageNames.map((packageName) => (
                         <Button
@@ -60,7 +66,7 @@ export function Page({ renderChildren }: PageParam) {
                         </Button>
                       ))}
                     </Stack>
-                  </>
+                  </VStack>
                 )}
                 renderIfLoading={() => (
                   <VStack height="100vh" justifyContent={"center"}>
