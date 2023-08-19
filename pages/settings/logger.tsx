@@ -72,6 +72,7 @@ export function LoggerSettingsContent(options: ContentOptions) {
 
 export default function LoggerSettingsPage() {
   const toast = useToast()
+  const [isLoggerInstallationLoading, setIsLoggerInstallationLoading] = useState(false);
   return (
     <Page renderChildren={({deep,deviceLinkId}) => <SettingContent>
     <WithPackagesInstalled
@@ -89,7 +90,10 @@ export default function LoggerSettingsPage() {
     renderIfNotInstalled={() => (
       <VStack>
         <ErrorAlert title={`${OPTIONAL_PACKAGES['@deep-foundation/logger']} is not installed`} />
-        <Button onClick={async () => {
+        <Button 
+        isLoading={isLoggerInstallationLoading}
+        onClick={async () => {
+          setIsLoggerInstallationLoading(true)
           try {
             const packageManagementProxy = new PackageManagementProxy(deep)
           await packageManagementProxy.install(OPTIONAL_PACKAGES['@deep-foundation/logger'])
@@ -107,6 +111,8 @@ export default function LoggerSettingsPage() {
               duration: null,
               isClosable: true
             })
+          } finally {
+            setIsLoggerInstallationLoading(false)
           }
         }}>
           Install {OPTIONAL_PACKAGES['@deep-foundation/logger']}
