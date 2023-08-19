@@ -28,8 +28,8 @@ import debug from 'debug'
 import { OPTIONAL_PACKAGES } from '../../imports/optional-packages';
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
 import { ErrorAlert } from '../../components/error-alert';
-import { PackageManagementProxy } from '../../imports/package-management-proxy';
 import { makeLoggerToggleHandler } from '../../imports/make-logger-toggle-handler';
+import { NpmPackagerProxy } from '../../imports/npm-packager-proxy';
 
 export function LoggerSettingsContent(options: ContentOptions) {
   const log = debug(`deep-foundation:pages:settings:logger:content`)
@@ -95,8 +95,8 @@ export default function LoggerSettingsPage() {
         onClick={async () => {
           setIsLoggerInstallationLoading(true)
           try {
-            const packageManagementProxy = new PackageManagementProxy(deep)
-          await packageManagementProxy.install(OPTIONAL_PACKAGES['@deep-foundation/logger'])
+            const npmPackagerProxy = new NpmPackagerProxy(deep)
+            await npmPackagerProxy.install(OPTIONAL_PACKAGES['@deep-foundation/logger'])
           toast({
             title: `Successfully installed ${OPTIONAL_PACKAGES['@deep-foundation/logger']}`,
             status: "success",
