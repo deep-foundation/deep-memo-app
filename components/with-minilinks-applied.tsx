@@ -2,11 +2,11 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { useEffect, useState } from "react";
 import { REQUIRED_PACKAGES } from "../imports/required-packages";
 import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types";
-import { CircularProgress, CircularProgressLabel, Text } from "@chakra-ui/react";
+import { Box, CircularProgress, CircularProgressLabel, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 
 export function WithMinilinksApplied(options: WithMinilinksAppliedOptions) {
   const { deep, children } = options;
-  const [isMinilinksApplied, setIsMinilinksApplied] = useState(false);
+  const [isMinilinksApplied, setIsMinilinksApplied] = useState(undefined);
 
   useEffect(() => {
     new Promise(async () => {
@@ -18,12 +18,11 @@ export function WithMinilinksApplied(options: WithMinilinksAppliedOptions) {
     })
   }, [isMinilinksApplied])
 
-  return isMinilinksApplied ? (
-    <CircularProgress >
-      <CircularProgressLabel>Storing links in minilinks... </CircularProgressLabel>
-    </CircularProgress>
-  ) : (
-    children
+  return isMinilinksApplied ? children : (
+    <VStack height="100vh" justifyContent={"center"} >
+      <CircularProgress size="10rem" isIndeterminate/>
+      <Text fontSize={"1rem"} >Storing links in minilinks... </Text>
+    </VStack>
   )
 }
 
