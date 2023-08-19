@@ -36,7 +36,7 @@ export function Page({ renderChildren }: PageParam) {
             return (
               <WithPackagesInstalled
               deep={deep}
-                packageNames={[DEEP_MEMO_PACKAGE_NAME]}
+                packageNames={[DEEP_MEMO_PACKAGE_NAME, ...Object.values(REQUIRED_PACKAGES)]}
                 renderIfError={(error) => <ErrorAlert error={error} />}
                 renderIfNotInstalled={(packageNames) => (
                   <>
