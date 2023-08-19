@@ -4,6 +4,5 @@ export const REQUIRED_PACKAGES = {
   "@deep-foundation/capacitor-motion": "@deep-foundation/capacitor-motion",
   "@deep-foundation/capacitor-network": "@deep-foundation/capacitor-network",
   "@deep-foundation/capacitor-geolocation": "@deep-foundation/capacitor-geolocation",
-  "@deep-foundation/logger": "@deep-foundation/logger",
   "@deep-foundation/npm-packager": "@deep-foundation/npm-packager",
 } as const;
