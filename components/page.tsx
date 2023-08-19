@@ -35,15 +35,15 @@ export function Page({ renderChildren }: PageParam) {
           renderChildren={({ deep }) => {
             console.log({ deep });
             const _package = new CapacitorDevicePackage({ deep });
-            console.log({_package})
+            console.log({ _package })
             return (
               <WithPackagesInstalled
-              deep={deep}
+                deep={deep}
                 packageNames={[DEEP_MEMO_PACKAGE_NAME, ...Object.values(REQUIRED_PACKAGES)]}
                 renderIfError={(error) => <VStack height="100vh" justifyContent={"center"}><ErrorAlert title={"Failed to check whether required packages are installed"} description={error.message} /></VStack>}
                 renderIfNotInstalled={(packageNames) => {
                   const isDeepMemoInstalled = !packageNames.includes(DEEP_MEMO_PACKAGE_NAME);
-                  
+
                   return (
                     <VStack height="100vh" justifyContent={"center"}>
                       {
@@ -53,38 +53,38 @@ export function Page({ renderChildren }: PageParam) {
                               <List styleType="disc">
                                 {
                                   packageNames.map((packageName) => (
-                                    
+
                                     <ListItem >
                                       {packageName}
-                                      </ListItem>
+                                    </ListItem>
                                   ))
                                 }
-                                </List>
-                              </VStack>
+                              </List>
+                            </VStack>
                           } />
                         ) : (
                           <VStack>
                             <ErrorAlert title={`${DEEP_MEMO_PACKAGE_NAME} is not installed`} />
-                          <Button
-                            onClick={async () => {
-                              const serialOperations = await makeInstallPackagesOperations({deep,packageNames: [DEEP_MEMO_PACKAGE_NAME]})
-                              try{
-                                await deep.serial({
-                                  operations: serialOperations
-                                })
-                              } catch (error) {
-                                toast({
-                                  title: `Failed to install ${DEEP_MEMO_PACKAGE_NAME}`,
-                                  description: error.message,
-                                  status: "error",
-                                  duration: null,
-                                  isClosable: true,
-                                })
-                              }
-                            }}
-                          >
-                            Install {DEEP_MEMO_PACKAGE_NAME}
-                          </Button>
+                            <Button
+                              onClick={async () => {
+                                const serialOperations = await makeInstallPackagesOperations({ deep, packageNames: [DEEP_MEMO_PACKAGE_NAME] })
+                                try {
+                                  await deep.serial({
+                                    operations: serialOperations
+                                  })
+                                } catch (error) {
+                                  toast({
+                                    title: `Failed to install ${DEEP_MEMO_PACKAGE_NAME}`,
+                                    description: error.message,
+                                    status: "error",
+                                    duration: null,
+                                    isClosable: true,
+                                  })
+                                }
+                              }}
+                            >
+                              Install {DEEP_MEMO_PACKAGE_NAME}
+                            </Button>
                           </VStack>
                         )
                       }
@@ -93,7 +93,7 @@ export function Page({ renderChildren }: PageParam) {
                 }}
                 renderIfLoading={() => (
                   <VStack height="100vh" justifyContent={"center"}>
-                    <CircularProgress isIndeterminate/>
+                    <CircularProgress isIndeterminate />
                     <Text>Checking if deep packages are installed...</Text>
                   </VStack>
                 )}
@@ -130,7 +130,7 @@ interface WithDeviceLinkIdProps {
 }
 
 function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore<number|undefined>(
+  const [deviceLinkId, setDeviceLinkId] = useLocalStore<number | undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );
@@ -146,7 +146,7 @@ function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
         const [deviceLinkId] = await deep.reserve(1);
         const serialOperations = await getDeviceInsertSerialOperations({
           deep,
-          reservedLinkIds:{
+          reservedLinkIds: {
             deviceLinkId: deviceLinkId
           }
         });
@@ -166,13 +166,13 @@ interface InstallRequiredPackagesOptions {
 }
 
 async function installRequiredPackages(options: InstallRequiredPackagesOptions) {
-  const {deep} = options;
+  const { deep } = options;
   const operations = await makeInstallPackagesOperations({
     deep,
     packageNames: Object.values(REQUIRED_PACKAGES)
   })
   return await deep.serial({
-    operations 
+    operations
   })
 }
 
@@ -187,7 +187,7 @@ async function makeInstallPackagesOperations(options: InstallPackageOptions): Pr
     REQUIRED_PACKAGES['@deep-foundation/core'],
     'Contain'
   );
-  const reservedLinkIds = await deep.reserve(2  )
+  const reservedLinkIds = await deep.reserve(2)
   const packageQueryLinkId = reservedLinkIds.pop()!;
   const installLinkId = reservedLinkIds.pop()!;
   return packageNames.flatMap((packageName) => [
