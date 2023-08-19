@@ -40,11 +40,7 @@ export function Page({ renderChildren }: PageParam) {
               <WithPackagesInstalled
               deep={deep}
                 packageNames={[DEEP_MEMO_PACKAGE_NAME, ...Object.values(REQUIRED_PACKAGES)]}
-                renderIfError={(error) => <Alert status="error">
-                <AlertIcon />
-                <AlertTitle>Failed to check whether required packages are installed</AlertTitle>
-                <AlertDescription>{error.message}</AlertDescription>
-              </Alert>}
+                renderIfError={(error) => <ErrorAlert title={"Failed to check whether required packages are installed"} description={error.message} />}
                 renderIfNotInstalled={(packageNames) => {
                   const isDeepMemoInstalled = !packageNames.includes(DEEP_MEMO_PACKAGE_NAME);
                   
