@@ -29,6 +29,7 @@ import { OPTIONAL_PACKAGES } from '../../imports/optional-packages';
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
 import { ErrorAlert } from '../../components/error-alert';
 import { PackageManagementProxy } from '../../imports/package-management-proxy';
+import { makeLoggerToggleHandler } from '../../imports/make-logger-toggle-handler';
 
 function Content(options: ContentOptions) {
   const log = debug(`deep-foundation:pages:settings:logger:content`)
@@ -40,136 +41,6 @@ function Content(options: ContentOptions) {
   );
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLoggerToggle = async (event: ChangeEvent<HTMLInputElement>) => {
-    // Prevent the immediate toggle
-    event.preventDefault();
-
-    setIsLoading(true);
-
-    // Simulating a network request
-    // Replace with your actual network request code
-    try {
-      if(isLoggerEnabled) {
-        await deep.delete({
-          up: {
-            tree_id: {
-              _id: ["@deep-foundation/core", "containTree"]
-            },
-            parent: {
-              type_id: {
-                _id: ["@deep-foundation/core", "Contain"]
-              },
-              to: {
-                _or: [
-                  {
-                    type_id: {
-                      _id: ["@deep-foundation/core", "HandleInsert"]
-                    }
-                  },
-                  {
-                    type_id: {
-                      _id: ["@deep-foundation/core", "HandleUpdate"]
-                    }
-                  },
-                  {
-                    type_id: {
-                      _id: ["@deep-foundation/core", "HandleDelete"]
-                    }
-                  },
-                ],
-                to: {
-                  _or: [
-                    {
-                      id: {
-                        _id: ["@deep-foundation/logger", "InsertHandler"]
-                      }
-                    },
-                    {
-                      id: {
-                        _id: ["@deep-foundation/logger", "UpdateHandler"]
-                      }
-                    },
-                    {
-                      id: {
-                        _id: ["@deep-foundation/logger", "DeleteHandler"]
-                      }
-                    },
-                  ]
-                }
-              }
-            }
-          }
-        })
-      } else {
-        const handleInsertTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "HandleInsert")
-        const insertHandlerTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/logger'], "InsertHandler")
-        const handleUpdateTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "HandleUpdate")
-        const updateHandlerTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/logger'], "UpdateHandler")
-        const handleDeleteTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "HandleDelete")
-        const deleteHandlerTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/logger'], "DeleteHandler")
-        const deviceTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-device'], "Device");
-        const motionTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-motion'], "Motion");
-        const positionTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-geolocation'], "Position");
-        const networkTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-network'], "Network");
-        const typesLinkIdsToLog = [
-          deviceTypeLinkId,
-          motionTypeLinkId,
-          positionTypeLinkId,
-          networkTypeLinkId
-        ]
-        const containTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "Contain")
-        const insertData: Array<MutationInputLink> = typesLinkIdsToLog.flatMap(typeLinkId => [
-          {
-            type_id: handleInsertTypeLinkId,
-            from_id: typeLinkId,
-            to_id: insertHandlerTypeLinkId,
-            in: {
-              data: {
-                type_id: containTypeLinkId,
-                from_id: deep.linkId
-              }
-            }
-          },
-          {
-            type_id: handleUpdateTypeLinkId,
-            from_id: typeLinkId,
-            to_id: updateHandlerTypeLinkId,
-            in: {
-              data: {
-                type_id: containTypeLinkId,
-                from_id: deep.linkId
-              }
-            }
-          },
-          {
-            type_id: handleDeleteTypeLinkId,
-            from_id: typeLinkId,
-            to_id: deleteHandlerTypeLinkId,
-            in: {
-              data: {
-                type_id: containTypeLinkId,
-                from_id: deep.linkId
-              }
-            }
-          }
-        
-        ]);
-        log({insertData})
-        await deep.insert(insertData)
-      }
-      setIsLoggerEnabled(!isLoggerEnabled);
-    } catch (error) {
-      toast({
-        title: 'Failed to toggle logger',
-        description: error.message,
-        status: 'error',
-        duration: null,
-        isClosable: true,
-      })
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <Card>
@@ -184,7 +55,12 @@ function Content(options: ContentOptions) {
           <Switch
             id="sync-logger-switch"
             isChecked={isLoggerEnabled}
-            onChange={handleLoggerToggle}
+            onChange={makeLoggerToggleHandler({
+              isLoggerEnabled,
+              setIsLoading,
+              setIsLoggerEnabled,
+              toast
+            })}
             isDisabled={isLoading}
           />
         </FormControl>
