@@ -3,7 +3,7 @@ import { ChangeEvent } from "react";
 
 export function makeLoggerToggleHandler(options: MakeLoggerToggleHandlerOptions) {
   const { isLoggerEnabled, setIsLoggerEnabled, setIsLoading, toast } = options;
-  return async function toggleLoggerHandler(event: ChangeEvent<HTMLInputElement>) {
+  return async function toggleLoggerHandler(event: ChangeEvent<HTMLElement>) {
     event.preventDefault();
 
     setIsLoading(true)
