@@ -20,8 +20,8 @@ export function WithMinilinksApplied(options: WithMinilinksAppliedOptions) {
 
   return isMinilinksApplied ? children : (
     <VStack height="100vh" justifyContent={"center"} >
-      <CircularProgress size="10rem" isIndeterminate/>
-      <Text fontSize={"1rem"} >Storing links in minilinks... </Text>
+      <CircularProgress isIndeterminate/>
+      <Text >Storing links in minilinks... </Text>
     </VStack>
   )
 }
