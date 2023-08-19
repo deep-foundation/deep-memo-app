@@ -31,7 +31,7 @@ import { ErrorAlert } from '../../components/error-alert';
 import { PackageManagementProxy } from '../../imports/package-management-proxy';
 import { makeLoggerToggleHandler } from '../../imports/make-logger-toggle-handler';
 
-function Content(options: ContentOptions) {
+export function LoggerSettingsContent(options: ContentOptions) {
   const log = debug(`deep-foundation:pages:settings:logger:content`)
   const toast = useToast();
   const {deep} = options;
@@ -114,7 +114,7 @@ export default function LoggerSettingsPage() {
       </VStack>
     )}
     >
-    <Content deep={deep} />
+    <LoggerSettingsContent deep={deep} />
     </WithPackagesInstalled>
   </SettingContent>} />
   );
