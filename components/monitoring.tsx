@@ -6,11 +6,10 @@ import { ErrorAlert } from "./error-alert";
 import { toggleLogger } from "./toggle-logger";
 import { makeLoggerToggleHandler } from "../imports/make-logger-toggle-handler";
 import { useState } from "react";
+import Link from "next/link";
 
 export function Monitoring(options: MonitoringOptions) {
   const { deep, isLoggerEnabled,setIsLoggerEnabled } = options;
-  const toast = useToast();
-  const [isLoggerInstallationLoading, setIsLoggerInstallationLoading] = useState(false);
   const { data: logObjectLinks } = deep.useDeepSubscription({
     type_id: {
       _id: ["@deep-foundation/logger", "LogObject"]
@@ -65,13 +64,14 @@ export function Monitoring(options: MonitoringOptions) {
             ) 
         ): (
           <VStack>
-            <ErrorAlert title="Logger is disabled" description="Enable the logger to see logs" />
-            <Button onClick={makeLoggerToggleHandler({
-              isLoggerEnabled,
-              setIsLoading: setIsLoggerInstallationLoading,
-              setIsLoggerEnabled,
-              toast
-            })}>Enable logger</Button>
+            <ErrorAlert title="Logger is disabled" description={
+              <VStack>
+                <Text>Enable the logger to see logs</Text>
+                <Link href="/settings/logger">
+                  Logger Settings
+                  </Link>
+                </VStack>
+            } />
           </VStack>
         )
       }
