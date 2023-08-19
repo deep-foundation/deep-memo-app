@@ -2,7 +2,7 @@ import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-inst
 import { DEEP_MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
 import { ProvidersAndLoginOrContent } from './providers-and-login-or-content';
 import { StoreProvider } from './store-provider';
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, CircularProgress, List, ListItem, Stack, Text, VStack } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, CircularProgress, Heading, List, ListIcon, ListItem, Stack, Text, Toast, VStack, useToast } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { CapacitorDevicePackage, WithDeviceInsertionIfDoesNotExistAndSavingData, getDeviceInsertSerialOperations } from '@deep-foundation/capacitor-device';
@@ -16,6 +16,8 @@ import { WithMinilinksApplied } from './with-minilinks-applied';
 import { REQUIRED_PACKAGES } from '../imports/required-packages';
 import { createSerialOperation } from '@deep-foundation/deeplinks/imports/gql';
 import error from 'next/error';
+import { ErrorAlert } from './error-alert';
+
 
 export interface PageParam {
   renderChildren: (param: {
@@ -25,6 +27,7 @@ export interface PageParam {
 }
 
 export function Page({ renderChildren }: PageParam) {
+  const toast = useToast();
   return (
     <StoreProvider>
       <ProvidersAndLoginOrContent>
@@ -42,32 +45,56 @@ export function Page({ renderChildren }: PageParam) {
                 <AlertTitle>Failed to check whether required packages are installed</AlertTitle>
                 <AlertDescription>{error.message}</AlertDescription>
               </Alert>}
-                renderIfNotInstalled={(packageNames) => (
-                  <VStack height="100vh" justifyContent={"center"}>
-                       <Alert status="error">
-                        <AlertIcon />
-                        <AlertTitle>Required packages are not installed</AlertTitle>
-                        <AlertDescription>
-                          <List>
-                            {packageNames.map((packageName) => (
-                              <ListItem>{packageName}</ListItem>
-                            ))}
-                          </List>
-                        </AlertDescription>
-                      </Alert>
-                    <Stack>
-                      {packageNames.map((packageName) => (
-                        <Button
-                          onClick={async () => {
-                            await installRequiredPackages({deep})
-                          }}
-                        >
-                          Install {packageName}
-                        </Button>
-                      ))}
-                    </Stack>
-                  </VStack>
-                )}
+                renderIfNotInstalled={(packageNames) => {
+                  const isDeepMemoInstalled = !packageNames.includes(DEEP_MEMO_PACKAGE_NAME);
+                  
+                  return (
+                    <VStack height="100vh" justifyContent={"center"}>
+                      {
+                        isDeepMemoInstalled && packageNames.length > 1 ? (
+                          <ErrorAlert title={`${DEEP_MEMO_PACKAGE_NAME} is installed but its dependencies-packages are not installed`} description={
+                            <VStack>
+                              <List styleType="disc">
+                                {
+                                  packageNames.map((packageName) => (
+                                    
+                                    <ListItem >
+                                      {packageName}
+                                      </ListItem>
+                                  ))
+                                }
+                                </List>
+                              </VStack>
+                          } />
+                        ) : (
+                          <VStack>
+                            <ErrorAlert title={`${DEEP_MEMO_PACKAGE_NAME} is not installed`} />
+                          <Button
+                            onClick={async () => {
+                              const serialOperations = await makeInstallPackagesOperations({deep,packageNames: [DEEP_MEMO_PACKAGE_NAME]})
+                              try{
+                                await deep.serial({
+                                  operations: serialOperations
+                                })
+                              } catch (error) {
+                                toast({
+                                  title: `Failed to install ${DEEP_MEMO_PACKAGE_NAME}`,
+                                  description: error.message,
+                                  status: "error",
+                                  duration: null,
+                                  isClosable: true,
+                                })
+                              }
+                            }}
+                          >
+                            Install {DEEP_MEMO_PACKAGE_NAME}
+                          </Button>
+                          </VStack>
+                        )
+                      }
+                    </VStack>
+                  );
+                }}
                 renderIfLoading={() => (
                   <VStack height="100vh" justifyContent={"center"}>
                     <CircularProgress isIndeterminate/>
