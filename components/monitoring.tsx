@@ -1,10 +1,16 @@
-import { Stack, Text } from "@chakra-ui/react";
+import { Button, Stack, Text, VStack, useToast } from "@chakra-ui/react";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { JsonToTable } from "react-json-to-table";
 import { JSONToHTMLTable } from '@kevincobain2000/json-to-html-table'
+import { ErrorAlert } from "./error-alert";
+import { toggleLogger } from "./toggle-logger";
+import { makeLoggerToggleHandler } from "../imports/make-logger-toggle-handler";
+import { useState } from "react";
 
 export function Monitoring(options: MonitoringOptions) {
-  const { deep } = options;
+  const { deep, isLoggerEnabled,setIsLoggerEnabled } = options;
+  const toast = useToast();
+  const [isLoggerInstallationLoading, setIsLoggerInstallationLoading] = useState(false);
   const { data: logObjectLinks } = deep.useDeepSubscription({
     type_id: {
       _id: ["@deep-foundation/logger", "LogObject"]
@@ -49,18 +55,32 @@ export function Monitoring(options: MonitoringOptions) {
   return (
     <Stack>
       {
-        logObjectLinks.length === 0 ? (
-        <Text>
-          No logs
-        </Text>
-        ) : (
-          logObjectLinks.map(logObjectLink => <JSONToHTMLTable data={JSON.parse(logObjectLink.value.value)} />)
-        ) 
+        isLoggerEnabled ? (
+          logObjectLinks.length === 0 ? (
+            <Text>
+              No logs
+            </Text>
+            ) : (
+              logObjectLinks.map(logObjectLink => <JSONToHTMLTable data={JSON.parse(logObjectLink.value.value)} />)
+            ) 
+        ): (
+          <VStack>
+            <ErrorAlert title="Logger is disabled" description="Enable the logger to see logs" />
+            <Button onClick={makeLoggerToggleHandler({
+              isLoggerEnabled,
+              setIsLoading: setIsLoggerInstallationLoading,
+              setIsLoggerEnabled,
+              toast
+            })}>Enable logger</Button>
+          </VStack>
+        )
       }
     </Stack>
   )
 }
 
 export interface MonitoringOptions {
-  deep: DeepClient
+  deep: DeepClient,
+  isLoggerEnabled: boolean;
+  setIsLoggerEnabled: (isLoggerEnabled: boolean) => void;
 }
