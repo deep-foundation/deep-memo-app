@@ -3,7 +3,7 @@ import { DEEP_MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
 import { ProvidersAndLoginOrContent } from './providers-and-login-or-content';
 import { StoreProvider } from './store-provider';
 import { ErrorAlert } from './error-alert';
-import { Button, Stack, Text } from '@chakra-ui/react';
+import { Button, CircularProgress, Stack, Text, VStack } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { CapacitorDevicePackage, WithDeviceInsertionIfDoesNotExistAndSavingData, getDeviceInsertSerialOperations } from '@deep-foundation/capacitor-device';
@@ -63,7 +63,10 @@ export function Page({ renderChildren }: PageParam) {
                   </>
                 )}
                 renderIfLoading={() => (
-                  <Text>Checking if deep packages are installed...</Text>
+                  <VStack height="100vh" justifyContent={"center"}>
+                    <CircularProgress isIndeterminate/>
+                    <Text>Checking if deep packages are installed...</Text>
+                  </VStack>
                 )}
               >
                 <WithMinilinksApplied deep={deep}>
