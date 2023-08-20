@@ -14,12 +14,18 @@ import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { Page } from '../../components/page';
 import { SettingContent } from '../../components/setting-page';
+import { useEffect } from 'react';
+import { Network } from '@capacitor/network';
 
 function Content() {
   const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useLocalStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSyncEnabled],
     undefined
   );
+
+  useEffect(() => {
+    self["CapacitorNetwork"] = Network
+  }, [])
 
   return (
     <Card>
