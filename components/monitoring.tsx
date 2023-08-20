@@ -1,4 +1,4 @@
-import { Button, Stack, Text, VStack, useToast } from "@chakra-ui/react";
+import { Button, Link, Stack, Text, VStack, useToast } from "@chakra-ui/react";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { JsonToTable } from "react-json-to-table";
 import { JSONToHTMLTable } from '@kevincobain2000/json-to-html-table'
@@ -6,7 +6,8 @@ import { ErrorAlert } from "./error-alert";
 import { toggleLogger } from "./toggle-logger";
 import { makeLoggerToggleHandler } from "../imports/make-logger-toggle-handler";
 import { useState } from "react";
-import Link from "next/link";
+import NextLink from "next/link";
+import {LinkIcon} from '@chakra-ui/icons'
 
 export function Monitoring(options: MonitoringOptions) {
   const { deep, isLoggerEnabled,setIsLoggerEnabled } = options;
@@ -67,8 +68,8 @@ export function Monitoring(options: MonitoringOptions) {
             <ErrorAlert title="Logger is disabled" description={
               <VStack>
                 <Text>Enable the logger to see logs</Text>
-                <Link href="/settings/logger">
-                  Logger Settings
+                <Link as={NextLink} href="/settings/logger">
+                  Logger Settings <LinkIcon mx='2px' />
                   </Link>
                 </VStack>
             } />
