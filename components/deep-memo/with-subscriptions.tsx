@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { WithMotionSubscription } from '@deep-foundation/capacitor-motion';
 import Recorder from "@deep-foundation/capacitor-voice-recorder";
+import { NetworkStatus } from '@deep-foundation/capacitor-network';
 
 export function WithSubscriptions({
    deep, 
@@ -15,7 +16,7 @@ export function WithSubscriptions({
     lastContactsSyncTime,
     isCallHistorySyncEnabled,
     lastCallHistorySyncTime,
-    isNetworkSubscriptionEnabled,
+    isNetworkSyncEnabled: isNetworkSyncEnabled,
     isVoiceRecorderEnabled,
     onLastContactsSyncTimeChange,
     onLastCallHistorySyncTimeChange,
@@ -27,7 +28,7 @@ export function WithSubscriptions({
       lastContactsSyncTime: number,
       isCallHistorySyncEnabled: boolean,
       lastCallHistorySyncTime: number,
-      isNetworkSubscriptionEnabled: boolean,
+      isNetworkSyncEnabled: boolean,
       isVoiceRecorderEnabled: boolean,
       onLastContactsSyncTimeChange: (currentTime: number) => void,
       onLastCallHistorySyncTimeChange: (currentTime: number) => void,
@@ -84,7 +85,7 @@ export function WithSubscriptions({
           }
         }
       }
-      if (isNetworkSubscriptionEnabled) {
+      if (isNetworkSyncEnabled) {
         // TODO
       }
       if(isVoiceRecorderEnabled) {
@@ -108,6 +109,9 @@ export function WithSubscriptions({
     <>
     {
       isMotionSyncEnabled && <WithMotionSubscription deep={deep} containerLinkId={deviceLinkId}/>
+    }
+    {
+      isNetworkSyncEnabled && <NetworkStatus deep={deep} />
     }
     </>
   )

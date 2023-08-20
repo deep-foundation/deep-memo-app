@@ -61,7 +61,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     CapacitorStoreKeys[CapacitorStoreKeys.CallHistoryLastSyncTime],
     undefined
   );
-  const [isNetworkSubscriptionEnabled, setIsNetworkSubscriptionEnabled] =
+  const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] =
     useLocalStore<boolean|undefined>(
       CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled],
       false
@@ -92,7 +92,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
         isCallHistorySyncEnabled={isCallHistorySyncEnabled}
         lastCallHistorySyncTime={lastCallHistorySyncTime}
         onLastCallHistorySyncTimeChange={setLastCallHistorySyncTime}
-        isNetworkSubscriptionEnabled={isNetworkSubscriptionEnabled}
+        isNetworkSyncEnabled={isNetworkSyncEnabled}
         isVoiceRecorderEnabled={isVoiceRecorderEnabled}
         isMotionSyncEnabled={isMotionSyncEnabled}
         />
