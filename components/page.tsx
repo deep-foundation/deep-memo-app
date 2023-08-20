@@ -194,7 +194,7 @@ interface InstallPackageOptions {
 async function makeInstallPackagesOperations(options: InstallPackageOptions): Promise<Array<SerialOperation>> {
   const { deep, packageNames } = options;
   const containTypeLinkId = deep.idLocal(
-    RequiredPackages['@deep-foundation/core'],
+    RequiredPackages.Core,
     'Contain'
   );
   const reservedLinkIds = await deep.reserve(2)
@@ -207,7 +207,7 @@ async function makeInstallPackagesOperations(options: InstallPackageOptions): Pr
       objects: {
         id: packageQueryLinkId,
         type_id: deep.idLocal(
-          RequiredPackages['@deep-foundation/core'],
+          RequiredPackages.Core,
           'PackageQuery'
         ),
       }
@@ -235,7 +235,7 @@ async function makeInstallPackagesOperations(options: InstallPackageOptions): Pr
       objects: {
         id: installLinkId,
         type_id: deep.idLocal(
-          RequiredPackages['@deep-foundation/npm-packager'],
+          RequiredPackages.NpmPackager,
           'Install'
         ),
         from_id: deep.linkId,

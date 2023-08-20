@@ -107,13 +107,13 @@ async function toggleDisabledFunction(options: ToggleDisabledFunctionOptions) {
   log({handleDeleteTypeLinkId})
   const deleteHandlerTypeLinkId = deep.idLocal(OptionalPackages.Logger, "DeleteHandler")
   log({deleteHandlerTypeLinkId})
-  const deviceTypeLinkId = deep.idLocal(RequiredPackages['@deep-foundation/capacitor-device'], "Device");
+  const deviceTypeLinkId = deep.idLocal(RequiredPackages.CapacitorDevice, "Device");
   log({deviceTypeLinkId})
-  const motionTypeLinkId = deep.idLocal(RequiredPackages['@deep-foundation/capacitor-motion'], "Motion");
+  const motionTypeLinkId = deep.idLocal(RequiredPackages.CapacitorMotion, "Motion");
   log({motionTypeLinkId})
-  const positionTypeLinkId = deep.idLocal(RequiredPackages['@deep-foundation/capacitor-geolocation'], "Position");
+  const positionTypeLinkId = deep.idLocal(RequiredPackages.CapacitorGeolocation, "Position");
   log({positionTypeLinkId})
-  const networkTypeLinkId = deep.idLocal(RequiredPackages['@deep-foundation/capacitor-network'], "Network");
+  const networkTypeLinkId = deep.idLocal(RequiredPackages.CapacitorNetwork, "Network");
   log({networkTypeLinkId})
   const typesLinkIdsToLog = [
     deviceTypeLinkId,

@@ -78,35 +78,35 @@ export default function LoggerSettingsPage() {
     <Page renderChildren={({deep,deviceLinkId}) => <SettingContent>
     <WithPackagesInstalled
     deep={deep}
-    packageNames={[OptionalPackages['@deep-foundation/logger']]}
+    packageNames={[OptionalPackages.Logger]}
     renderIfError={(error) => (
-      <ErrorAlert title={`Failed to check whether ${OptionalPackages['@deep-foundation/logger']} is intalled`} description={error.message}/>
+      <ErrorAlert title={`Failed to check whether ${OptionalPackages.Logger} is intalled`} description={error.message}/>
     )}
     renderIfLoading={() => (
       <VStack height="100vh" justifyContent={"center"}>
         <CircularProgress isIndeterminate />
-        <Text>Checking whether {OptionalPackages['@deep-foundation/logger']} is installed...</Text>
+        <Text>Checking whether {OptionalPackages.Logger} is installed...</Text>
       </VStack>
     )}
     renderIfNotInstalled={() => (
       <VStack>
-        <ErrorAlert title={`${OptionalPackages['@deep-foundation/logger']} is not installed`} />
+        <ErrorAlert title={`${OptionalPackages.Logger} is not installed`} />
         <Button 
         isLoading={isLoggerInstallationLoading}
         onClick={async () => {
           setIsLoggerInstallationLoading(true)
           try {
             const npmPackagerProxy = new NpmPackagerProxy(deep)
-            await npmPackagerProxy.install(OptionalPackages['@deep-foundation/logger'])
+            await npmPackagerProxy.install(OptionalPackages.Logger)
           toast({
-            title: `Successfully installed ${OptionalPackages['@deep-foundation/logger']}`,
+            title: `Successfully installed ${OptionalPackages.Logger}`,
             status: "success",
             duration: 5000,
             isClosable: true
           })
           } catch (error) {
             toast({
-              title: `Failed to install ${OptionalPackages['@deep-foundation/logger']}`,
+              title: `Failed to install ${OptionalPackages.Logger}`,
               description: error.message,
               status: "error",
               duration: null,
@@ -116,7 +116,7 @@ export default function LoggerSettingsPage() {
             setIsLoggerInstallationLoading(false)
           }
         }}>
-          Install {OptionalPackages['@deep-foundation/logger']}
+          Install {OptionalPackages.Logger}
         </Button>
       </VStack>
     )}

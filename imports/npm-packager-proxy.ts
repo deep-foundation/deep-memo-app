@@ -53,7 +53,7 @@ export class NpmPackagerProxy {
   public async makeInstallPackagesOperations(...packageNames: Array<string>): Promise<MakeInstallPackagesOperationsReturnType> {
     this.ensureRequiredPackagesAreInMinilinks()
     const containTypeLinkId = this.deep.idLocal(
-      this.RequiredPackages['@deep-foundation/core'],
+      this.RequiredPackages.Core,
       'Contain'
     );
     const reservedLinkIds = await this.deep.reserve(packageNames.length * 2)
@@ -71,7 +71,7 @@ export class NpmPackagerProxy {
             objects: {
               id: packageQueryLinkId,
               type_id: this.deep.idLocal(
-                this.RequiredPackages['@deep-foundation/core'],
+                this.RequiredPackages.Core,
                 'PackageQuery'
               ),
             }
@@ -99,7 +99,7 @@ export class NpmPackagerProxy {
             objects: {
               id: installLinkId,
               type_id: this.deep.idLocal(
-                this.RequiredPackages['@deep-foundation/npm-packager'],
+                this.RequiredPackages.NpmPackager,
                 'Install'
               ),
               from_id: this.deep.linkId,
