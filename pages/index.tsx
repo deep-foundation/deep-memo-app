@@ -12,6 +12,7 @@ import {
   DeepClient,
 } from '@deep-foundation/deeplinks/imports/client';
 import NextLink from 'next/link';
+import {LinkIcon} from '@chakra-ui/icons'
 
 
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
@@ -21,6 +22,8 @@ import { Page } from '../components/page';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { Monitoring } from '../components/monitoring';
+import { SETTINGS_ROUTES } from '../imports/settings-routes';
+import { capitalCase } from 'case-anything';
 
 interface ContentParam {
   deep: DeepClient;
@@ -110,33 +113,13 @@ export default function IndexPage() {
 function Pages() {
   return (
     <Stack>
-      <Link as={NextLink} href="/settings">
-        Settings
-      </Link>
-
-      <Link as={NextLink} href="/device">
-        Device
-      </Link>
-
-      <Link as={NextLink} href="/call-history">
-        Call History
-      </Link>
-
-      <Link as={NextLink} href="/contact">
-        Contact
-      </Link>
-
-      <Link as={NextLink} href="/network">
-        Network
-      </Link>
-
-      <Link as={NextLink} href="/camera">
-        Camera
-      </Link>
-
-      <Link as={NextLink} href="/motion">
-        Motion
-      </Link>
+      {
+        Object.entries(SETTINGS_ROUTES).map(([name, route]) => (
+          <Link as={NextLink} href={route}>
+            {capitalCase(name)} <LinkIcon mx='2px' />
+          </Link>
+        ))
+      }
     </Stack>
   );
 }
