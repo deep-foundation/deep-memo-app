@@ -96,7 +96,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
         isVoiceRecorderEnabled={isVoiceRecorderEnabled}
         isMotionSyncEnabled={isMotionSyncEnabled}
         />
-        <Monitoring deep={deep} isLoggerEnabled={isLoggerEnabled} setIsLoggerEnabled={setIsLoggerEnabled} />
+        <Monitoring deep={deep} isLoggerEnabled={isLoggerEnabled} deviceLinkId={deviceLinkId} />
     </Stack>
   );
 }

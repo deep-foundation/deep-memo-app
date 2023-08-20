@@ -1,4 +1,4 @@
-import { Button, Link, Stack, Text, VStack, useToast } from "@chakra-ui/react";
+import { Box, Button, Link, Stack, Text, VStack, useToast } from "@chakra-ui/react";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { JsonToTable } from "react-json-to-table";
 import { JSONToHTMLTable } from '@kevincobain2000/json-to-html-table'
@@ -8,10 +8,16 @@ import { makeLoggerToggleHandler } from "../imports/make-logger-toggle-handler";
 import { useState } from "react";
 import NextLink from "next/link";
 import {LinkIcon} from '@chakra-ui/icons'
+import debug from "debug";
+import { QueryLink } from "@deep-foundation/deeplinks/imports/client_types";
+import { JsonView, allExpanded, darkStyles, defaultStyles } from 'react-json-view-lite';
+import 'react-json-view-lite/dist/index.css';
 
 export function Monitoring(options: MonitoringOptions) {
-  const { deep, isLoggerEnabled,setIsLoggerEnabled } = options;
-  const { data: logObjectLinks } = deep.useDeepSubscription({
+  const log = debug(`deep-memo-app:${Monitoring.name}`)
+  log({options})
+  const { deep, isLoggerEnabled,deviceLinkId} = options;
+  const useDeepSubscriptionQuery: QueryLink = {
     type_id: {
       _id: ["@deep-foundation/logger", "LogObject"]
     },
@@ -45,12 +51,18 @@ export function Monitoring(options: MonitoringOptions) {
             type_id: {
               _id: ["@deep-foundation/core", "Contain"]
             },
-            from_id: deep.linkId
+            from_id: {
+              _in: [deep.linkId, deviceLinkId]
+            }
           }
         }
       }
     }
-  })
+  }
+  log({useDeepSubscriptionQuery})
+  const { data: logObjectLinks } = deep.useDeepSubscription(useDeepSubscriptionQuery)
+  log({logObjectLinks})
+
 
   return (
     <Stack>
@@ -61,7 +73,9 @@ export function Monitoring(options: MonitoringOptions) {
               No logs
             </Text>
             ) : (
-              logObjectLinks.map(logObjectLink => <JSONToHTMLTable data={JSON.parse(logObjectLink.value.value)} />)
+              logObjectLinks.map(logObjectLink => (
+                <JsonView data={logObjectLink.value.value} shouldInitiallyExpand={allExpanded} style={defaultStyles} />
+              ))
             ) 
         ): (
           <VStack>
@@ -83,5 +97,5 @@ export function Monitoring(options: MonitoringOptions) {
 export interface MonitoringOptions {
   deep: DeepClient,
   isLoggerEnabled: boolean;
-  setIsLoggerEnabled: (isLoggerEnabled: boolean) => void;
+  deviceLinkId: number;
 }
