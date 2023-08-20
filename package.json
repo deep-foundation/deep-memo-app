@@ -93,6 +93,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-json-to-table": "^0.1.7",
+    "react-json-view-lite": "^0.9.8",
     "uuid": "^9.0.0",
     "yargs": "^17.7.2"
   },
