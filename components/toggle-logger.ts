@@ -1,9 +1,11 @@
-import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
+import { DeepClient, Exp } from "@deep-foundation/deeplinks/imports/client";
 import { REQUIRED_PACKAGES } from "../imports/required-packages";
 import { MutationInputLink } from "@deep-foundation/deeplinks/imports/client_types";
 import debug from "debug";
 
 export async function toggleLogger(options: ToggleLoggerOptions) {
+  const log = debug(`deep-memo-app:${toggleLogger.name}`);
+  log({options})
   const { deep, isLoggerEnabled,onError,onSuccess } = options;
 
   try {
@@ -26,8 +28,10 @@ export interface ToggleLoggerOptions {
 }
 
 async function toggleEnabledLogger(options: ToggleEnabledLoggerOptions) {
+  const log = debug(`deep-memo-app:${toggleEnabledLogger.name}`);
+  log({options})
   const {deep} = options
-  await deep.delete({
+  const deleteData: Exp<'links'> = {
     up: {
       tree_id: {
         _id: [REQUIRED_PACKAGES['@deep-foundation/core'], "containTree"]
@@ -76,7 +80,9 @@ async function toggleEnabledLogger(options: ToggleEnabledLoggerOptions) {
         }
       }
     }
-  })
+  }
+  log({deleteData})
+  await deep.delete(deleteData)
 }
 
 export interface ToggleEnabledLoggerOptions {
@@ -84,26 +90,39 @@ export interface ToggleEnabledLoggerOptions {
 }
 
 async function toggleDisabledFunction(options: ToggleDisabledFunctionOptions) {
-  const log = debug(toggleDisabledFunction.name);
+  const log = debug(`deep-memo-app:${toggleDisabledFunction.name}`);
+  log({options})
   const {deep} = options
   
   const handleInsertTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "HandleInsert")
+  log({handleInsertTypeLinkId})
   const insertHandlerTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/logger'], "InsertHandler")
+  log({insertHandlerTypeLinkId})
   const handleUpdateTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "HandleUpdate")
-  const updateHandlerTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/logger'], "UpdateHandler")
+  log({handleUpdateTypeLinkId})
+  const   updateHandlerTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/logger'], "UpdateHandler")
+  log({updateHandlerTypeLinkId})
   const handleDeleteTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "HandleDelete")
+  log({handleDeleteTypeLinkId})
   const deleteHandlerTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/logger'], "DeleteHandler")
+  log({deleteHandlerTypeLinkId})
   const deviceTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-device'], "Device");
+  log({deviceTypeLinkId})
   const motionTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-motion'], "Motion");
+  log({motionTypeLinkId})
   const positionTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-geolocation'], "Position");
+  log({positionTypeLinkId})
   const networkTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-network'], "Network");
+  log({networkTypeLinkId})
   const typesLinkIdsToLog = [
     deviceTypeLinkId,
     motionTypeLinkId,
     positionTypeLinkId,
     networkTypeLinkId
   ]
+  log({typesLinkIdsToLog})
   const containTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "Contain")
+  log({containTypeLinkId})
   const insertData: Array<MutationInputLink> = typesLinkIdsToLog.flatMap(typeLinkId => [
     {
       type_id: handleInsertTypeLinkId,
@@ -142,7 +161,6 @@ async function toggleDisabledFunction(options: ToggleDisabledFunctionOptions) {
   ]);
   log({insertData})
   await deep.insert(insertData)
-
 }
 
 export interface ToggleDisabledFunctionOptions {
