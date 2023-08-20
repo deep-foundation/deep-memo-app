@@ -6,6 +6,7 @@ import debug from "debug";
 
 export function makeLoggerToggleHandler(options: MakeLoggerToggleHandlerOptions) {
   const log = debug(`deep-memo-app:${makeLoggerToggleHandler.name}`);
+  const logError = debug(`deep-memo-app:${makeLoggerToggleHandler.name}:error`);
   log({options})
   const { isLoggerEnabled, setIsLoggerEnabled, setIsLoading, toast, deep } = options;
   return async function toggleLoggerHandler(event: SyntheticEvent) {
@@ -25,7 +26,7 @@ export function makeLoggerToggleHandler(options: MakeLoggerToggleHandlerOptions)
           duration: null,
           isClosable: true,
         })
-        console.error(error)
+        logError({error})
       },
       onSuccess: () => {
         setIsLoggerEnabled(!isLoggerEnabled)
