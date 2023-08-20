@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react';
 import { DeviceInfo } from '@deep-foundation/capacitor-device';
 import { ErrorAlert } from '../../components/error-alert';
 import { RequiredPackages } from '../../imports/required-packages';
+import {WithPlatformChecking} from '@deep-foundation/capacitor-motion'
 
 function Content() {
   const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useLocalStore(
@@ -29,19 +30,18 @@ function Content() {
     undefined
   );
 
-  const [platform, setPlatform] = useState<DeviceInfo['platform'] | undefined>(undefined)
-
-  useEffect(() => {
-    Device.getInfo().then(deviceInfo => {
-      setPlatform(deviceInfo.platform)
-    })
-  }, [])
-
-  return platform ? (
-    platform === 'web' ? (
-      <ErrorAlert title={`${RequiredPackages.CapacitorMotion} is not supported on web platform`} />
-    ) : (
-      <Card>
+  return <WithPlatformChecking 
+  renderIfLoading={() => (
+<VStack height="100vh" justifyContent={"center"}>
+    <CircularProgress isIndeterminate />
+    <Text>Checking whether your platform supported...</Text>
+  </VStack>
+  )}
+  renderIfNotSupported={() => (
+<ErrorAlert title={`${RequiredPackages.CapacitorMotion} is not supported on web platform`} />
+  )}
+  renderIfSupported={() => (
+<Card>
           <CardHeader>
             <Heading>Motion</Heading>
           </CardHeader>
@@ -60,13 +60,8 @@ function Content() {
             </FormControl>
           </CardBody>
         </Card>
-    )
-  ) : (
-    <VStack height="100vh" justifyContent={"center"}>
-    <CircularProgress isIndeterminate />
-    <Text>Checking whether your platform supported...</Text>
-  </VStack>
-  )
+  )}
+  />
 }
 
 export default function MotionSettingsPage() {
