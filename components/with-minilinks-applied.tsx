@@ -1,6 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { useEffect, useState } from "react";
-import { REQUIRED_PACKAGES } from "../imports/required-packages";
+import { RequiredPackages } from "../imports/required-packages";
 import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types";
 import { Box, CircularProgress, CircularProgressLabel, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 
@@ -28,7 +28,7 @@ export function WithMinilinksApplied(options: WithMinilinksAppliedOptions) {
 
 async function getLinksToApply(options: GetLinksToApplyOptions) {
   const { deep } = options;
-  const packageNamesToApply = Object.values(REQUIRED_PACKAGES);
+  const packageNamesToApply = Object.values(RequiredPackages);
   const selectData: BoolExpLink = {
     up: {
       tree_id: {

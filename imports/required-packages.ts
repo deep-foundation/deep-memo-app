@@ -1,8 +1,8 @@
-export const REQUIRED_PACKAGES = {
-  "@deep-foundation/core": "@deep-foundation/core",
-  "@deep-foundation/capacitor-device": "@deep-foundation/capacitor-device",
-  "@deep-foundation/capacitor-motion": "@deep-foundation/capacitor-motion",
-  "@deep-foundation/capacitor-network": "@deep-foundation/capacitor-network",
-  "@deep-foundation/capacitor-geolocation": "@deep-foundation/capacitor-geolocation",
-  "@deep-foundation/npm-packager": "@deep-foundation/npm-packager",
-} as const;
+export enum RequiredPackages {
+  Core = "@deep-foundation/core",
+  CapacitorDevice = "@deep-foundation/capacitor-device",
+  CapacitorMotion = "@deep-foundation/capacitor-motion",
+  CapacitorNetwork = "@deep-foundation/capacitor-network",
+  CapacitorGeolocation = "@deep-foundation/capacitor-geolocation",
+  NpmPackager = "@deep-foundation/npm-packager",
+}

@@ -1,3 +1,3 @@
-export const OPTIONAL_PACKAGES = {
-  "@deep-foundation/logger": "@deep-foundation/logger",
-} as const;
+export enum OptionalPackages {
+  Logger = "@deep-foundation/logger",
+};

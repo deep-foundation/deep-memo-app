@@ -24,6 +24,7 @@ import { useLocalStore } from '@deep-foundation/store/local';
 import { Monitoring } from '../components/monitoring';
 import { SETTINGS_ROUTES } from '../imports/settings-routes';
 import { capitalCase } from 'case-anything';
+import debug from 'debug';
 
 interface ContentParam {
   deep: DeepClient;

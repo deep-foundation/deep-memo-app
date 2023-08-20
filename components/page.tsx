@@ -13,10 +13,10 @@ import {
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import { WithMinilinksApplied } from './with-minilinks-applied';
-import { REQUIRED_PACKAGES } from '../imports/required-packages';
 import { createSerialOperation } from '@deep-foundation/deeplinks/imports/gql';
 import error from 'next/error';
 import { ErrorAlert } from './error-alert';
+import { RequiredPackages } from '../imports/required-packages';
 
 
 export interface PageParam {
@@ -39,7 +39,7 @@ export function Page({ renderChildren }: PageParam) {
             return (
               <WithPackagesInstalled
                 deep={deep}
-                packageNames={[DEEP_MEMO_PACKAGE_NAME, ...Object.values(REQUIRED_PACKAGES)]}
+                packageNames={[DEEP_MEMO_PACKAGE_NAME, ...Object.values(RequiredPackages)]}
                 renderIfError={(error) => <VStack height="100vh" justifyContent={"center"}><ErrorAlert title={"Failed to check whether required packages are installed"} description={error.message} /></VStack>}
                 renderIfNotInstalled={(packageNames) => {
                   const isDeepMemoInstalled = !packageNames.includes(DEEP_MEMO_PACKAGE_NAME);
@@ -179,7 +179,7 @@ async function installRequiredPackages(options: InstallRequiredPackagesOptions) 
   const { deep } = options;
   const operations = await makeInstallPackagesOperations({
     deep,
-    packageNames: Object.values(REQUIRED_PACKAGES)
+    packageNames: Object.values(RequiredPackages)
   })
   return await deep.serial({
     operations
@@ -194,7 +194,7 @@ interface InstallPackageOptions {
 async function makeInstallPackagesOperations(options: InstallPackageOptions): Promise<Array<SerialOperation>> {
   const { deep, packageNames } = options;
   const containTypeLinkId = deep.idLocal(
-    REQUIRED_PACKAGES['@deep-foundation/core'],
+    RequiredPackages['@deep-foundation/core'],
     'Contain'
   );
   const reservedLinkIds = await deep.reserve(2)
@@ -207,7 +207,7 @@ async function makeInstallPackagesOperations(options: InstallPackageOptions): Pr
       objects: {
         id: packageQueryLinkId,
         type_id: deep.idLocal(
-          REQUIRED_PACKAGES['@deep-foundation/core'],
+          RequiredPackages['@deep-foundation/core'],
           'PackageQuery'
         ),
       }
@@ -235,7 +235,7 @@ async function makeInstallPackagesOperations(options: InstallPackageOptions): Pr
       objects: {
         id: installLinkId,
         type_id: deep.idLocal(
-          REQUIRED_PACKAGES['@deep-foundation/npm-packager'],
+          RequiredPackages['@deep-foundation/npm-packager'],
           'Install'
         ),
         from_id: deep.linkId,

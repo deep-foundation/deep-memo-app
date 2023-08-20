@@ -1,7 +1,8 @@
 import { DeepClient, Exp } from "@deep-foundation/deeplinks/imports/client";
-import { REQUIRED_PACKAGES } from "../imports/required-packages";
+import { RequiredPackages } from "../imports/required-packages";
 import { MutationInputLink } from "@deep-foundation/deeplinks/imports/client_types";
 import debug from "debug";
+import { OptionalPackages } from "../imports/optional-packages";
 
 export async function toggleLogger(options: ToggleLoggerOptions) {
   const log = debug(`deep-memo-app:${toggleLogger.name}`);
@@ -34,27 +35,27 @@ async function toggleEnabledLogger(options: ToggleEnabledLoggerOptions) {
   const deleteData: Exp<'links'> = {
     up: {
       tree_id: {
-        _id: [REQUIRED_PACKAGES['@deep-foundation/core'], "containTree"]
+        _id: [RequiredPackages.Core, "containTree"]
       },
       parent: {
         type_id: {
-          _id: [REQUIRED_PACKAGES['@deep-foundation/core'], "Contain"]
+          _id: [RequiredPackages.Core, "Contain"]
         },
         to: {
           _or: [
             {
               type_id: {
-                _id: [REQUIRED_PACKAGES['@deep-foundation/core'], "HandleInsert"]
+                _id: [RequiredPackages.Core, "HandleInsert"]
               }
             },
             {
               type_id: {
-                _id: [REQUIRED_PACKAGES['@deep-foundation/core'], "HandleUpdate"]
+                _id: [RequiredPackages.Core, "HandleUpdate"]
               }
             },
             {
               type_id: {
-                _id: [REQUIRED_PACKAGES['@deep-foundation/core'], "HandleDelete"]
+                _id: [RequiredPackages.Core, "HandleDelete"]
               }
             },
           ],
@@ -62,17 +63,17 @@ async function toggleEnabledLogger(options: ToggleEnabledLoggerOptions) {
             _or: [
               {
                 id: {
-                  _id: [REQUIRED_PACKAGES['@deep-foundation/logger'], "InsertHandler"]
+                  _id: [OptionalPackages.Logger, "InsertHandler"]
                 }
               },
               {
                 id: {
-                  _id: [REQUIRED_PACKAGES['@deep-foundation/logger'], "UpdateHandler"]
+                  _id: [OptionalPackages.Logger, "UpdateHandler"]
                 }
               },
               {
                 id: {
-                  _id: [REQUIRED_PACKAGES['@deep-foundation/logger'], "DeleteHandler"]
+                  _id: [OptionalPackages.Logger, "DeleteHandler"]
                 }
               },
             ]
@@ -94,25 +95,25 @@ async function toggleDisabledFunction(options: ToggleDisabledFunctionOptions) {
   log({options})
   const {deep} = options
   
-  const handleInsertTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "HandleInsert")
+  const handleInsertTypeLinkId = deep.idLocal(RequiredPackages.Core, "HandleInsert")
   log({handleInsertTypeLinkId})
-  const insertHandlerTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/logger'], "InsertHandler")
+  const insertHandlerTypeLinkId = deep.idLocal(OptionalPackages.Logger, "InsertHandler")
   log({insertHandlerTypeLinkId})
-  const handleUpdateTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "HandleUpdate")
+  const handleUpdateTypeLinkId = deep.idLocal(RequiredPackages.Core, "HandleUpdate")
   log({handleUpdateTypeLinkId})
-  const   updateHandlerTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/logger'], "UpdateHandler")
+  const   updateHandlerTypeLinkId = deep.idLocal(OptionalPackages.Logger, "UpdateHandler")
   log({updateHandlerTypeLinkId})
-  const handleDeleteTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "HandleDelete")
+  const handleDeleteTypeLinkId = deep.idLocal(RequiredPackages.Core, "HandleDelete")
   log({handleDeleteTypeLinkId})
-  const deleteHandlerTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/logger'], "DeleteHandler")
+  const deleteHandlerTypeLinkId = deep.idLocal(OptionalPackages.Logger, "DeleteHandler")
   log({deleteHandlerTypeLinkId})
-  const deviceTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-device'], "Device");
+  const deviceTypeLinkId = deep.idLocal(RequiredPackages['@deep-foundation/capacitor-device'], "Device");
   log({deviceTypeLinkId})
-  const motionTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-motion'], "Motion");
+  const motionTypeLinkId = deep.idLocal(RequiredPackages['@deep-foundation/capacitor-motion'], "Motion");
   log({motionTypeLinkId})
-  const positionTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-geolocation'], "Position");
+  const positionTypeLinkId = deep.idLocal(RequiredPackages['@deep-foundation/capacitor-geolocation'], "Position");
   log({positionTypeLinkId})
-  const networkTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/capacitor-network'], "Network");
+  const networkTypeLinkId = deep.idLocal(RequiredPackages['@deep-foundation/capacitor-network'], "Network");
   log({networkTypeLinkId})
   const typesLinkIdsToLog = [
     deviceTypeLinkId,
@@ -121,7 +122,7 @@ async function toggleDisabledFunction(options: ToggleDisabledFunctionOptions) {
     networkTypeLinkId
   ]
   log({typesLinkIdsToLog})
-  const containTypeLinkId = deep.idLocal(REQUIRED_PACKAGES['@deep-foundation/core'], "Contain")
+  const containTypeLinkId = deep.idLocal(RequiredPackages.Core, "Contain")
   log({containTypeLinkId})
   const insertData: Array<MutationInputLink> = typesLinkIdsToLog.flatMap(typeLinkId => [
     {
