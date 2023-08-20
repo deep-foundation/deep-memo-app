@@ -30,27 +30,27 @@ async function toggleEnabledLogger(options: ToggleEnabledLoggerOptions) {
   await deep.delete({
     up: {
       tree_id: {
-        _id: ["@deep-foundation/core", "containTree"]
+        _id: [REQUIRED_PACKAGES['@deep-foundation/core'], "containTree"]
       },
       parent: {
         type_id: {
-          _id: ["@deep-foundation/core", "Contain"]
+          _id: [REQUIRED_PACKAGES['@deep-foundation/core'], "Contain"]
         },
         to: {
           _or: [
             {
               type_id: {
-                _id: ["@deep-foundation/core", "HandleInsert"]
+                _id: [REQUIRED_PACKAGES['@deep-foundation/core'], "HandleInsert"]
               }
             },
             {
               type_id: {
-                _id: ["@deep-foundation/core", "HandleUpdate"]
+                _id: [REQUIRED_PACKAGES['@deep-foundation/core'], "HandleUpdate"]
               }
             },
             {
               type_id: {
-                _id: ["@deep-foundation/core", "HandleDelete"]
+                _id: [REQUIRED_PACKAGES['@deep-foundation/core'], "HandleDelete"]
               }
             },
           ],
@@ -58,17 +58,17 @@ async function toggleEnabledLogger(options: ToggleEnabledLoggerOptions) {
             _or: [
               {
                 id: {
-                  _id: ["@deep-foundation/logger", "InsertHandler"]
+                  _id: [REQUIRED_PACKAGES['@deep-foundation/logger'], "InsertHandler"]
                 }
               },
               {
                 id: {
-                  _id: ["@deep-foundation/logger", "UpdateHandler"]
+                  _id: [REQUIRED_PACKAGES['@deep-foundation/logger'], "UpdateHandler"]
                 }
               },
               {
                 id: {
-                  _id: ["@deep-foundation/logger", "DeleteHandler"]
+                  _id: [REQUIRED_PACKAGES['@deep-foundation/logger'], "DeleteHandler"]
                 }
               },
             ]
