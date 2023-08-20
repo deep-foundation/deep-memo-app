@@ -56,6 +56,7 @@ export function LoggerSettingsContent(options: ContentOptions) {
             id="sync-logger-switch"
             isChecked={isLoggerEnabled}
             onChange={makeLoggerToggleHandler({
+              deep,
               isLoggerEnabled,
               setIsLoading,
               setIsLoggerEnabled,
