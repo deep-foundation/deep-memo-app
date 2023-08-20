@@ -4,32 +4,20 @@ import { Provider } from "../imports/provider";
 import NextLink from 'next/link';
 import { Page } from "../components/page";
 import { SettingContent } from "../components/setting-page";
-
+import { capitalCase } from "case-anything";
+import { SETTINGS_ROUTES } from "../imports/settings-routes";
+import { LinkIcon } from "@chakra-ui/icons";
 
 function Content() {
   return (
     <Stack>
-      <Link as={NextLink} href="/settings/device">
-        Device
-      </Link>
-      <Link as={NextLink} href="/settings/motion">
-        Motion
-      </Link>
-      <Link as={NextLink} href="/settings/contact">
-        Contact
-      </Link>
-      <Link as={NextLink} href="/settings/network">
-        Network
-      </Link>
-      <Link as={NextLink} href="/settings/camera">
-        Camera
-      </Link>
-      <Link as={NextLink} href="/settings/voice-recorder">
-        Voice Recorder
-      </Link>
-      <Link as={NextLink} href="/settings/logger">
-        Logger
-      </Link>
+      {
+          Object.entries(SETTINGS_ROUTES).map(([name, route]) => (
+            <Link as={NextLink} href={route}>
+              {capitalCase(name)} <LinkIcon mx='2px' />
+            </Link>
+          ))
+      }
     </Stack>
   )
 }
