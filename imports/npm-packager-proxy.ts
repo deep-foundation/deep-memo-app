@@ -36,8 +36,13 @@ export class NpmPackagerProxy {
    */
   public async install(...packageNames: Array<string>): Promise<any> {
     const log = debug(`@deep-foundation/npm-packager:${NpmPackagerProxy.name}:${this.install.name}`)
+    log({packageNames})
     const operations = await this.makeInstallPackagesOperations(...packageNames);
     log({operations})
+    const serialResult = await this.deep.serial({
+      operations: operations.flatMap(operation => operation.operations)
+    })
+    log({serialResult})
     const promisesToAwaitInstallation = operations.map(async (operation) => await this.deep.await(operation.installLinkId));
     log({promisesToAwaitInstallation})
     await Promise.all(promisesToAwaitInstallation);
