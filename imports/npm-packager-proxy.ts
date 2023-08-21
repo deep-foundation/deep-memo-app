@@ -53,7 +53,7 @@ export class NpmPackagerProxy {
   public async makeInstallPackagesOperations(...packageNames: Array<string>): Promise<MakeInstallPackagesOperationsReturnType> {
     this.ensureRequiredPackagesAreInMinilinks()
     const containTypeLinkId = this.deep.idLocal(
-      RequiredPackages.Core,
+      this.RequiredPackages.Core,
       'Contain'
     );
     const reservedLinkIds = await this.deep.reserve(packageNames.length * 2)
@@ -71,7 +71,7 @@ export class NpmPackagerProxy {
             objects: {
               id: packageQueryLinkId,
               type_id: this.deep.idLocal(
-                RequiredPackages.Core,
+                this.RequiredPackages.Core,
                 'PackageQuery'
               ),
             }
@@ -99,7 +99,7 @@ export class NpmPackagerProxy {
             objects: {
               id: installLinkId,
               type_id: this.deep.idLocal(
-                RequiredPackages.NpmPackager,
+                this.RequiredPackages.NpmPackager,
                 'Install'
               ),
               from_id: this.deep.linkId,
@@ -123,7 +123,7 @@ export class NpmPackagerProxy {
   }
 
   public ensureRequiredPackagesAreInMinilinks() {
-    for (const requiredPackageName of Object.values(RequiredPackages)) {
+    for (const requiredPackageName of Object.values(this.RequiredPackages)) {
       try {
         this.deep.idLocal(requiredPackageName);
       } catch (error) {
@@ -131,6 +131,11 @@ export class NpmPackagerProxy {
       }
     }
   }
+
+  public RequiredPackages = {
+    '@deep-foundation/core': '@deep-foundation/core',
+    '@deep-foundation/npm-packager': '@deep-foundation/npm-packager',
+  } as const
 
   /**
    * Puts {@link RequiredPackages} to minilinks
@@ -144,7 +149,7 @@ export class NpmPackagerProxy {
    * Gets all links down in contain tree to {@link RequiredPackages} 
    */
   public async getRequiredPackagesLinks() {
-    const packageNamesToApply = Object.values(RequiredPackages);
+    const packageNamesToApply = Object.values(this.RequiredPackages);
     const selectData: BoolExpLink = {
       up: {
         tree_id: {
@@ -163,10 +168,5 @@ export class NpmPackagerProxy {
   }
 
 }
-
-export enum RequiredPackages {
-  Core = '@deep-foundation/core',
-  NpmPackager = '@deep-foundation/npm-packager',
-} 
 
 export type MakeInstallPackagesOperationsReturnType = Array<{packageQueryLinkId: number; installLinkId: number; operations: Array<SerialOperation>}>
