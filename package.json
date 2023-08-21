@@ -69,7 +69,7 @@
     "@freephoenix888/deep-map-object": "^3.0.1",
     "@google-cloud/speech": "^5.4.0",
     "@google-cloud/vision": "^3.1.2",
-    "@ionic/pwa-elements": "^3.1.1",
+    "@ionic/pwa-elements": "^3.2.2",
     "@kevincobain2000/json-to-html-table": "^1.0.4",
     "@octokit/rest": "^19.0.5",
     "@rjsf/chakra-ui": "^5.6.2",
