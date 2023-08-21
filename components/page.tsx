@@ -45,18 +45,20 @@ export function Page({ renderChildren }: PageParam) {
                 deep={deep}
                 packageNames={[DEEP_MEMO_PACKAGE_NAME, ...Object.values(RequiredPackages)]}
                 renderIfError={(error) => <VStack height="100vh" justifyContent={"center"}><ErrorAlert title={"Failed to check whether required packages are installed"} description={error.message} /></VStack>}
-                renderIfNotInstalled={(packageNames) => {
-                  const isDeepMemoInstalled = !packageNames.includes(DEEP_MEMO_PACKAGE_NAME);
+                renderIfNotInstalled={(notInstalledPackageNames) => {
+                  log({notInstalledPackageNames})
+                  const isDeepMemoInstalled = !notInstalledPackageNames.includes(DEEP_MEMO_PACKAGE_NAME);
+                  log({isDeepMemoInstalled})
 
                   return (
                     <VStack height="100vh" justifyContent={"center"}>
                       {
-                        isDeepMemoInstalled && packageNames.length > 1 ? (
+                        isDeepMemoInstalled ? (
                           <ErrorAlert title={`${DEEP_MEMO_PACKAGE_NAME} is installed but its dependencies-packages are not installed`} description={
                             <VStack>
                               <List styleType="disc">
                                 {
-                                  packageNames.map((packageName) => (
+                                  notInstalledPackageNames.map((packageName) => (
 
                                     <ListItem >
                                       {packageName}
