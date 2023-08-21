@@ -19,6 +19,7 @@ import { ErrorAlert } from './error-alert';
 import { RequiredPackages } from '../imports/required-packages';
 import { useState } from 'react';
 import { NpmPackagerProxy } from '../imports/npm-packager-proxy';
+import debug from 'debug';
 
 
 export interface PageParam {
@@ -29,16 +30,16 @@ export interface PageParam {
 }
 
 export function Page({ renderChildren }: PageParam) {
+  const log = debug(`deep-memo-app:${Page.name}`)
   const toast = useToast();
   const [isInstallationLoading, setIsInstallationLoading] = useState<boolean|undefined>(undefined);
+  log({isInstallationLoading, setIsInstallationLoading})
   return (
     <StoreProvider>
       <ProvidersAndLoginOrContent>
         <WithDeep
           renderChildren={({ deep }) => {
-            console.log({ deep });
             const _package = new CapacitorDevicePackage({ deep });
-            console.log({ _package })
             return (
               <WithPackagesInstalled
                 deep={deep}
@@ -85,7 +86,7 @@ export function Page({ renderChildren }: PageParam) {
                                     isClosable: true,
                                   })
                                 } finally {
-                                  setIsInstallationLoading(true)
+                                  setIsInstallationLoading(false)
                                 }
                               }}
                             >
@@ -176,24 +177,3 @@ function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
     </WithDeviceInsertionIfDoesNotExistAndSavingData> : null
   );
 }
-
-interface InstallRequiredPackagesOptions {
-  deep: DeepClient;
-}
-
-async function installRequiredPackages(options: InstallRequiredPackagesOptions) {
-  const { deep } = options;
-  const operations = await makeInstallPackagesOperations({
-    deep,
-    packageNames: Object.values(RequiredPackages)
-  })
-  return await deep.serial({
-    operations
-  })
-}
-
-interface InstallPackageOptions {
-  deep: DeepClient;
-  packageNames: Array<string>;
-}
-
