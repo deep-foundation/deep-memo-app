@@ -17,6 +17,8 @@ import { createSerialOperation } from '@deep-foundation/deeplinks/imports/gql';
 import error from 'next/error';
 import { ErrorAlert } from './error-alert';
 import { RequiredPackages } from '../imports/required-packages';
+import { useState } from 'react';
+import { NpmPackagerProxy } from '../imports/npm-packager-proxy';
 
 
 export interface PageParam {
@@ -28,6 +30,7 @@ export interface PageParam {
 
 export function Page({ renderChildren }: PageParam) {
   const toast = useToast();
+  const [isInstallationLoading, setIsInstallationLoading] = useState<boolean|undefined>(undefined);
   return (
     <StoreProvider>
       <ProvidersAndLoginOrContent>
@@ -66,12 +69,13 @@ export function Page({ renderChildren }: PageParam) {
                           <VStack>
                             <ErrorAlert title={`${DEEP_MEMO_PACKAGE_NAME} is not installed`} />
                             <Button
+                            isLoading={isInstallationLoading}
                               onClick={async () => {
-                                const serialOperations = await makeInstallPackagesOperations({ deep, packageNames: [DEEP_MEMO_PACKAGE_NAME] })
+                                setIsInstallationLoading(true)
                                 try {
-                                  await deep.serial({
-                                    operations: serialOperations
-                                  })
+                                  const npmPackagerProxy = new NpmPackagerProxy(deep);
+                                  await npmPackagerProxy.applyMinilinks()
+                                  await npmPackagerProxy.install(DEEP_MEMO_PACKAGE_NAME)
                                 } catch (error) {
                                   toast({
                                     title: `Failed to install ${DEEP_MEMO_PACKAGE_NAME}`,
@@ -80,6 +84,8 @@ export function Page({ renderChildren }: PageParam) {
                                     duration: null,
                                     isClosable: true,
                                   })
+                                } finally {
+                                  setIsInstallationLoading(true)
                                 }
                               }}
                             >
@@ -191,65 +197,3 @@ interface InstallPackageOptions {
   packageNames: Array<string>;
 }
 
-async function makeInstallPackagesOperations(options: InstallPackageOptions): Promise<Array<SerialOperation>> {
-  const { deep, packageNames } = options;
-  const containTypeLinkId = deep.idLocal(
-    RequiredPackages.Core,
-    'Contain'
-  );
-  const reservedLinkIds = await deep.reserve(2)
-  const packageQueryLinkId = reservedLinkIds.pop()!;
-  const installLinkId = reservedLinkIds.pop()!;
-  return packageNames.flatMap((packageName) => [
-    createSerialOperation({
-      type: 'insert',
-      table: 'links',
-      objects: {
-        id: packageQueryLinkId,
-        type_id: deep.idLocal(
-          RequiredPackages.Core,
-          'PackageQuery'
-        ),
-      }
-    }),
-    createSerialOperation({
-      type: 'insert',
-      table: 'strings',
-      objects: {
-        link_id: packageQueryLinkId,
-        value: packageName
-      }
-    }),
-    createSerialOperation({
-      type: 'insert',
-      table: 'links',
-      objects: {
-        type_id: containTypeLinkId,
-        from_id: deep.linkId,
-        to_id: packageQueryLinkId
-      }
-    }),
-    createSerialOperation({
-      type: 'insert',
-      table: 'links',
-      objects: {
-        id: installLinkId,
-        type_id: deep.idLocal(
-          RequiredPackages.NpmPackager,
-          'Install'
-        ),
-        from_id: deep.linkId,
-        to_id: packageQueryLinkId
-      }
-    }),
-    createSerialOperation({
-      type: 'insert',
-      table: 'links',
-      objects: {
-        type_id: containTypeLinkId,
-        from_id: deep.linkId,
-        to_id: installLinkId
-      }
-    }),
-  ])
-}
