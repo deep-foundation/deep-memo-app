@@ -5,6 +5,7 @@ import {
 import { BoolExpLink } from '@deep-foundation/deeplinks/imports/client_types.js';
 import { createSerialOperation } from '@deep-foundation/deeplinks/imports/gql/index.js';
 import { MinilinkCollection, Minilinks } from '@deep-foundation/deeplinks/imports/minilinks';
+import debug from 'debug';
 
 /**
  * Proxy for package management
@@ -34,10 +35,14 @@ export class NpmPackagerProxy {
    * If installation failed
    */
   public async install(...packageNames: Array<string>): Promise<any> {
+    const log = debug(`@deep-foundation/npm-packager:${NpmPackagerProxy.name}:${this.install.name}`)
     const operations = await this.makeInstallPackagesOperations(...packageNames);
+    log({operations})
     const promisesToAwaitInstallation = operations.map(async (operation) => await this.deep.await(operation.installLinkId));
+    log({promisesToAwaitInstallation})
     await Promise.all(promisesToAwaitInstallation);
     const intalledTypeLinkId = this.deep.idLocal(RequiredPackages.NpmPackager, "Installed");
+    log({intalledTypeLinkId})
    
     const {data: failedInstallLinkIds} = await this.deep.select({
       _or: operations.map(operation => (
@@ -56,6 +61,7 @@ export class NpmPackagerProxy {
         }
       ))
     })
+    log({failedInstallLinkIds})
 
     if(failedInstallLinkIds.length > 0) {
       throw new Error(`Failed to install ${failedInstallLinkIds.join(', ')}`)
@@ -72,12 +78,15 @@ export class NpmPackagerProxy {
  * If {@link REQUIRED_PACKAGES} is not in minilinks
 */
   public async makeInstallPackagesOperations(...packageNames: Array<string>): Promise<MakeInstallPackagesOperationsReturnType> {
+    const log = debug(`@deep-foundation/npm-packager:${NpmPackagerProxy.name}:${this.makeInstallPackagesOperations.name}`)
     this.ensureRequiredPackagesAreInMinilinks()
     const containTypeLinkId = this.deep.idLocal(
       RequiredPackages.Core,
       'Contain'
     );
+    log({containTypeLinkId})
     const reservedLinkIds = await this.deep.reserve(packageNames.length * 2)
+    log({reservedLinkIds})
     
     const result = packageNames.map((packageName) => {
       const packageQueryLinkId = reservedLinkIds.pop()!;
@@ -140,6 +149,7 @@ export class NpmPackagerProxy {
         ]
       }
     })
+    log({result})
 
     return result
   }
@@ -158,15 +168,21 @@ export class NpmPackagerProxy {
    * Puts {@link REQUIRED_PACKAGES} to minilinks
    */
   public async applyMinilinks() {
+    const log = debug(`@deep-foundation/npm-packager:${NpmPackagerProxy.name}:${this.applyMinilinks.name}`)
     const requiredPackageLinks = await this.getRequiredPackagesLinks();
-    return this.deep.minilinks.apply(requiredPackageLinks.data)
+    log({requiredPackageLinks})
+    const applyMinilinksResult = this.deep.minilinks.apply(requiredPackageLinks.data);
+    log({applyMinilinksResult})
+    return applyMinilinksResult
   }
 
   /**
    * Gets all links down in contain tree to {@link REQUIRED_PACKAGES} 
    */
   public async getRequiredPackagesLinks() {
+    const log = debug(`@deep-foundation/npm-packager:${NpmPackagerProxy.name}:${this.getRequiredPackagesLinks.name}`)
     const packageNamesToApply = Object.values(RequiredPackages);
+    log({packageNamesToApply})
     const selectData: BoolExpLink = {
       up: {
         tree_id: {
@@ -181,7 +197,10 @@ export class NpmPackagerProxy {
         }
       }
     }
-    return await this.deep.select(selectData);
+    log({selectData})
+    const result = await this.deep.select(selectData);
+    log({result})
+    return result;
   }
 
 }
