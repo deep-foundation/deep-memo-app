@@ -69,3 +69,10 @@ npm run ios-run
 - [ ] heroku solution
 - [ ] gh-pages client solution
 - [ ] standalone os build solution
+
+# Development
+You can set these environment variables in `.env.development`:
+```
+NEXT_PUBLIC_DEEP_TOKEN=""
+NEXT_PUBLIC_GRAPHQL_PATH=""
+```
