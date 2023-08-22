@@ -8,6 +8,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Stack,
   Switch,
   Text,
   VStack,
@@ -34,63 +35,43 @@ import { NpmPackagerProxy } from '../../imports/npm-packager-proxy';
 export function LoggerSettingsContent(options: ContentOptions) {
   const log = debug(`deep-foundation:pages:settings:logger:content`)
   const toast = useToast();
-  const {deep} = options;
+  const {deep,isInstalled} = options;
   const [isLoggerEnabled, setIsLoggerEnabled] = useLocalStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
     undefined
   );
   const [isLoading, setIsLoading] = useState(false);
-
-
-  return (
-    <Card>
-      <CardHeader>
-        <Heading>Logger</Heading>
-      </CardHeader>
-      <CardBody>
-        <FormControl display="flex" alignItems="center">
-          <FormLabel htmlFor="sync-logger-switch" mb="0">
-            Logger
-          </FormLabel>
-          <Switch
-            id="sync-logger-switch"
-            isChecked={isLoggerEnabled}
-            onChange={makeLoggerToggleHandler({
-              deep,
-              isLoggerEnabled,
-              setIsLoading,
-              setIsLoggerEnabled,
-              toast
-            })}
-            isDisabled={isLoading}
-          />
-        </FormControl>
-      </CardBody>
-    </Card>
-  );
-}
-
-
-export default function LoggerSettingsPage() {
-  const toast = useToast()
   const [isLoggerInstallationLoading, setIsLoggerInstallationLoading] = useState(false);
+
   return (
-    <Page renderChildren={({deep,deviceLinkId}) => <SettingContent>
-    <WithPackagesInstalled
-    deep={deep}
-    packageNames={[OptionalPackages.Logger]}
-    renderIfError={(error) => (
-      <ErrorAlert title={`Failed to check whether ${OptionalPackages.Logger} is intalled`} description={error.message}/>
-    )}
-    renderIfLoading={() => (
-      <VStack height="100vh" justifyContent={"center"}>
-        <CircularProgress isIndeterminate />
-        <Text>Checking whether {OptionalPackages.Logger} is installed...</Text>
-      </VStack>
-    )}
-    renderIfNotInstalled={() => (
-      <VStack>
-        <ErrorAlert title={`${OptionalPackages.Logger} is not installed`} />
+    <Stack>
+      <Card>
+        <CardHeader>
+          <Heading>Logger</Heading>
+        </CardHeader>
+        <CardBody>
+          <FormControl display="flex" alignItems="center">
+            <FormLabel htmlFor="sync-logger-switch" mb="0">
+              Logger
+            </FormLabel>
+            <Switch
+              id="sync-logger-switch"
+              isChecked={isLoggerEnabled}
+              onChange={makeLoggerToggleHandler({
+                deep,
+                isLoggerEnabled,
+                setIsLoading,
+                setIsLoggerEnabled,
+                toast
+              })}
+              isDisabled={isLoading}
+            />
+          </FormControl>
+        </CardBody>
+      </Card>
+      {
+        !isInstalled && <Stack>
+        <ErrorAlert title={`${OptionalPackages.Logger} is not installed`} description={`Disable and install ${OptionalPackages.Logger}`} />
         <Button 
         isLoading={isLoggerInstallationLoading}
         onClick={async () => {
@@ -118,10 +99,34 @@ export default function LoggerSettingsPage() {
         }}>
           Install {OptionalPackages.Logger}
         </Button>
+      </Stack>
+      }
+    </Stack>
+  );
+}
+
+
+export default function LoggerSettingsPage() {
+  const toast = useToast()
+  return (
+    <Page renderChildren={({deep,deviceLinkId}) => <SettingContent>
+    <WithPackagesInstalled
+    deep={deep}
+    packageNames={[OptionalPackages.Logger]}
+    renderIfError={(error) => (
+      <ErrorAlert title={`Failed to check whether ${OptionalPackages.Logger} is intalled`} description={error.message}/>
+    )}
+    renderIfLoading={() => (
+      <VStack height="100vh" justifyContent={"center"}>
+        <CircularProgress isIndeterminate />
+        <Text>Checking whether {OptionalPackages.Logger} is installed...</Text>
       </VStack>
     )}
+    renderIfNotInstalled={() => (
+      <LoggerSettingsContent deep={deep} isInstalled={false} />
+    )}
     >
-    <LoggerSettingsContent deep={deep} />
+    <LoggerSettingsContent deep={deep} isInstalled={true} />
     </WithPackagesInstalled>
   </SettingContent>} />
   );
@@ -129,4 +134,5 @@ export default function LoggerSettingsPage() {
 
 interface ContentOptions {
   deep: DeepClient;
+  isInstalled: boolean;
 }

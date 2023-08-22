@@ -7,6 +7,7 @@ import {
   CardBody,
   Heading,
   CardHeader,
+  VStack,
 } from '@chakra-ui/react';
 import {
   DeepClient,
@@ -25,6 +26,9 @@ import { Monitoring } from '../components/monitoring';
 import { SETTINGS_ROUTES } from '../imports/settings-routes';
 import { capitalCase } from 'case-anything';
 import debug from 'debug';
+import { ErrorAlert } from '../components/error-alert';
+import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
+import { OptionalPackages } from '../imports/optional-packages';
 
 interface ContentParam {
   deep: DeepClient;
@@ -96,7 +100,52 @@ function Content({ deep, deviceLinkId }: ContentParam) {
         isVoiceRecorderEnabled={isVoiceRecorderEnabled}
         isMotionSyncEnabled={isMotionSyncEnabled}
         />
-        <Monitoring deep={deep} isLoggerEnabled={isLoggerEnabled} deviceLinkId={deviceLinkId} />
+        {
+          isLoggerEnabled ? (
+            <WithPackagesInstalled
+            deep={deep}
+            packageNames={[OptionalPackages.Logger]}
+            renderIfError={(error) => (
+              <VStack>
+                <ErrorAlert title="Error checking whether logger is installed" description={error.message} />
+              </VStack>
+            )}
+            renderIfLoading={() => (
+              <VStack>
+                <Text>Checking whether logger installed...</Text>
+              </VStack>
+            )}
+            renderIfNotInstalled={() => {
+              setIsLoggerEnabled(false)
+              return (
+                <VStack>
+                  <ErrorAlert title="Logger is not installed" description={
+                    <VStack>
+                      <Text>Disable logger in settings and then install it. Note: if you disable logger in settings you will see installation button</Text>
+                      <Link as={NextLink} href="/settings/logger">
+                        Logger Settings <LinkIcon mx='2px' />
+                        </Link>
+                      </VStack>
+                  } />
+                </VStack>
+              )
+            }}
+            >
+              <Monitoring deep={deep} isLoggerEnabled={isLoggerEnabled} deviceLinkId={deviceLinkId} />
+            </WithPackagesInstalled>
+          ) : (
+            <VStack>
+            <ErrorAlert title="Logger is disabled" description={
+              <VStack>
+                <Text>Enable the logger to see logs</Text>
+                <Link as={NextLink} href="/settings/logger">
+                  Logger Settings <LinkIcon mx='2px' />
+                  </Link>
+                </VStack>
+            } />
+          </VStack>
+          )
+        }
     </Stack>
   );
 }
