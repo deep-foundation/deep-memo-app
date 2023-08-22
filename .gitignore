@@ -135,3 +135,6 @@ extension/*.html
 /*.crx
 /*.pem
 
+
+
+.env*
