@@ -8,6 +8,7 @@ import {
   Heading,
   CardHeader,
   VStack,
+  Button,
 } from '@chakra-ui/react';
 import {
   DeepClient,
@@ -29,6 +30,7 @@ import debug from 'debug';
 import { ErrorAlert } from '../components/error-alert';
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
 import { OptionalPackages } from '../imports/optional-packages';
+import {getDeviceValueUpdateSerialOperations} from '@deep-foundation/capacitor-device'
 
 interface ContentParam {
   deep: DeepClient;
@@ -87,6 +89,17 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     <Stack alignItems={'center'}>
       <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
+      <Button onClick={async () => {
+        const operations = await getDeviceValueUpdateSerialOperations({
+          deep,
+          deviceLinkId
+        })
+        await deep.serial({
+          operations
+        })
+      }}>
+        Update Device Info
+      </Button>
       <WithSubscriptions 
         deep={deep}
         deviceLinkId={deviceLinkId}
