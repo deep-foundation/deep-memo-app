@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react';
 import { DeviceInfo } from '@deep-foundation/capacitor-device';
 import { ErrorAlert } from '../../components/error-alert';
 import { RequiredPackages } from '../../imports/required-packages';
-import {WithPlatformChecking} from '@deep-foundation/capacitor-motion'
+import {WithOperatingSystemChecking} from '@deep-foundation/capacitor-motion'
 
 function Content() {
   const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useLocalStore(
@@ -30,7 +30,7 @@ function Content() {
     undefined
   );
 
-  return <WithPlatformChecking 
+  return <WithOperatingSystemChecking 
   renderIfLoading={() => (
 <VStack height="100vh" justifyContent={"center"}>
     <CircularProgress isIndeterminate />
