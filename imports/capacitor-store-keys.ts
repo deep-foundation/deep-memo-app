@@ -27,5 +27,6 @@ export enum CapacitorStoreKeys {
    IsCameraSyncEnabled,
    IsDeviceSyncEnabled,
    IsGeolocationSyncEnabled,
-   IsLoggerEnabled
+   IsLoggerEnabled,
+   DeepToken
 }
