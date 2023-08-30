@@ -2,7 +2,7 @@ import * as TJS from 'typescript-json-schema';
 import * as path from 'path'
 import fsExtra from 'fs-extra'
 import _ from 'lodash';
-import {deepMapObject} from '@freephoenix888/deep-map-object';
+import {recursiveObjectMap} from '@freephoenix888/recursive-object-map';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import {capitalCase} from 'case-anything'
@@ -35,7 +35,7 @@ async function generateJsonSchema () {
   
 
   log({schema})
-  schema = await deepMapObject(schema, ({key, value}) => {
+  schema = await recursiveObjectMap(schema, (key, value) => {
     log({key, value})
     return {newKey: key, newValue: (key === 'title' && typeof value === 'string') ? capitalCase(value) : value}
   });
