@@ -31,9 +31,10 @@ import { ErrorAlert } from '../components/error-alert';
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
 import { OptionalPackages } from '../imports/optional-packages';
 import {getDeviceValueUpdateSerialOperations} from '@deep-foundation/capacitor-device'
+import { DecoratedDeep } from '../components/with-decorated-deep';
 
 interface ContentParam {
-  deep: DeepClient;
+  deep: DecoratedDeep;
   deviceLinkId: number;
 }
 

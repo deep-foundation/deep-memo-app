@@ -20,11 +20,12 @@ import { RequiredPackages } from '../imports/required-packages';
 import { useState } from 'react';
 import { NpmPackagerProxy } from '../imports/npm-packager-proxy';
 import debug from 'debug';
+import { DecoratedDeep, WithDecoratedDeep } from './with-decorated-deep';
 
 
 export interface PageParam {
   renderChildren: (param: {
-    deep: DeepClient;
+    deep: DecoratedDeep;
     deviceLinkId: number;
   }) => JSX.Element;
 }
@@ -38,86 +39,85 @@ export function Page({ renderChildren }: PageParam) {
     <StoreProvider>
       <ProvidersAndLoginOrContent>
         <WithDeep
-          renderChildren={({ deep }) => {
-            const _package = new CapacitorDevicePackage({ deep });
-            return (
+          renderChildren={({ deep }) => (
+            <WithDecoratedDeep deep={deep} renderChildren={({deep}) => (
               <WithPackagesInstalled
-                deep={deep}
-                packageNames={[DEEP_MEMO_PACKAGE_NAME, ...Object.values(RequiredPackages)]}
-                renderIfError={(error) => <VStack height="100vh" justifyContent={"center"}><ErrorAlert title={"Failed to check whether required packages are installed"} description={error.message} /></VStack>}
-                renderIfNotInstalled={(notInstalledPackageNames) => {
-                  log({notInstalledPackageNames})
-                  const isDeepMemoInstalled = !notInstalledPackageNames.includes(DEEP_MEMO_PACKAGE_NAME);
-                  log({isDeepMemoInstalled})
+              deep={deep}
+              packageNames={[DEEP_MEMO_PACKAGE_NAME, ...Object.values(RequiredPackages)]}
+              renderIfError={(error) => <VStack height="100vh" justifyContent={"center"}><ErrorAlert title={"Failed to check whether required packages are installed"} description={error.message} /></VStack>}
+              renderIfNotInstalled={(notInstalledPackageNames) => {
+                log({notInstalledPackageNames})
+                const isDeepMemoInstalled = !notInstalledPackageNames.includes(DEEP_MEMO_PACKAGE_NAME);
+                log({isDeepMemoInstalled})
 
-                  return (
-                    <VStack height="100vh" justifyContent={"center"}>
-                      {
-                        isDeepMemoInstalled ? (
-                          <ErrorAlert title={`${DEEP_MEMO_PACKAGE_NAME} is installed but its dependencies-packages are not installed`} description={
-                            <VStack>
-                              <List styleType="disc">
-                                {
-                                  notInstalledPackageNames.map((packageName) => (
-
-                                    <ListItem >
-                                      {packageName}
-                                    </ListItem>
-                                  ))
-                                }
-                              </List>
-                            </VStack>
-                          } />
-                        ) : (
-                          <VStack>
-                            <ErrorAlert title={`${DEEP_MEMO_PACKAGE_NAME} is not installed`} />
-                            <Button
-                            isLoading={isInstallationLoading}
-                              onClick={async () => {
-                                setIsInstallationLoading(true)
-                                try {
-                                  const npmPackagerProxy = new NpmPackagerProxy(deep);
-                                  await npmPackagerProxy.applyMinilinks()
-                                  await npmPackagerProxy.install(DEEP_MEMO_PACKAGE_NAME)
-                                } catch (error) {
-                                  toast({
-                                    title: `Failed to install ${DEEP_MEMO_PACKAGE_NAME}`,
-                                    description: error.message,
-                                    status: "error",
-                                    duration: null,
-                                    isClosable: true,
-                                  })
-                                } finally {
-                                  setIsInstallationLoading(false)
-                                }
-                              }}
-                            >
-                              Install {DEEP_MEMO_PACKAGE_NAME}
-                            </Button>
-                          </VStack>
-                        )
-                      }
-                    </VStack>
-                  );
-                }}
-                renderIfLoading={() => (
+                return (
                   <VStack height="100vh" justifyContent={"center"}>
-                    <CircularProgress isIndeterminate />
-                    <Text>Checking if deep packages are installed...</Text>
-                  </VStack>
-                )}
-              >
-                <WithMinilinksApplied deep={deep}>
-                  <WithDeviceLinkId
-                    deep={deep}
-                    renderChildren={({ deviceLinkId }) =>
-                      renderChildren({ deep, deviceLinkId })
+                    {
+                      isDeepMemoInstalled ? (
+                        <ErrorAlert title={`${DEEP_MEMO_PACKAGE_NAME} is installed but its dependencies-packages are not installed`} description={
+                          <VStack>
+                            <List styleType="disc">
+                              {
+                                notInstalledPackageNames.map((packageName) => (
+
+                                  <ListItem >
+                                    {packageName}
+                                  </ListItem>
+                                ))
+                              }
+                            </List>
+                          </VStack>
+                        } />
+                      ) : (
+                        <VStack>
+                          <ErrorAlert title={`${DEEP_MEMO_PACKAGE_NAME} is not installed`} />
+                          <Button
+                          isLoading={isInstallationLoading}
+                            onClick={async () => {
+                              setIsInstallationLoading(true)
+                              try {
+                                const npmPackagerProxy = new NpmPackagerProxy(deep);
+                                await npmPackagerProxy.applyMinilinks()
+                                await npmPackagerProxy.install(DEEP_MEMO_PACKAGE_NAME)
+                              } catch (error) {
+                                toast({
+                                  title: `Failed to install ${DEEP_MEMO_PACKAGE_NAME}`,
+                                  description: error.message,
+                                  status: "error",
+                                  duration: null,
+                                  isClosable: true,
+                                })
+                              } finally {
+                                setIsInstallationLoading(false)
+                              }
+                            }}
+                          >
+                            Install {DEEP_MEMO_PACKAGE_NAME}
+                          </Button>
+                        </VStack>
+                      )
                     }
-                  />
-                </WithMinilinksApplied>
-              </WithPackagesInstalled>
-            );
-          }}
+                  </VStack>
+                );
+              }}
+              renderIfLoading={() => (
+                <VStack height="100vh" justifyContent={"center"}>
+                  <CircularProgress isIndeterminate />
+                  <Text>Checking if deep packages are installed...</Text>
+                </VStack>
+              )}
+            >
+              <WithMinilinksApplied deep={deep}>
+                <WithDeviceLinkId
+                  deep={deep}
+                  renderChildren={({ deviceLinkId }) =>
+                    renderChildren({ deep, deviceLinkId })
+                  }
+                />
+              </WithMinilinksApplied>
+            </WithPackagesInstalled>
+            )} />
+          )}
         />
       </ProvidersAndLoginOrContent>
     </StoreProvider>

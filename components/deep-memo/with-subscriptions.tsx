@@ -8,6 +8,7 @@ import { useToast } from '@chakra-ui/react';
 import { WithMotionSubscription } from '@deep-foundation/capacitor-motion';
 import Recorder from "@deep-foundation/capacitor-voice-recorder";
 import { NetworkStatus } from '@deep-foundation/capacitor-network';
+import { GeolocationDecorator, createGeolocationDecorator } from '@deep-foundation/capacitor-geolocation';
 
 export function WithSubscriptions({
    deep, 
@@ -20,9 +21,10 @@ export function WithSubscriptions({
     isVoiceRecorderEnabled,
     onLastContactsSyncTimeChange,
     onLastCallHistorySyncTimeChange,
-    isMotionSyncEnabled
+    isMotionSyncEnabled,
+    isGeolocationSyncEnabled
   }: { 
-    deep: DeepClient,
+    deep: GeolocationDecorator<DeepClient>,
      deviceLinkId: number,
       isContactsSyncEnabled: boolean,
       lastContactsSyncTime: number,
@@ -33,6 +35,7 @@ export function WithSubscriptions({
       onLastContactsSyncTimeChange: (currentTime: number) => void,
       onLastCallHistorySyncTimeChange: (currentTime: number) => void,
       isMotionSyncEnabled: boolean,
+      isGeolocationSyncEnabled: boolean,
      }) {
       const toast = useToast();
 
@@ -112,6 +115,9 @@ export function WithSubscriptions({
     }
     {
       isNetworkSyncEnabled && <NetworkStatus deep={deep} />
+    }
+    {
+      isGeolocationSyncEnabled && <deep.WithComponentWatch containerLinkId={deviceLinkId} />
     }
     </>
   )
