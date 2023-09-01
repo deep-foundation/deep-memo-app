@@ -58,7 +58,7 @@
     "@deep-foundation/capacitor-device": "^17.0.3",
     "@deep-foundation/capacitor-motion": "^6.0.0",
     "@deep-foundation/capacitor-network": "^0.1.4",
-    "@deep-foundation/capacitor-geolocation": "^1.0.0-dev.3",
+    "@deep-foundation/capacitor-geolocation": "^1.0.0-dev.5",
     "@deep-foundation/capacitor-voice-recorder": "^1.2.1",
     "@deep-foundation/deeplinks": "^0.0.291",
     "@deep-foundation/firebase-push-notification": "^18.2.0",
