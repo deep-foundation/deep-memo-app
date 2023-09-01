@@ -85,6 +85,12 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     CapacitorStoreKeys[CapacitorStoreKeys.IsMotionSyncEnabled],
     undefined
   );
+  const [isGeolocationSyncEnabled, setIsGeolocationSyncEnabled] = useLocalStore<boolean|undefined>(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsGeolocationSyncEnabled],
+    undefined
+  );
+
+  
 
   return (
     <Stack alignItems={'center'}>
@@ -113,6 +119,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
         isNetworkSyncEnabled={isNetworkSyncEnabled}
         isVoiceRecorderEnabled={isVoiceRecorderEnabled}
         isMotionSyncEnabled={isMotionSyncEnabled}
+        isGeolocationSyncEnabled={isGeolocationSyncEnabled}
         />
         {
           isLoggerEnabled ? (
