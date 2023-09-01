@@ -117,7 +117,7 @@ export function WithSubscriptions({
       isNetworkSyncEnabled && <NetworkStatus deep={deep} />
     }
     {
-      isGeolocationSyncEnabled && <deep.WithComponentWatch containerLinkId={deviceLinkId} />
+      isGeolocationSyncEnabled && <deep.WithPositionWatch containerLinkId={deviceLinkId} />
     }
     </>
   )
