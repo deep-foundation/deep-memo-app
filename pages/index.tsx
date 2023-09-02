@@ -17,7 +17,6 @@ import NextLink from 'next/link';
 import {LinkIcon} from '@chakra-ui/icons'
 
 
-import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
 import { NavBar } from '../components/navbar';
 import { Page } from '../components/page';
@@ -40,7 +39,9 @@ interface ContentParam {
 
 function Content({ deep, deviceLinkId }: ContentParam) {
   useEffect(() => {
-    defineCustomElements(window);
+    import('@ionic/pwa-elements/loader').then(({ defineCustomElements }) => {
+      defineCustomElements(window);
+    });
   }, []);
 
   useEffect(() => {

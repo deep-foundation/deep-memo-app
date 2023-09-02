@@ -28,7 +28,6 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
-import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import {
   ActionSheet,
   ActionSheetButton,
@@ -86,7 +85,9 @@ function InsertActionSheetModal({deep, deviceLinkId} : {deep: DeepClient, device
 
 function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
   useEffect(() => {
-    defineCustomElements(window);
+    import('@ionic/pwa-elements/loader').then(({ defineCustomElements }) => {
+      defineCustomElements(window);
+    });
     self['deep'] = deep;
     self['ActionSheet'] = ActionSheet;
     self['ActionSheetButtonStyle'] = ActionSheetButtonStyle;
