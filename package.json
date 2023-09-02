@@ -54,7 +54,7 @@
     "@capacitor/screen-reader": "^5.0.0",
     "@capawesome/capacitor-file-picker": "^5.0.0",
     "@chakra-ui/react": "^2.5.5",
-    "@deep-foundation/capacitor-camera": "^1.1.7",
+    "@deep-foundation/capacitor-camera": "^1.1.9",
     "@deep-foundation/capacitor-device": "^17.0.3",
     "@deep-foundation/capacitor-motion": "^6.0.0",
     "@deep-foundation/capacitor-network": "^0.1.4",
