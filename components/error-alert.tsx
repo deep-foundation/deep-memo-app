@@ -7,7 +7,7 @@ export function ErrorAlert(options: ErrorAlertOptions) {
       <HStack spacing={4} alignItems="center" flex="1">
         <AlertIcon />
         <VStack spacing={1} width={"100%"}>
-          {title && <AlertTitle>{title}</AlertTitle>}
+          <AlertTitle>{title}</AlertTitle>
           {description && <AlertDescription>{description}</AlertDescription>}
         </VStack>
       </HStack>
