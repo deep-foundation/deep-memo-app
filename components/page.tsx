@@ -1,6 +1,6 @@
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
 import { DEEP_MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
-import { ProvidersAndLoginOrContent } from './providers-and-login-or-content';
+import { WithProvidersAndLogin } from './with-providers-and-login';
 import { StoreProvider } from './store-provider';
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, CircularProgress, Heading, List, ListIcon, ListItem, Stack, Text, Toast, VStack, useToast } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
@@ -37,7 +37,7 @@ export function Page({ renderChildren }: PageParam) {
   log({isInstallationLoading, setIsInstallationLoading})
   return (
     <StoreProvider>
-      <ProvidersAndLoginOrContent>
+      <WithProvidersAndLogin>
         <WithDeep
           renderChildren={({ deep }) => (
             <WithDecoratedDeep deep={deep} renderChildren={({deep}) => (
@@ -119,7 +119,7 @@ export function Page({ renderChildren }: PageParam) {
             )} />
           )}
         />
-      </ProvidersAndLoginOrContent>
+      </WithProvidersAndLogin>
     </StoreProvider>
   );
 }
