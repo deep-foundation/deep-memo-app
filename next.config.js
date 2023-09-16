@@ -9,8 +9,7 @@ const config =  {
   distDir: 'app',
   strictMode: false,
   
-  webpack: (config) => {
-    
+  webpack: (config) => {   
     config.resolve.fallback = {
       "buffer":false,
       "events": false,

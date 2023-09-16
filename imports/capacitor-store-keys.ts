@@ -1,5 +1,5 @@
 export enum CapacitorStoreKeys {
-   AdminLinkId,
+AdminLinkId,
    DeviceLinkId,
    IsActionSheetSubscriptionEnabled,
    IsDialogSubscriptionEnabled,
