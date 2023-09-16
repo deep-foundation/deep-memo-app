@@ -60,7 +60,7 @@
     "@deep-foundation/capacitor-network": "^0.1.4",
     "@deep-foundation/capacitor-geolocation": "^1.0.0-dev.7",
     "@deep-foundation/capacitor-voice-recorder": "^1.2.1",
-    "@deep-foundation/deeplinks": "^0.0.291",
+    "@deep-foundation/deeplinks": "^0.0.222",
     "@deep-foundation/firebase-push-notification": "^18.2.0",
     "@deep-foundation/react-with-packages-installed": "^0.5.3",
     "@deep-foundation/store": "^0.0.19",
