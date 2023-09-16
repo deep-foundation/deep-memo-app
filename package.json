@@ -48,7 +48,7 @@
     "@deep-foundation/capacitor-camera": "^1.1.10",
     "@deep-foundation/capacitor-device": "^17.1.0",
     "@deep-foundation/capacitor-geolocation": "^1.0.0-dev.11",
-    "@deep-foundation/capacitor-motion": "^7.0.0",
+    "@deep-foundation/capacitor-motion": "^7.0.1",
     "@deep-foundation/capacitor-network": "^0.1.8",
     "@deep-foundation/capacitor-voice-recorder": "^1.2.5",
     "@deep-foundation/deeplinks": "^0.0.302",
