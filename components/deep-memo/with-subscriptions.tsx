@@ -97,7 +97,6 @@ export function WithSubscriptions({
           await Recorder.stopRecording({
             deep,
             containerLinkId: deep.linkId!,
-            startTime
           })
         }, 1*60*1000)
         returnFn = () => {
