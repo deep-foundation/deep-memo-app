@@ -1,5 +1,5 @@
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
-import { DEEP_MEMO_PACKAGE_NAME } from '../imports/deep-memo/package-name';
+import { DEEP_MEMO_PACKAGE_NAME } from '../imports/package-name';
 import { WithProvidersAndLogin } from './with-providers-and-login';
 import { StoreProvider } from './store-provider';
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, CircularProgress, Heading, List, ListIcon, ListItem, Stack, Text, Toast, VStack, useToast } from '@chakra-ui/react';

@@ -3,7 +3,7 @@ import { DeepProvider, useDeep, useDeepSubscription } from "@deep-foundation/dee
 import { Provider } from "../imports/provider";
 import { useEffect, useState } from "react";
 import { useIsPackageInstalled } from "../imports/use-is-package-installed";
-import { DEEP_MEMO_PACKAGE_NAME } from "../imports/deep-memo/package-name";
+import { DEEP_MEMO_PACKAGE_NAME } from "../imports/package-name";
 import { useLocalStore } from "@deep-foundation/store/local";
 
 function Content() {
