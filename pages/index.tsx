@@ -17,7 +17,7 @@ import NextLink from 'next/link';
 import {LinkIcon} from '@chakra-ui/icons'
 
 
-import { WithSubscriptions } from '../components/deep-memo/with-subscriptions';
+import { WithSubscriptions } from '../components/with-subscriptions';
 import { NavBar } from '../components/navbar';
 import { Page } from '../components/page';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
