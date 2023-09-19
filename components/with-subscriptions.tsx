@@ -1,8 +1,8 @@
 import {
   DeepClient,
 } from '@deep-foundation/deeplinks/imports/client';
-import { saveAllCallHistory } from '../../imports/callhistory/callhistory';
-import { saveAllContacts } from '../../imports/contact/contact';
+import { saveAllCallHistory } from '../imports/callhistory/callhistory';
+import { saveAllContacts } from '../imports/contact/contact';
 import { useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { WithMotionSubscription } from '@deep-foundation/capacitor-motion';
