@@ -21,12 +21,17 @@ import { DeviceInfo, Device } from '@capacitor/device';
 import { useState, useEffect } from 'react';
 import { ErrorAlert } from '../../components/error-alert';
 import { RequiredPackages } from '../../imports/required-packages';
+import { Contacts } from '@capacitor-community/contacts';
 
 function Content() {
   const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
     undefined
   );
+
+    useEffect(() => {
+      self['CapacitorContact'] = Contacts
+    })
 
   const [platform, setPlatform] = useState<DeviceInfo['platform'] | undefined>(undefined)
 
