@@ -17,11 +17,16 @@ import { createSerialOperation } from '@deep-foundation/deeplinks/imports/gql';
 import error from 'next/error';
 import { ErrorAlert } from './error-alert';
 import { RequiredPackages } from '../imports/required-packages';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NpmPackagerProxy } from '../imports/npm-packager-proxy';
 import debug from 'debug';
 import { DecoratedDeep, WithDecoratedDeep } from './with-decorated-deep';
-
+import { Contacts } from '@capacitor-community/contacts';
+import { Device } from '@capacitor/device';
+import { Motion } from '@capacitor/motion';
+import { Geolocation } from '@capacitor/geolocation';
+import { Camera } from '@capacitor/camera';
+import { Network } from '@capacitor/network';
 
 export interface PageParam {
   renderChildren: (param: {
@@ -35,6 +40,16 @@ export function Page({ renderChildren }: PageParam) {
   const toast = useToast();
   const [isInstallationLoading, setIsInstallationLoading] = useState<boolean|undefined>(undefined);
   log({isInstallationLoading, setIsInstallationLoading})
+
+  useEffect(() => {
+    self['CapacitorDevice'] = Device
+    self['CapacitorMotion'] = Motion
+    self['CapacitorGeolocation'] = Geolocation
+    self['CapacitorCamera'] = Camera
+    self['CapacitorNetwork'] = Network
+    self['CapacitorContact'] = Contacts
+  })
+
   return (
     <StoreProvider>
       <WithProvidersAndLogin>
