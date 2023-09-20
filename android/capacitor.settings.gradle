@@ -5,15 +5,6 @@ project(':capacitor-android').projectDir = new File('../node_modules/@capacitor/
 include ':capacitor-community-contacts'
 project(':capacitor-community-contacts').projectDir = new File('../node_modules/@capacitor-community/contacts/android')
 
-include ':capacitor-action-sheet'
-project(':capacitor-action-sheet').projectDir = new File('../node_modules/@capacitor/action-sheet/android')
-
-include ':capacitor-camera'
-project(':capacitor-camera').projectDir = new File('../node_modules/@capacitor/camera/android')
-
-include ':capacitor-clipboard'
-project(':capacitor-clipboard').projectDir = new File('../node_modules/@capacitor/clipboard/android')
-
 include ':capacitor-device'
 project(':capacitor-device').projectDir = new File('../node_modules/@capacitor/device/android')
 
@@ -22,21 +13,6 @@ project(':capacitor-dialog').projectDir = new File('../node_modules/@capacitor/d
 
 include ':capacitor-haptics'
 project(':capacitor-haptics').projectDir = new File('../node_modules/@capacitor/haptics/android')
-
-include ':capacitor-local-notifications'
-project(':capacitor-local-notifications').projectDir = new File('../node_modules/@capacitor/local-notifications/android')
-
-include ':capacitor-network'
-project(':capacitor-network').projectDir = new File('../node_modules/@capacitor/network/android')
-
-include ':capacitor-push-notifications'
-project(':capacitor-push-notifications').projectDir = new File('../node_modules/@capacitor/push-notifications/android')
-
-include ':capacitor-screen-reader'
-project(':capacitor-screen-reader').projectDir = new File('../node_modules/@capacitor/screen-reader/android')
-
-include ':capawesome-capacitor-file-picker'
-project(':capawesome-capacitor-file-picker').projectDir = new File('../node_modules/@capawesome/capacitor-file-picker/android')
 
 include ':capacitor-voice-recorder'
 project(':capacitor-voice-recorder').projectDir = new File('../node_modules/capacitor-voice-recorder/android')
