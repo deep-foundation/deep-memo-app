@@ -10,6 +10,8 @@ import { processEnvs } from "../imports/process-envs";
 
 export function WithProvidersAndLogin({ children }: { children: JSX.Element }) {
   const [gqlPath, setGqlPath] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.GraphQlPath], processEnvs.graphQlPath)
+  console.log("gqlPath: ", gqlPath)
+  console.log("gqlPathFromEnv: ", processEnvs.graphQlPath)
   return (
     <>
       <ChakraProvider>
