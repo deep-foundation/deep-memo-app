@@ -31,6 +31,12 @@ import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-inst
 import { OptionalPackages } from '../imports/optional-packages';
 import {getDeviceValueUpdateSerialOperations} from '@deep-foundation/capacitor-device'
 import { DecoratedDeep } from '../components/with-decorated-deep';
+import { Contacts } from '@capacitor-community/contacts';
+import { Device } from '@capacitor/device';
+import { Motion } from '@capacitor/motion';
+import { Geolocation } from '@capacitor/geolocation';
+import { Camera } from '@capacitor/camera';
+import { Network } from '@capacitor/network';
 
 interface ContentParam {
   deep: DecoratedDeep;
@@ -38,6 +44,16 @@ interface ContentParam {
 }
 
 function Content({ deep, deviceLinkId }: ContentParam) {
+
+  useEffect(() => {
+    self['CapacitorDevice'] = Device
+    self['CapacitorMotion'] = Motion
+    self['CapacitorGeolocation'] = Geolocation
+    self['CapacitorCamera'] = Camera
+    self['CapacitorNetwork'] = Network
+    self['CapacitorContact'] = Contacts
+  })
+
   useEffect(() => {
     import('@ionic/pwa-elements/loader').then(({ defineCustomElements }) => {
       defineCustomElements(window);
