@@ -5,7 +5,7 @@ import { StoreProvider } from './store-provider';
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, CircularProgress, Heading, List, ListIcon, ListItem, Stack, Text, Toast, VStack, useToast } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
-import { CapacitorDevicePackage, WithDeviceInsertionIfDoesNotExistAndSavingData, getDeviceInsertSerialOperations } from '@deep-foundation/capacitor-device';
+import { WithDeviceSync } from '@deep-foundation/capacitor-device';
 import {
   DeepClient,
   DeepProvider,
@@ -149,7 +149,7 @@ function WithDeep({ renderChildren }: WithDeepProps) {
 }
 
 interface WithDeviceLinkIdProps {
-  deep: DeepClient;
+  deep: DecoratedDeep;
   renderChildren: (param: { deviceLinkId: number }) => JSX.Element;
 }
 
@@ -160,7 +160,7 @@ function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
   );
 
   return (
-    deep.linkId ? <WithDeviceInsertionIfDoesNotExistAndSavingData
+    <WithDeviceSync
       containerLinkId={deep.linkId}
       deep={deep}
       deviceLinkId={deviceLinkId}
@@ -176,21 +176,7 @@ function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
           <Text>Initializing device...</Text>
         </VStack>
       )}
-      insertDeviceCallback={async () => {
-        const [deviceLinkId] = await deep.reserve(1);
-        const serialOperations = await getDeviceInsertSerialOperations({
-          deep,
-          reservedLinkIds: {
-            deviceLinkId: deviceLinkId
-          }
-        });
-        await deep.serial({
-          operations: serialOperations
-        })
-        setDeviceLinkId(deviceLinkId)
-      }}
-    >
-      {renderChildren({ deviceLinkId })}
-    </WithDeviceInsertionIfDoesNotExistAndSavingData> : null
+      renderChildren={renderChildren}
+    />
   );
 }

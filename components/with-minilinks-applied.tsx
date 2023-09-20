@@ -43,6 +43,7 @@ async function getLinksToApply(options: GetLinksToApplyOptions) {
       }
     }
   }
+  console.log("deep in withMinilinksAPplied:", deep)
   return await deep.select(selectData);
 }
 
