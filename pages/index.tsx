@@ -21,7 +21,7 @@ import { WithSubscriptions } from '../components/with-subscriptions';
 import { NavBar } from '../components/navbar';
 import { Page } from '../components/page';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
-import { useLocalStore } from '@deep-foundation/store/local';
+import { useCapacitorStore } from '@deep-foundation/store/capacitor';
 import { Monitoring } from '../components/monitoring';
 import { SETTINGS_ROUTES } from '../imports/settings-routes';
 import { capitalCase } from 'case-anything';
@@ -29,8 +29,8 @@ import debug from 'debug';
 import { ErrorAlert } from '../components/error-alert';
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
 import { OptionalPackages } from '../imports/optional-packages';
-import {getDeviceValueUpdateSerialOperations} from '@deep-foundation/capacitor-device'
-import { DecoratedDeep } from '../components/with-decorated-deep';
+import { DecoratedDeep } from '../imports/decorated-deep';
+import { updateDevice } from '@deep-foundation/capacitor-device';
 
 interface ContentParam {
   deep: DecoratedDeep;
@@ -54,40 +54,40 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     });
   }, [deep]);
 
-  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore<boolean|undefined>(
+  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useCapacitorStore<boolean|undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
     undefined
   );
-  const [lastContactsSyncTime, setLastContactsSyncTime] = useLocalStore<number|undefined>(
+  const [lastContactsSyncTime, setLastContactsSyncTime] = useCapacitorStore<number|undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.ContactsLastSyncTime],
     undefined
   );
-  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useLocalStore<boolean|undefined>(
+  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useCapacitorStore<boolean|undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.IsCallHistorySyncEnabled],
     undefined
   );
-  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useLocalStore<number | undefined>(
+  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useCapacitorStore<number | undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.CallHistoryLastSyncTime],
     undefined
   );
   const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] =
-    useLocalStore<boolean|undefined>(
+    useCapacitorStore<boolean|undefined>(
       CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled],
       false
     );
-  const [isVoiceRecorderEnabled, setIsVoiceRecorderEnabled] = useLocalStore<boolean|undefined>(
+  const [isVoiceRecorderEnabled, setIsVoiceRecorderEnabled] = useCapacitorStore<boolean|undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.IsVoiceRecorderEnabled],
     undefined
   );
-  const [isLoggerEnabled, setIsLoggerEnabled] = useLocalStore(
+  const [isLoggerEnabled, setIsLoggerEnabled] = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
     undefined
   );
-  const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useLocalStore<boolean|undefined>(
+  const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useCapacitorStore<boolean|undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.IsMotionSyncEnabled],
     undefined
   );
-  const [isGeolocationSyncEnabled, setIsGeolocationSyncEnabled] = useLocalStore<boolean|undefined>(
+  const [isGeolocationSyncEnabled, setIsGeolocationSyncEnabled] = useCapacitorStore<boolean|undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.IsGeolocationSyncEnabled],
     undefined
   );
@@ -99,12 +99,8 @@ function Content({ deep, deviceLinkId }: ContentParam) {
       <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
       <Button onClick={async () => {
-        const operations = await getDeviceValueUpdateSerialOperations({
-          deep,
+        await deep.updateDevice({
           deviceLinkId
-        })
-        await deep.serial({
-          operations
         })
       }}>
         Update Device Info

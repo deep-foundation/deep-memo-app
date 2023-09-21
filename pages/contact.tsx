@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  useLocalStore,
-} from '@deep-foundation/store/local';
+  useCapacitorStore,
+} from '@deep-foundation/store/capacitor';
 import {
   DeepClient,
   DeepProvider,

@@ -3,7 +3,7 @@ import { DEEP_MEMO_PACKAGE_NAME } from '../imports/package-name';
 import { WithProvidersAndLogin } from './with-providers-and-login';
 import { StoreProvider } from './store-provider';
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, CircularProgress, Heading, List, ListIcon, ListItem, Stack, Text, Toast, VStack, useToast } from '@chakra-ui/react';
-import { useLocalStore } from '@deep-foundation/store/local';
+import { useCapacitorStore } from '@deep-foundation/store/capacitor';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { WithDeviceSync } from '@deep-foundation/capacitor-device';
 import {
@@ -20,13 +20,14 @@ import { RequiredPackages } from '../imports/required-packages';
 import { useEffect, useState } from 'react';
 import { NpmPackagerProxy } from '../imports/npm-packager-proxy';
 import debug from 'debug';
-import { DecoratedDeep, WithDecoratedDeep } from './with-decorated-deep';
+import { WithDecoratedDeep } from './with-decorated-deep';
 import { Contacts } from '@capacitor-community/contacts';
 import { Device } from '@capacitor/device';
 import { Motion } from '@capacitor/motion';
 import { Geolocation } from '@capacitor/geolocation';
 import { Camera } from '@capacitor/camera';
 import { Network } from '@capacitor/network';
+import { DecoratedDeep } from '../imports/decorated-deep';
 
 export interface PageParam {
   renderChildren: (param: {
@@ -154,7 +155,7 @@ interface WithDeviceLinkIdProps {
 }
 
 function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
-  const [deviceLinkId, setDeviceLinkId] = useLocalStore<number | undefined>(
+  const [deviceLinkId, setDeviceLinkId] = useCapacitorStore<number | undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );

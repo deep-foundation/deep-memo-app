@@ -9,7 +9,7 @@ import {
   Switch,
 } from '@chakra-ui/react';
 import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/client';
-import { useLocalStore } from '@deep-foundation/store/local';
+import { useCapacitorStore } from '@deep-foundation/store/capacitor';
 import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { Page } from '../../components/page';
@@ -18,7 +18,7 @@ import { useEffect } from 'react';
 import { Network } from '@capacitor/network';
 
 function Content() {
-  const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useLocalStore(
+  const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSyncEnabled],
     undefined
   );

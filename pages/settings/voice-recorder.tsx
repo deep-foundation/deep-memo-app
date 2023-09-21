@@ -9,14 +9,14 @@ import {
   Switch,
 } from '@chakra-ui/react';
 import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/client';
-import { useLocalStore } from '@deep-foundation/store/local';
+import { useCapacitorStore } from '@deep-foundation/store/capacitor';
 import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { Page } from '../../components/page';
 import { SettingContent } from '../../components/setting-page';
 
 function Content() {
-  const [isVoiceRecorderSyncEnabled, setIsVoiceRecorderSyncEnabled] = useLocalStore(
+  const [isVoiceRecorderSyncEnabled, setIsVoiceRecorderSyncEnabled] = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsVoiceRecorderSyncEnabled],
     undefined
   );
