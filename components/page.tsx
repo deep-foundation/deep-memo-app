@@ -27,6 +27,7 @@ import { Motion } from '@capacitor/motion';
 import { Geolocation } from '@capacitor/geolocation';
 import { Camera } from '@capacitor/camera';
 import { Network } from '@capacitor/network';
+import { Preferences } from '@capacitor/preferences';
 import { DecoratedDeep } from '../imports/decorated-deep';
 
 export interface PageParam {
@@ -49,6 +50,7 @@ export function Page({ renderChildren }: PageParam) {
     self['CapacitorCamera'] = Camera
     self['CapacitorNetwork'] = Network
     self['CapacitorContact'] = Contacts
+    self['CapacitorPreferences'] = Preferences
   })
 
   return (
