@@ -2,7 +2,6 @@ import { DeviceDecorator, createDeviceDecorator } from "@deep-foundation/capacit
 import { GeolocationDecorator, createGeolocationDecorator } from "@deep-foundation/capacitor-geolocation";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client.js";
 import { compose } from 'lodash/fp';
-import { DecoratedDeep } from "../imports/decorated-deep";
 
 export function WithDecoratedDeep(options: WithDecoratedDeepOptions) {
   const { deep, renderChildren } = options;
@@ -19,3 +18,4 @@ export interface WithDecoratedDeepOptions {
 
 export interface RenderChildrenOptions {deep: DecoratedDeep}
 
+export type DecoratedDeep = GeolocationDecorator<DeepClient> & DeviceDecorator<DeepClient>;

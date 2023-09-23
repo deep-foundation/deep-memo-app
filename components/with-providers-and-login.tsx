@@ -6,10 +6,10 @@ import { WithLogin } from "./with-login";
 import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
 import { useContext } from "react";
 import { processEnvs } from "../imports/process-envs";
-import { useCapacitorStore } from "@deep-foundation/store/capacitor";
+import { useLocalStore } from "@deep-foundation/store/local";
 
 export function WithProvidersAndLogin({ children }: { children: JSX.Element }) {
-  const [gqlPath, setGqlPath] = useCapacitorStore(CapacitorStoreKeys[CapacitorStoreKeys.GraphQlPath], processEnvs.graphQlPath)
+  const [gqlPath, setGqlPath] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.GraphQlPath], processEnvs.graphQlPath)
   console.log("gqlPath: ", gqlPath)
   console.log("gqlPathFromEnv: ", processEnvs.graphQlPath)
   return (

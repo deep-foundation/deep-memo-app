@@ -15,7 +15,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/client';
-import { useCapacitorStore } from '@deep-foundation/store/capacitor';
+import { useLocalStore } from '@deep-foundation/store/local';
 import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { Page } from '../../components/page';
@@ -36,7 +36,7 @@ export function LoggerSettingsContent(options: ContentOptions) {
   const log = debug(`deep-foundation:pages:settings:logger:content`)
   const toast = useToast();
   const {deep,isInstalled} = options;
-  const [isLoggerEnabled, setIsLoggerEnabled] = useCapacitorStore(
+  const [isLoggerEnabled, setIsLoggerEnabled] = useLocalStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
     undefined
   );
@@ -64,7 +64,7 @@ export function LoggerSettingsContent(options: ContentOptions) {
                 setIsLoggerEnabled,
                 toast
               })}
-              isDisabled={isLoading || !isInstalled}
+              isDisabled={isLoading}
             />
           </FormControl>
         </CardBody>

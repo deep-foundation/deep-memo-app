@@ -4,13 +4,13 @@ import { Login } from "./login";
 import { useToast } from "@chakra-ui/react";
 import { CapacitorStoreKeys } from "../imports/capacitor-store-keys";
 import { processEnvs } from "../imports/process-envs";
-import { useCapacitorStore } from "@deep-foundation/store/capacitor";
+import { useLocalStore } from "@deep-foundation/store/local";
 
 export function WithLogin({ gqlPath, setGqlPath, children }: { gqlPath: string | undefined, setGqlPath: (gqlPath: string | undefined) => void, children: JSX.Element }) {
   const toast = useToast();
   const deep = useDeep();
   const [isAuthorized, setIsAuthorized] = useState(undefined);
-  const [token, setToken] = useCapacitorStore(CapacitorStoreKeys[CapacitorStoreKeys.DeepToken], processEnvs.deepToken);
+  const [token, setToken] = useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.DeepToken], processEnvs.deepToken);
   console.log({token})
 
   useEffect(() => {

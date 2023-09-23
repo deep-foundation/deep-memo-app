@@ -1,7 +1,7 @@
 import { LocalStoreProvider } from "@deep-foundation/store/local";
-import { CapacitorStoreProvider } from "@deep-foundation/store/capacitor";
 import { QueryStoreProvider } from "@deep-foundation/store/query";
 import { CookiesStoreProvider } from "@deep-foundation/store/cookies";
+import { CapacitorStoreProvider } from "@deep-foundation/store/capacitor";
 
 export function StoreProvider({
   children,

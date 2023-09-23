@@ -10,7 +10,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/client';
-import { useCapacitorStore } from '@deep-foundation/store/capacitor';
+import { useLocalStore } from '@deep-foundation/store/local';
 import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
 import { Page } from '../../components/page';
@@ -19,7 +19,7 @@ import {Camera} from '@capacitor/camera'
 
 function Content() {
   const toast = useToast();
-  const [isCameraSyncEnabled, setIsCameraSyncEnabled] = useCapacitorStore(
+  const [isCameraSyncEnabled, setIsCameraSyncEnabled] = useLocalStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsCameraSyncEnabled],
     undefined
   );

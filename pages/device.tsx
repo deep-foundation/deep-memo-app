@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import {
-  useCapacitorStore,
-} from '@deep-foundation/store/capacitor';
+  useLocalStore,
+} from '@deep-foundation/store/local';
 import {
   DeepClient,
   DeepProvider,
@@ -10,14 +10,13 @@ import {
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
-import { updateDevice } from '@deep-foundation/capacitor-device';
+import { getDeviceValueUpdateSerialOperations } from '@deep-foundation/capacitor-device';
 import { NavBar } from '../components/navbar';
 import { Page } from '../components/page';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import debug from 'debug'
-import { DecoratedDeep } from '../imports/decorated-deep';
 
-function Content({deep, deviceLinkId}: {deep: DecoratedDeep, deviceLinkId: number}) {
+function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number}) {
 
   useEffect(() => {
     self["Device"] = Device
@@ -30,7 +29,10 @@ function Content({deep, deviceLinkId}: {deep: DecoratedDeep, deviceLinkId: numbe
       <Button
         onClick={async () => {
           const deviceGeneralInfo = await Device.getInfo();
-          await deep.updateDevice({deviceLinkId, info: deviceGeneralInfo})
+          const serialOperations = await getDeviceValueUpdateSerialOperations({deep, deviceLinkId, info: deviceGeneralInfo});
+          await deep.serial({
+            operations: serialOperations
+          })
         }}
       >
         Save general info
@@ -38,7 +40,10 @@ function Content({deep, deviceLinkId}: {deep: DecoratedDeep, deviceLinkId: numbe
       <Button
         onClick={async () => {
           const deviceBatteryInfo = await Device.getBatteryInfo();
-          await deep.updateDevice({deviceLinkId, info: deviceBatteryInfo})
+          const serialOperations = await getDeviceValueUpdateSerialOperations({deep, deviceLinkId, info: deviceBatteryInfo});
+          await deep.serial({
+            operations: serialOperations
+          })
         }}
       >
         Save battery info
@@ -46,9 +51,10 @@ function Content({deep, deviceLinkId}: {deep: DecoratedDeep, deviceLinkId: numbe
       <Button
         onClick={async () => {
           const deviceLanguageCode = await Device.getLanguageCode();
-          await deep.updateDevice({deviceLinkId, info: {
-            languageCode: deviceLanguageCode.value
-          }})
+          const serialOperations = await getDeviceValueUpdateSerialOperations({deep, deviceLinkId, info: {languageCode: deviceLanguageCode.value}});
+          await deep.serial({
+            operations: serialOperations
+          })
         }}
       >
         Save language id
@@ -56,9 +62,10 @@ function Content({deep, deviceLinkId}: {deep: DecoratedDeep, deviceLinkId: numbe
       <Button
         onClick={async () => {
           const deviceLanguageTag = await Device.getLanguageTag();
-          await deep.updateDevice({deviceLinkId, info: {
-            languageTag: deviceLanguageTag.value
-          }})
+          const serialOperations = await getDeviceValueUpdateSerialOperations({deep, deviceLinkId, info: {languageTag: deviceLanguageTag.value}});
+          await deep.serial({
+            operations: serialOperations
+          })
         }}
       >
         Save language tag

@@ -6,7 +6,7 @@ export default function Index() {
 // import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
 // import { TokenProvider, useTokenController } from '@deep-foundation/deeplinks/imports/react-token';
 // import { useQuery, useSubscription, gql } from '@apollo/client';
-// import { CapacitorStoreProvider, useCapacitorStore } from '@deep-foundation/store/capacitor';
+// import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
 // import { MinilinksLink, MinilinksResult, useMinilinksConstruct } from '@deep-foundation/deeplinks/imports/minilinks';
 // import { DeepClient, parseJwt, useAuthNode, useDeep } from '@deep-foundation/deeplinks/imports/client';
 // import { useDelayedInterval, useDelayRefetch } from "../imports/use-delayed-interval";
@@ -20,7 +20,7 @@ export default function Index() {
 
 // function usePreloaded() {
 //   const [token, setToken] = useTokenController();
-//   const pr = useCapacitorStore('preloaded', null);
+//   const pr = useLocalStore('preloaded', null);
 //   const [preloaded, setPreloaded] = pr;
 //   const deep = useDeep();
 //   const p = useRef<any>();
@@ -225,10 +225,10 @@ export default function Index() {
 //   </>;
 // }
 
-// // function useGqlUrlInput() { return useCapacitorStore('gqlUrlInput', NEXT_PUBLIC_GQL_PATH); }
-// // function useTokenInput() { return useCapacitorStore('tokenInput', ''); }
-// // function useLinkInput() { return useCapacitorStore('linkInput', ''); }
-// // function useGqlUrl() { return useCapacitorStore('gqlUrl', NEXT_PUBLIC_GQL_PATH); }
+// // function useGqlUrlInput() { return useLocalStore('gqlUrlInput', NEXT_PUBLIC_GQL_PATH); }
+// // function useTokenInput() { return useLocalStore('tokenInput', ''); }
+// // function useLinkInput() { return useLocalStore('linkInput', ''); }
+// // function useGqlUrl() { return useLocalStore('gqlUrl', NEXT_PUBLIC_GQL_PATH); }
 
 // function Page() {
 //   const [linkId, setLinkId] = useAuthNode();
@@ -269,11 +269,11 @@ export default function Index() {
 // export default function Index() {
 //   return (
 //     <ChakraProvider>
-//       <CapacitorStoreProvider>
+//       <LocalStoreProvider>
 //         <TokenProvider>
 //           <Page/>
 //         </TokenProvider>
-//       </CapacitorStoreProvider>
+//       </LocalStoreProvider>
 //     </ChakraProvider>
 //   );
 // }

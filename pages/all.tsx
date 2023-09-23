@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { ApolloClientTokenizedProvider } from '@deep-foundation/react-hasura/apollo-client-tokenized-provider';
 import { TokenProvider, useTokenController } from '@deep-foundation/deeplinks/imports/react-token';
 import { useQuery, useSubscription, gql } from '@apollo/client';
-import { CapacitorStoreProvider, useCapacitorStore } from '@deep-foundation/store/capacitor';
+import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
 import { MinilinksLink, MinilinksResult, useMinilinksConstruct } from '@deep-foundation/deeplinks/imports/minilinks';
 import { Button, ChakraProvider, Input } from '@chakra-ui/react';
 
@@ -81,9 +81,9 @@ function Content() {
   </>;
 }
 
-function useGqlUrlInput() { return useCapacitorStore('gqlUrlInput', ''); }
-function useTokenInput() { return useCapacitorStore('tokenInput', ''); }
-function useGqlUrl() { return useCapacitorStore('gqlUrl', ''); }
+function useGqlUrlInput() { return useLocalStore('gqlUrlInput', ''); }
+function useTokenInput() { return useLocalStore('tokenInput', ''); }
+function useGqlUrl() { return useLocalStore('gqlUrl', ''); }
 
 function Page() {
   const [gqlUrlInput, setGqlUrlInput] = useGqlUrlInput();
@@ -110,11 +110,11 @@ function Page() {
 export default function Index() {
   return (
     <ChakraProvider>
-      <CapacitorStoreProvider>
+      <LocalStoreProvider>
         <TokenProvider>
           <Page/>
         </TokenProvider>
-      </CapacitorStoreProvider>
+      </LocalStoreProvider>
     </ChakraProvider>
   );
 }
