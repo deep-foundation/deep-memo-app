@@ -5,8 +5,8 @@ import { Motion } from '@capacitor/motion';
 import { Geolocation } from '@capacitor/geolocation';
 import { Camera } from '@capacitor/camera';
 import { Network } from '@capacitor/network';
-import { useToken } from "./useToken";
-import { useGqlPath } from "./useGqlPath";
+import { useToken } from "./use-token";
+import { useGqlPath } from "./use-gql-path";
 
 export function useAddDebugFieldsToWindow() { 
   const [gqlPath,setGqlPath] = useGqlPath()

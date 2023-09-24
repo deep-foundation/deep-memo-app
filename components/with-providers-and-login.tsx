@@ -6,12 +6,13 @@ import { LocalStoreProvider } from "@deep-foundation/store/local";
 import { CapacitorStoreProvider } from "@deep-foundation/store/capacitor";
 import { CookiesStoreProvider } from "@deep-foundation/store/cookies";
 import { QueryStoreProvider } from "@deep-foundation/store/query";
-import { useGqlPath } from "../hooks/use-gql-path";
-import { useToken } from "../hooks/use-token";
+import { useGqlPath } from "../imports/react/hooks/use-gql-path";
+import { useToken } from "../imports/react/hooks/use-token";
 
 export function WithProviders({ children }: { children: JSX.Element }) {
   const [gqlPath, setGqlPath] = useGqlPath();
   const [token,setToken]=useToken();
+  console.log({gqlPath,token})
   
   return (
     <ChakraProvider>
