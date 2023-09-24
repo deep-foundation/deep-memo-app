@@ -35,7 +35,6 @@ interface ContentParam {
 }
 
 function Content({ deep, deviceLinkId }: ContentParam) {
-
   useEffect(() => {
     import('@ionic/pwa-elements/loader').then(({ defineCustomElements }) => {
       defineCustomElements(window);
