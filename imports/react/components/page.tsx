@@ -24,7 +24,7 @@ import { ErrorAlert } from './error-alert';
 import { StoreProvider } from './store-provider';
 import { DecoratedDeep, WithDecoratedDeep } from './with-decorated-deep';
 import { WithMinilinksApplied } from './with-minilinks-applied';
-import { WithProviders } from './with-providers-and-login';
+import { WithProviders } from './with-providers';
 import { RequiredPackages } from '../../required-packages';
 
 export interface PageParam {

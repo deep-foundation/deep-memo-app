@@ -12,7 +12,6 @@ import { useToken } from "../hooks/useToken";
 export function WithProviders({ children }: { children: JSX.Element }) {
   const [gqlPath, setGqlPath] = useGqlPath();
   const [token,setToken]=useToken();
-  console.log({gqlPath,token})
   
   return (
     <ChakraProvider>
