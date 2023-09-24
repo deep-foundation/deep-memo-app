@@ -2,12 +2,16 @@ import { DeviceDecorator, createDeviceDecorator } from "@deep-foundation/capacit
 import { GeolocationDecorator, createGeolocationDecorator } from "@deep-foundation/capacitor-geolocation";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client.js";
 import { compose } from 'lodash/fp';
+import { useEffect } from "react";
 
 export function WithDecoratedDeep(options: WithDecoratedDeepOptions) {
   const { deep, renderChildren } = options;
   const deviceDecoratedDeep = createDeviceDecorator(deep);
   const geolocationDecoratedDeep = createGeolocationDecorator(deviceDecoratedDeep);
   const decoratedDeep = geolocationDecoratedDeep;
+  useEffect(() => {
+    self['decoratedDeep'] = decoratedDeep;
+  })
   return renderChildren({deep: decoratedDeep  })
 }
 

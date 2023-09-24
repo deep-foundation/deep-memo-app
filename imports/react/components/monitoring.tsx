@@ -4,7 +4,6 @@ import { JsonToTable } from "react-json-to-table";
 import { JSONToHTMLTable } from '@kevincobain2000/json-to-html-table'
 import { ErrorAlert } from "./error-alert";
 import { toggleLogger } from "./toggle-logger";
-import { makeLoggerToggleHandler } from "../imports/make-logger-toggle-handler";
 import { useState } from "react";
 import NextLink from "next/link";
 import {LinkIcon} from '@chakra-ui/icons'
@@ -12,7 +11,7 @@ import debug from "debug";
 import { QueryLink } from "@deep-foundation/deeplinks/imports/client_types";
 import { JsonView, allExpanded, darkStyles, defaultStyles } from 'react-json-view-lite';
 import 'react-json-view-lite/dist/index.css';
-import { OptionalPackages } from "../imports/optional-packages";
+import { OptionalPackages } from "../../optional-packages";
 
 export function Monitoring(options: MonitoringOptions) {
   const log = debug(`deep-memo-app:${Monitoring.name}`)

@@ -1,8 +1,8 @@
 import { ToastId, UseToastOptions } from "@chakra-ui/react";
 import { ChangeEvent, SyntheticEvent } from "react";
-import { toggleLogger } from "../components/toggle-logger";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import debug from "debug";
+import { toggleLogger } from "./react/components/toggle-logger";
 
 export function makeLoggerToggleHandler(options: MakeLoggerToggleHandlerOptions) {
   const log = debug(`deep-memo-app:${makeLoggerToggleHandler.name}`);

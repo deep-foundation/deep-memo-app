@@ -1,32 +1,31 @@
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
-import { DEEP_MEMO_PACKAGE_NAME } from '../imports/package-name';
-import { WithProvidersAndLogin } from './with-providers-and-login';
-import { StoreProvider } from './store-provider';
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, CircularProgress, Heading, List, ListIcon, ListItem, Stack, Text, Toast, VStack, useToast } from '@chakra-ui/react';
 import { useLocalStore } from '@deep-foundation/store/local';
-import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
-import { WithDeviceSync } from '@deep-foundation/capacitor-device';
 import {
   DeepClient,
   DeepProvider,
   SerialOperation,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
-import { WithMinilinksApplied } from './with-minilinks-applied';
 import { createSerialOperation } from '@deep-foundation/deeplinks/imports/gql';
 import error from 'next/error';
-import { ErrorAlert } from './error-alert';
-import { RequiredPackages } from '../imports/required-packages';
 import { useEffect, useState } from 'react';
-import { NpmPackagerProxy } from '../imports/npm-packager-proxy';
 import debug from 'debug';
-import { DecoratedDeep, WithDecoratedDeep } from './with-decorated-deep';
-import { Contacts } from '@capacitor-community/contacts';
 import { Device } from '@capacitor/device';
 import { Motion } from '@capacitor/motion';
 import { Geolocation } from '@capacitor/geolocation';
 import { Camera } from '@capacitor/camera';
 import { Network } from '@capacitor/network';
+import { WithAddDebugFieldsToWindows } from './WithAddDebugFieldsToWindows';
+import { WithDeviceSync } from '@deep-foundation/capacitor-device';
+import { CapacitorStoreKeys } from '../../capacitor-store-keys';
+import { DEEP_MEMO_PACKAGE_NAME } from '../../package-name';
+import { ErrorAlert } from './error-alert';
+import { StoreProvider } from './store-provider';
+import { DecoratedDeep, WithDecoratedDeep } from './with-decorated-deep';
+import { WithMinilinksApplied } from './with-minilinks-applied';
+import { WithProviders } from './with-providers-and-login';
+import { RequiredPackages } from '../../required-packages';
 
 export interface PageParam {
   renderChildren: (param: {
@@ -41,18 +40,10 @@ export function Page({ renderChildren }: PageParam) {
   const [isInstallationLoading, setIsInstallationLoading] = useState<boolean|undefined>(undefined);
   log({isInstallationLoading, setIsInstallationLoading})
 
-  useEffect(() => {
-    self['CapacitorDevice'] = Device
-    self['CapacitorMotion'] = Motion
-    self['CapacitorGeolocation'] = Geolocation
-    self['CapacitorCamera'] = Camera
-    self['CapacitorNetwork'] = Network
-    self['CapacitorContact'] = Contacts
-  })
-
   return (
+    <>
     <StoreProvider>
-      <WithProvidersAndLogin>
+      <WithProviders>
         <WithDeep
           renderChildren={({ deep }) => (
             <WithDecoratedDeep deep={deep} renderChildren={({deep}) => (
@@ -134,8 +125,12 @@ export function Page({ renderChildren }: PageParam) {
             )} />
           )}
         />
-      </WithProvidersAndLogin>
+      </WithProviders>
     </StoreProvider>
+    {
+      process.env.NODE_ENV === 'development' && <WithAddDebugFieldsToWindows />
+    }
+    </>
   );
 }
 
@@ -145,6 +140,9 @@ interface WithDeepProps {
 
 function WithDeep({ renderChildren }: WithDeepProps) {
   const deep = useDeep();
+  useEffect(() => {
+    self['deep'] = deep
+  })
   return renderChildren({ deep });
 }
 

@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   CardHeader,
-  ChakraProvider,
   CircularProgress,
   FormControl,
   FormLabel,
@@ -14,23 +13,18 @@ import {
   VStack,
   useToast,
 } from '@chakra-ui/react';
-import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/client';
+import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { useLocalStore } from '@deep-foundation/store/local';
-import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
-import { Page } from '../../components/page';
-import { ChangeEvent, useState } from 'react';
-import { deepCopy } from '@firebase/util';
-import {SerialTransitionsBuilder} from '@deep-foundation/deeplinks/imports/experimental/serial-transitions-builder'
-import { RequiredPackages } from '../../imports/required-packages';
-import { SettingContent } from '../../components/setting-page';
-import { MutationInputLink } from '@deep-foundation/deeplinks/imports/client_types';
+import { Page } from '../../imports/react/components/page';
+import { useState } from 'react';
 import debug from 'debug'
 import { OptionalPackages } from '../../imports/optional-packages';
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
-import { ErrorAlert } from '../../components/error-alert';
+import { ErrorAlert } from '../../imports/react/components/error-alert';
 import { makeLoggerToggleHandler } from '../../imports/make-logger-toggle-handler';
 import { NpmPackagerProxy } from '../../imports/npm-packager-proxy';
+import { SettingContent } from '../../imports/react/components/setting-page';
 
 export function LoggerSettingsContent(options: ContentOptions) {
   const log = debug(`deep-foundation:pages:settings:logger:content`)

@@ -1,8 +1,8 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import { useEffect, useState } from "react";
-import { RequiredPackages } from "../imports/required-packages";
 import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types";
 import { Box, CircularProgress, CircularProgressLabel, HStack, Stack, Text, VStack } from "@chakra-ui/react";
+import { RequiredPackages } from "../../required-packages";
 
 export function WithMinilinksApplied(options: WithMinilinksAppliedOptions) {
   const { deep, children } = options;

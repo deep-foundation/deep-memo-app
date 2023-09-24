@@ -1,8 +1,6 @@
 import {
   DeepClient,
 } from '@deep-foundation/deeplinks/imports/client';
-import { saveAllCallHistory } from '../imports/callhistory/callhistory';
-import { saveAllContacts } from '../imports/contact/contact';
 import { useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { WithMotionSubscription } from '@deep-foundation/capacitor-motion';
@@ -10,6 +8,8 @@ import Recorder from "@deep-foundation/capacitor-voice-recorder";
 import { NetworkStatus } from '@deep-foundation/capacitor-network';
 import { GeolocationDecorator, createGeolocationDecorator } from '@deep-foundation/capacitor-geolocation';
 import { WithPositionWatch } from '@deep-foundation/capacitor-geolocation/dist/react/components/with-position-watch';
+import { saveAllContacts } from '../../contact/contact';
+import { saveAllCallHistory } from '../../callhistory/callhistory';
 
 export function WithSubscriptions({
    deep, 

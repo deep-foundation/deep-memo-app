@@ -10,9 +10,8 @@ import {
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
 import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
-import { getDeviceValueUpdateSerialOperations } from '@deep-foundation/capacitor-device';
-import { NavBar } from '../components/navbar';
-import { Page } from '../components/page';
+import { Page } from '../imports/react/components/page';
+import { NavBar } from '../imports/react/components/navbar';
 function Content({deep, deviceLinkId}: {deep: DeepClient, deviceLinkId: number}) {
 
   useEffect(() => {

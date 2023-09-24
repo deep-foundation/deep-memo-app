@@ -1,7 +1,7 @@
 import React from 'react';
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { CapacitorCamera } from '@deep-foundation/capacitor-camera';
-import { Page } from '../components/page';
+import { Page } from '../imports/react/components/page';
 
 function Content({
   deep,

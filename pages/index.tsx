@@ -15,22 +15,19 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import NextLink from 'next/link';
 import {LinkIcon} from '@chakra-ui/icons'
-
-
-import { WithSubscriptions } from '../components/with-subscriptions';
-import { NavBar } from '../components/navbar';
-import { Page } from '../components/page';
+import { Page } from '../imports/react/components/page';
 import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
 import { useLocalStore } from '@deep-foundation/store/local';
-import { Monitoring } from '../components/monitoring';
 import { SETTINGS_ROUTES } from '../imports/settings-routes';
 import { capitalCase } from 'case-anything';
 import debug from 'debug';
-import { ErrorAlert } from '../components/error-alert';
+import { ErrorAlert } from '../imports/react/components/error-alert';
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
 import { OptionalPackages } from '../imports/optional-packages';
-import {getDeviceValueUpdateSerialOperations} from '@deep-foundation/capacitor-device'
-import { DecoratedDeep } from '../components/with-decorated-deep';
+import { DecoratedDeep } from '../imports/react/components/with-decorated-deep';
+import { WithSubscriptions } from '../imports/react/components/with-subscriptions';
+import { NavBar } from '../imports/react/components/navbar';
+import { Monitoring } from '../imports/react/components/monitoring';
 
 interface ContentParam {
   deep: DecoratedDeep;
@@ -99,12 +96,8 @@ function Content({ deep, deviceLinkId }: ContentParam) {
       <NavBar />
       <Heading as={'h1'}>DeepMemo</Heading>
       <Button onClick={async () => {
-        const operations = await getDeviceValueUpdateSerialOperations({
-          deep,
+        await deep.updateDevice({
           deviceLinkId
-        })
-        await deep.serial({
-          operations
         })
       }}>
         Update Device Info

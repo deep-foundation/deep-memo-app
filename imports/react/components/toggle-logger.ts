@@ -1,8 +1,8 @@
 import { DeepClient, Exp } from "@deep-foundation/deeplinks/imports/client";
-import { RequiredPackages } from "../imports/required-packages";
 import { MutationInputLink } from "@deep-foundation/deeplinks/imports/client_types";
 import debug from "debug";
-import { OptionalPackages } from "../imports/optional-packages";
+import { OptionalPackages } from "../../optional-packages";
+import { RequiredPackages } from "../../required-packages";
 
 export async function toggleLogger(options: ToggleLoggerOptions) {
   const log = debug(`deep-memo-app:${toggleLogger.name}`);

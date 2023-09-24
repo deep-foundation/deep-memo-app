@@ -15,12 +15,12 @@ import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/cli
 import { useLocalStore } from '@deep-foundation/store/local';
 import { Provider } from '../../imports/provider';
 import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
-import { Page } from '../../components/page';
-import { SettingContent } from '../../components/setting-page';
+import { Page } from '../../imports/react/components/page';
+import { SettingContent } from '../../imports/react/components/setting-page';
 import { Device } from '@capacitor/device';
 import { useEffect, useState } from 'react';
 import { DeviceInfo } from '@deep-foundation/capacitor-device';
-import { ErrorAlert } from '../../components/error-alert';
+import { ErrorAlert } from '../../imports/react/components/error-alert';
 import { RequiredPackages } from '../../imports/required-packages';
 import {WithOperatingSystemChecking} from '@deep-foundation/capacitor-motion'
 

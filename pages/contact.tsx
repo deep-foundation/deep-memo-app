@@ -12,8 +12,8 @@ import { Provider } from '../imports/provider';
 import { Device } from '@capacitor/device';
 import { saveAllCallHistory } from '../imports/callhistory/callhistory';
 import { saveAllContacts } from '../imports/contact/contact';
-import { NavBar } from '../components/navbar';
-import { Page } from '../components/page';
+import { Page } from '../imports/react/components/page';
+import { NavBar } from '../imports/react/components/navbar';
 
 function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
   return (
