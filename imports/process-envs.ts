@@ -3,4 +3,3 @@ export const processEnvs = {
   graphQlPath: process.env.NEXT_PUBLIC_GRAPHQL_PATH,
 }
 
-console.log({processEnvs})
