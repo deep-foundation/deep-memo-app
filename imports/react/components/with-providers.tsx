@@ -27,7 +27,7 @@ export function WithProviders({ children }: { children: JSX.Element }) {
                     path: gqlPath,
                     ssl: true,
                     token: token,
-                    ws: !!(typeof window),
+                    ws: !!process?.browser,
                   }}
                 >
                   <DeepProvider>{children}</DeepProvider>
