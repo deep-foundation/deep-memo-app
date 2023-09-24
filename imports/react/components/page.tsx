@@ -16,7 +16,7 @@ import { Motion } from '@capacitor/motion';
 import { Geolocation } from '@capacitor/geolocation';
 import { Camera } from '@capacitor/camera';
 import { Network } from '@capacitor/network';
-import { WithAddDebugFieldsToWindows } from './WithAddDebugFieldsToWindows';
+import { WithAddDebugFieldsToWindow } from './with-add-debug-fields-to-window';
 import { WithDeviceSync } from '@deep-foundation/capacitor-device';
 import { CapacitorStoreKeys } from '../../capacitor-store-keys';
 import { DEEP_MEMO_PACKAGE_NAME } from '../../package-name';
@@ -128,7 +128,7 @@ export function Page({ renderChildren }: PageParam) {
       </WithProviders>
     </StoreProvider>
     {
-      process.env.NODE_ENV === 'development' && <WithAddDebugFieldsToWindows />
+      process.env.NODE_ENV === 'development' && <WithAddDebugFieldsToWindow />
     }
     </>
   );
