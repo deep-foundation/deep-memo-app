@@ -10,10 +10,10 @@ import {
 } from '@chakra-ui/react';
 import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/client';
 import { useLocalStore } from '@deep-foundation/store/local';
-import { Provider } from '../../imports/provider';
-import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
-import { Page } from '../../imports/react/components/page';
-import { SettingContent } from '../../imports/react/components/setting-page';
+import { Provider } from '../../src/provider';
+import { CapacitorStoreKeys } from '../../src/capacitor-store-keys';
+import { Page } from '../../src/react/components/page';
+import { SettingContent } from '../../src/react/components/setting-page';
 import { useEffect } from 'react';
 import { Network } from '@capacitor/network';
 

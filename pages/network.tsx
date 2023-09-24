@@ -1,6 +1,6 @@
 import React from 'react';
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
-import { Page } from '../imports/react/components/page';
+import { Page } from '../src/react/components/page';
 import { NetworkStatus } from '@deep-foundation/capacitor-network';
 
 function Content({

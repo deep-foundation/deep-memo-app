@@ -8,12 +8,12 @@ import {
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import { Provider } from '../imports/provider';
+import { Provider } from '../src/provider';
 import { Device } from '@capacitor/device';
-import { saveAllCallHistory } from '../imports/callhistory/callhistory';
-import { saveAllContacts } from '../imports/contact/contact';
-import { Page } from '../imports/react/components/page';
-import { NavBar } from '../imports/react/components/navbar';
+import { saveAllCallHistory } from '../src/callhistory/callhistory';
+import { saveAllContacts } from '../src/contact/contact';
+import { Page } from '../src/react/components/page';
+import { NavBar } from '../src/react/components/navbar';
 
 function Content({deep, deviceLinkId}: {deep :DeepClient, deviceLinkId: number}) {
   return (

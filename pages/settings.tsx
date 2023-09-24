@@ -1,12 +1,12 @@
 import { ChakraProvider, Link, Stack } from "@chakra-ui/react";
 import { DeepClient, DeepProvider } from "@deep-foundation/deeplinks/imports/client";
-import { Provider } from "../imports/provider";
+import { Provider } from "../src/provider";
 import NextLink from 'next/link';
-import { Page } from "../imports/react/components/page";
+import { Page } from "../src/react/components/page";
 import { capitalCase } from "case-anything";
-import { SETTINGS_ROUTES } from "../imports/settings-routes";
+import { SETTINGS_ROUTES } from "../src/settings-routes";
 import { LinkIcon } from "@chakra-ui/icons";
-import { SettingContent } from "../imports/react/components/setting-page";
+import { SettingContent } from "../src/react/components/setting-page";
 
 function Content() {
   return (

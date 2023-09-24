@@ -15,16 +15,16 @@ import {
 } from '@chakra-ui/react';
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { useLocalStore } from '@deep-foundation/store/local';
-import { CapacitorStoreKeys } from '../../imports/capacitor-store-keys';
-import { Page } from '../../imports/react/components/page';
+import { CapacitorStoreKeys } from '../../src/capacitor-store-keys';
+import { Page } from '../../src/react/components/page';
 import { useState } from 'react';
 import debug from 'debug'
-import { OptionalPackages } from '../../imports/optional-packages';
+import { OptionalPackages } from '../../src/optional-packages';
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
-import { ErrorAlert } from '../../imports/react/components/error-alert';
-import { makeLoggerToggleHandler } from '../../imports/make-logger-toggle-handler';
-import { NpmPackagerProxy } from '../../imports/npm-packager-proxy';
-import { SettingContent } from '../../imports/react/components/setting-page';
+import { ErrorAlert } from '../../src/react/components/error-alert';
+import { makeLoggerToggleHandler } from '../../src/make-logger-toggle-handler';
+import { NpmPackagerProxy } from '../../src/npm-packager-proxy';
+import { SettingContent } from '../../src/react/components/setting-page';
 
 export function LoggerSettingsContent(options: ContentOptions) {
   const log = debug(`deep-foundation:pages:settings:logger:content`)

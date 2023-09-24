@@ -8,14 +8,14 @@ import {
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import { Provider } from '../imports/provider';
+import { Provider } from '../src/provider';
 import { Device } from '@capacitor/device';
-import { Page } from '../imports/react/components/page';
-import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
+import { Page } from '../src/react/components/page';
+import { CapacitorStoreKeys } from '../src/capacitor-store-keys';
 import debug from 'debug'
-import { NavBar } from '../imports/react/components/navbar';
+import { NavBar } from '../src/react/components/navbar';
 import { updateDevice } from '@deep-foundation/capacitor-device';
-import { DecoratedDeep } from '../imports/react/components/with-decorated-deep';
+import { DecoratedDeep } from '../src/react/components/with-decorated-deep';
 
 function Content({deep, deviceLinkId}: {deep: DecoratedDeep, deviceLinkId: number}) {
 

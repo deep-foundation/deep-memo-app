@@ -6,8 +6,8 @@ import { LocalStoreProvider } from "@deep-foundation/store/local";
 import { CapacitorStoreProvider } from "@deep-foundation/store/capacitor";
 import { CookiesStoreProvider } from "@deep-foundation/store/cookies";
 import { QueryStoreProvider } from "@deep-foundation/store/query";
-import { useGqlPath } from "../imports/react/hooks/use-gql-path";
-import { useToken } from "../imports/react/hooks/use-token";
+import { useGqlPath } from "../src/react/hooks/use-gql-path";
+import { useToken } from "../src/react/hooks/use-token";
 
 export function WithProviders({ children }: { children: JSX.Element }) {
   const [gqlPath, setGqlPath] = useGqlPath();

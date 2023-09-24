@@ -6,7 +6,7 @@ import {
 import { Button, Stack } from '@chakra-ui/react';
 import { PluginListenerHandle } from '@capacitor/core';
 import Link from 'next/link';
-import { Page } from '../imports/react/components/page';
+import { Page } from '../src/react/components/page';
 import { requestPermissions, subscribeToAccelerationChanges, subscribeToOrientationChanges } from '@deep-foundation/capacitor-motion';
 
 function Content({

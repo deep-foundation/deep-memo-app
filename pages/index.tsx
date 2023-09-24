@@ -15,19 +15,19 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import NextLink from 'next/link';
 import {LinkIcon} from '@chakra-ui/icons'
-import { Page } from '../imports/react/components/page';
-import { CapacitorStoreKeys } from '../imports/capacitor-store-keys';
+import { Page } from '../src/react/components/page';
+import { CapacitorStoreKeys } from '../src/capacitor-store-keys';
 import { useLocalStore } from '@deep-foundation/store/local';
-import { SETTINGS_ROUTES } from '../imports/settings-routes';
+import { SETTINGS_ROUTES } from '../src/settings-routes';
 import { capitalCase } from 'case-anything';
 import debug from 'debug';
-import { ErrorAlert } from '../imports/react/components/error-alert';
+import { ErrorAlert } from '../src/react/components/error-alert';
 import { WithPackagesInstalled } from '@deep-foundation/react-with-packages-installed';
-import { OptionalPackages } from '../imports/optional-packages';
-import { DecoratedDeep } from '../imports/react/components/with-decorated-deep';
-import { WithSubscriptions } from '../imports/react/components/with-subscriptions';
-import { NavBar } from '../imports/react/components/navbar';
-import { Monitoring } from '../imports/react/components/monitoring';
+import { OptionalPackages } from '../src/optional-packages';
+import { DecoratedDeep } from '../src/react/components/with-decorated-deep';
+import { WithSubscriptions } from '../src/react/components/with-subscriptions';
+import { NavBar } from '../src/react/components/navbar';
+import { Monitoring } from '../src/react/components/monitoring';
 
 interface ContentParam {
   deep: DecoratedDeep;
