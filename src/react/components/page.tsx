@@ -48,7 +48,6 @@ export function Page({ renderChildren }: PageParam) {
         <WithLogin>
         <WithDeep
           renderChildren={({ deep }) => {
-            console.log({ deep });
             return (
               <WithPackagesInstalled
               deep={deep}
