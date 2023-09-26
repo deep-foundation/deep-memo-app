@@ -28,7 +28,9 @@ export function WithProviders({ children }: { children: JSX.Element }) {
               }}
             >
               <DeepProvider>
+                <WithAddDebugFieldsToWindow>
                   {children}
+                </WithAddDebugFieldsToWindow>
               </DeepProvider>
             </ApolloClientTokenizedProvider>
             )}
