@@ -65,7 +65,7 @@ export function LoggerSettingsContent(options: ContentOptions) {
       </Card>
       {
         !isInstalled && <Stack>
-        <ErrorAlert title={`${OptionalPackages.Logger} is not installed`} description={`Disable and install ${OptionalPackages.Logger}`} />
+        <ErrorAlert title={`${OptionalPackages.Logger} is not installed`} description={`Install ${OptionalPackages.Logger}`} />
         {/* <Button 
         isLoading={isLoggerInstallationLoading}
         onClick={async () => {
