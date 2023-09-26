@@ -58,7 +58,7 @@ export function LoggerSettingsContent(options: ContentOptions) {
                 setIsLoggerEnabled,
                 toast
               })}
-              isDisabled={isLoading}
+              isDisabled={isLoading || !isInstalled}
             />
           </FormControl>
         </CardBody>
