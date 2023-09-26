@@ -47,8 +47,9 @@ export function Page({ renderChildren }: PageParam) {
       <WithProviders>
         <WithLogin>
         <WithDeep
-          renderChildren={({ deep }) => (
-            <WithDecoratedDeep deep={deep} renderChildren={({deep}) => (
+          renderChildren={({ deep }) => {
+            console.log({ deep });
+            return (
               <WithPackagesInstalled
               deep={deep}
               packageNames={[DEEP_MEMO_PACKAGE_NAME, ...Object.values(RequiredPackages)]}
