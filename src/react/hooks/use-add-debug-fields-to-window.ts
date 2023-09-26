@@ -7,10 +7,12 @@ import { Camera } from '@capacitor/camera';
 import { Network } from '@capacitor/network';
 import { useToken } from "./use-token";
 import { useGqlPath } from "./use-gql-path";
+import { useDeep } from "@deep-foundation/deeplinks/imports/client";
 
 export function useAddDebugFieldsToWindow() { 
   const [gqlPath,setGqlPath] = useGqlPath()
   const [token,setToken] = useToken()
+  const deep = useDeep();
 
   useEffect(() => {
     self['CapacitorDevice'] = Device
@@ -25,5 +27,7 @@ export function useAddDebugFieldsToWindow() {
 
     self['token'] = token
     self['setToken'] = setToken
+
+    self['deep'] = deep;
   })
 }

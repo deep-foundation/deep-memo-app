@@ -1,7 +1,7 @@
+import { CapacitorStoreProvider } from "@deep-foundation/store/capacitor";
+import { CookiesStoreProvider } from "@deep-foundation/store/cookies";
 import { LocalStoreProvider } from "@deep-foundation/store/local";
 import { QueryStoreProvider } from "@deep-foundation/store/query";
-import { CookiesStoreProvider } from "@deep-foundation/store/cookies";
-import { CapacitorStoreProvider } from "@deep-foundation/store/capacitor";
 
 export function StoreProvider({
   children,
@@ -9,14 +9,12 @@ export function StoreProvider({
   children: JSX.Element | JSX.Element[];
 }) {
   return (
-    <QueryStoreProvider>
-      <CookiesStoreProvider>
-        <LocalStoreProvider>
-          <CapacitorStoreProvider fetchInterval={5000}>
-            {children}
-          </CapacitorStoreProvider>
-        </LocalStoreProvider>
-      </CookiesStoreProvider>
-    </QueryStoreProvider>
+    <CapacitorStoreProvider>
+      <QueryStoreProvider>
+        <CookiesStoreProvider>
+          <LocalStoreProvider>{children}</LocalStoreProvider>
+        </CookiesStoreProvider>
+      </QueryStoreProvider>
+    </CapacitorStoreProvider>
   );
 }

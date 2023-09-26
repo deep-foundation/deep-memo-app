@@ -26,6 +26,7 @@ import { DecoratedDeep, WithDecoratedDeep } from './with-decorated-deep';
 import { WithMinilinksApplied } from './with-minilinks-applied';
 import { WithProviders } from './with-providers';
 import { RequiredPackages } from '../../required-packages';
+import { WithLogin } from './with-login';
 
 export interface PageParam {
   renderChildren: (param: {
@@ -44,6 +45,7 @@ export function Page({ renderChildren }: PageParam) {
     <>
     <StoreProvider>
       <WithProviders>
+        <WithLogin>
         <WithDeep
           renderChildren={({ deep }) => (
             <WithDecoratedDeep deep={deep} renderChildren={({deep}) => (
@@ -125,6 +127,7 @@ export function Page({ renderChildren }: PageParam) {
             )} />
           )}
         />
+        </WithLogin>
       </WithProviders>
     </StoreProvider>
     {
