@@ -1,7 +1,7 @@
 import { WithPackagesInstalled } from "@deep-foundation/react-with-packages-installed";
 import { WithProviders } from "./with-providers";
 import { StoreProvider } from "./store-provider";
-import { Button, Stack, Text } from "@chakra-ui/react";
+import { Button, CircularProgress, List, ListItem, Stack, Text, VStack, useToast } from "@chakra-ui/react";
 import { useLocalStore } from "@deep-foundation/store/local";
 import { CapacitorStoreKeys } from "../../capacitor-store-keys";
 import {
@@ -12,6 +12,14 @@ import {
 } from "@deep-foundation/deeplinks/imports/client";
 import { ErrorAlert } from "./error-alert";
 import { WithLogin } from "./with-login";
+import debug from "debug";
+import { useState, useEffect } from "react";
+import { DEEP_MEMO_PACKAGE_NAME } from "../../package-name";
+import { RequiredPackages } from "../../required-packages";
+import { WithAddDebugFieldsToWindow } from "./with-add-debug-fields-to-window";
+import { DecoratedDeep, WithDecoratedDeep } from "./with-decorated-deep";
+import { WithMinilinksApplied } from "./with-minilinks-applied";
+import {WithDeviceSync} from '@deep-foundation/capacitor-device'
 
 export interface PageParam {
   renderChildren: (param: {
@@ -92,10 +100,6 @@ export function Page({ renderChildren }: PageParam) {
                   );
                 }}
                 renderIfLoading={() => (
-                  <VStack height="100vh" justifyContent={"center"}>
-                    <CircularProgress isIndeterminate />
-                    <Text>Checking if deep packages are installed...</Text>
-                  </VStack>
                   <VStack height="100vh" justifyContent={"center"}>
                     <CircularProgress isIndeterminate />
                     <Text>Checking if deep packages are installed...</Text>
