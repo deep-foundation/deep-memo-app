@@ -9,6 +9,9 @@ import {
   CardHeader,
   VStack,
   Button,
+  FormControl,
+  FormLabel,
+  Switch,
 } from '@chakra-ui/react';
 import {
   DeepClient,
@@ -146,7 +149,40 @@ function Content({ deep, deviceLinkId }: ContentParam) {
               )
             }}
             >
-              <Monitoring deep={deep} isLoggerEnabled={isLoggerEnabled} deviceLinkId={deviceLinkId} />
+                    <Card>
+          <CardHeader>
+            <Heading>Call History</Heading>
+          </CardHeader>
+          <CardBody>
+            <FormControl display="flex" alignItems="center">
+              <FormLabel htmlFor="sync-call-history-switch" mb="0">
+                Synchronize All Data
+              </FormLabel>
+              <Switch
+                id="sync-call-history-switch"
+                isChecked={
+                  isContactsSyncEnabled &&
+                  isCallHistorySyncEnabled &&
+                  isMotionSyncEnabled &&
+                  isGeolocationSyncEnabled &&
+                  isNetworkSyncEnabled &&
+                  isVoiceRecorderEnabled &&
+                  isLoggerEnabled
+                }
+                onChange={(event) => {
+                  setIsContactsSyncEnabled(event.target.checked);
+                  setIsCallHistorySyncEnabled(event.target.checked);
+                  setIsMotionSyncEnabled(event.target.checked);
+                  setIsGeolocationSyncEnabled(event.target.checked);
+                  setIsNetworkSyncEnabled(event.target.checked);
+                  setIsVoiceRecorderEnabled(event.target.checked);
+                  setIsLoggerEnabled(event.target.checked);
+                }}
+              />
+            </FormControl>
+          </CardBody>
+        </Card>
+              {/* <Monitoring deep={deep} isLoggerEnabled={isLoggerEnabled} deviceLinkId={deviceLinkId} /> */}
             </WithPackagesInstalled>
           ) : (
             <VStack>
