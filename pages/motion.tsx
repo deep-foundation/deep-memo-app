@@ -8,12 +8,13 @@ import { PluginListenerHandle } from '@capacitor/core';
 import Link from 'next/link';
 import { Page } from '../src/react/components/page';
 import { requestPermissions, subscribeToAccelerationChanges, subscribeToOrientationChanges } from '@deep-foundation/capacitor-motion';
+import { DecoratedDeep } from '../src/react/components/with-decorated-deep';
 
 function Content({
   deep,
   deviceLinkId,
 }: {
-  deep: DeepClient;
+  deep: DecoratedDeep;
   deviceLinkId: number;
 }) {
   const [accelerationChangesHandler, setAccelerationHandler] = useState<
@@ -34,32 +35,32 @@ function Content({
         Request permissions
       </Button>
       <Button
-        onClick={async () => {
-          if (accelerationChangesHandler) {
-            return;
-          }
-          const newAccelerationChangesHandler =
-            await subscribeToAccelerationChanges({
-              deep,
-              deviceLinkId,
-            });
-          setAccelerationHandler(newAccelerationChangesHandler);
-        }}
+        // onClick={async () => {
+        //   if (accelerationChangesHandler) {
+        //     return;
+        //   }
+        //   const newAccelerationChangesHandler =
+        //     await deep.subscribeToAccelerationChanges({
+        //       deep,
+        //       deviceLinkId,
+        //     });
+        //   setAccelerationHandler(newAccelerationChangesHandler);
+        // }}
       >
         Subscritbe to Acceleration Changes
       </Button>
       <Button
-        onClick={async () => {
-          if (orientationChangesHandler) {
-            return;
-          }
-          const newOrientationChangesHandler =
-            await subscribeToOrientationChanges({
-              deep,
-              deviceLinkId,
-            });
-          setOrientationHandler(newOrientationChangesHandler);
-        }}
+        // onClick={async () => {
+        //   if (orientationChangesHandler) {
+        //     return;
+        //   }
+        //   const newOrientationChangesHandler =
+        //     await subscribeToOrientationChanges({
+        //       deep,
+        //       deviceLinkId,
+        //     });
+        //   setOrientationHandler(newOrientationChangesHandler);
+        // }}
       >
         Subscribe to Orientation changes
       </Button>
