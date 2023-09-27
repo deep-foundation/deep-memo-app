@@ -3,13 +3,14 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import { useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
-import { WithMotionSubscription } from '@deep-foundation/capacitor-motion';
 import Recorder from "@deep-foundation/capacitor-voice-recorder";
 import { NetworkStatus } from '@deep-foundation/capacitor-network';
 import { GeolocationDecorator, createGeolocationDecorator } from '@deep-foundation/capacitor-geolocation';
 import { WithPositionWatch } from '@deep-foundation/capacitor-geolocation/dist/react/components/with-position-watch';
 import { saveAllContacts } from '../../contact/contact';
 import { saveAllCallHistory } from '../../callhistory/callhistory';
+import { WithMotionSync } from '@deep-foundation/capacitor-motion';
+import { DecoratedDeep } from './with-decorated-deep';
 
 export function WithSubscriptions({
    deep, 
@@ -25,7 +26,7 @@ export function WithSubscriptions({
     isMotionSyncEnabled,
     isGeolocationSyncEnabled
   }: { 
-    deep: GeolocationDecorator<DeepClient>,
+    deep: DecoratedDeep,
      deviceLinkId: number,
       isContactsSyncEnabled: boolean,
       lastContactsSyncTime: number,
@@ -111,7 +112,7 @@ export function WithSubscriptions({
   return (
     <>
     {
-      isMotionSyncEnabled && <WithMotionSubscription deep={deep} containerLinkId={deviceLinkId}/>
+      isMotionSyncEnabled && <WithMotionSync deep={deep} containerLinkId={deviceLinkId}/>
     }
     {
       isNetworkSyncEnabled && <NetworkStatus deep={deep} />
