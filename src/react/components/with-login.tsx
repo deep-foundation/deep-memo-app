@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Login } from "./login";
 import { useDeepToken } from "../hooks/use-token";
 import { useGraphQlUrl } from "../hooks/use-gql-path";
-import { logPackage } from "../../logPackage";
+import { logPackage } from "../../log-package";
 
 export function WithLogin({ children }: { children: JSX.Element }) {
   const log = logPackage.extend(WithLogin.name);
