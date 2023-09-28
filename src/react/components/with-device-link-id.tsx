@@ -4,6 +4,7 @@ import { useLocalStore } from "@deep-foundation/store/local";
 import { useEffect } from "react";
 import { CapacitorStoreKeys } from "../../capacitor-store-keys";
 import { DecoratedDeep } from "./with-decorated-deep";
+import { Loading } from "./loading";
 
 export interface WithDeviceLinkIdOptions {
   deep: DecoratedDeep;
@@ -53,7 +54,7 @@ export function WithDeviceLinkId({
   }
 
   if (isLoading || !deviceLinkIdFromStore) {
-    return <LoadingState description="Initializing device..." />;
+    return <Loading description="Initializing device..." />;
   }
 
   return (
@@ -62,7 +63,7 @@ export function WithDeviceLinkId({
       deep={deep}
       deviceLinkId={deviceLinkIdFromStore}
       renderIfLoading={() => (
-        <LoadingState description="Synchronizing device data..." />
+        <Loading description="Synchronizing device data..." />
       )}
     >
       {renderChildren({ deviceLinkId: deviceLinkIdFromStore })}
@@ -70,12 +71,5 @@ export function WithDeviceLinkId({
   );
 }
 
-function LoadingState({ description }: { description: string }) {
-  return (
-    <VStack height="100vh" justifyContent="center">
-      <CircularProgress isIndeterminate />
-      <Text>{description}</Text>
-    </VStack>
-  );
-}
+
 
