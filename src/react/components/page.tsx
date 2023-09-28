@@ -32,7 +32,7 @@ import {
   WithDeviceSync,
   useDeviceLink,
 } from "@deep-foundation/capacitor-device";
-import {WithDeviceLinkId,WithDeviceLinkIdOptions} from './with-device-link-id.js'
+import {WithDeviceLinkId,WithDeviceLinkIdOptions} from './with-device-link-id'
 
 export interface PageParam {
   renderChildren: (param: {
