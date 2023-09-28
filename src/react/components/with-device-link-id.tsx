@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { CapacitorStoreKeys } from "../../capacitor-store-keys";
 import { DecoratedDeep } from "./with-decorated-deep";
 import { Loading } from "./loading";
+import { packageLog } from "../../package-log";
 
 export interface WithDeviceLinkIdOptions {
   deep: DecoratedDeep;
@@ -17,18 +18,23 @@ export function WithDeviceLinkId({
   renderChildren: renderChildren,
   containerLinkId = deep.linkId!,
 }: WithDeviceLinkIdOptions) {
+  const log = packageLog.extend(WithDeviceLinkId.name)
   const [deviceLinkIdFromStore, setDeviceLinkIdFromStore] = useLocalStore<number | undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );
+  log({ deviceLinkIdFromStore, setDeviceLinkIdFromStore })
   
   const toast = useToast();
+  log({ toast })
 
-  const { deviceLinkId, error, isLoading } = useDeviceLink({
+  const useDeviceLinkResult = useDeviceLink({
     deep: deep,
     containerLinkId,
     initialDeviceLinkId: deviceLinkIdFromStore,
   });
+  log({ useDeviceLinkResult })
+  const { deviceLinkId, error, isLoading } = useDeviceLinkResult
 
   useEffect(() => {
     if (error) {
