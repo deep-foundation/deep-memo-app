@@ -168,7 +168,10 @@ function WithDeviceLinkId({ deep, renderChildren }: WithDeviceLinkIdProps) {
           <Text>Initializing device...</Text>
         </VStack>
       )}
-      renderChildren={renderChildren}
+      renderChildren={({ deviceLinkId }) => {
+        setDeviceLinkId(deviceLinkId);
+        return renderChildren({ deviceLinkId })
+      }}
     />
   );
 }
