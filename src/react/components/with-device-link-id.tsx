@@ -38,14 +38,18 @@ export function WithDeviceLinkId({
 
   useEffect(() => {
     if (error) {
+      log(`Going to handle error`, error)
       handleError(error);
     }
     if (deviceLinkId && deviceLinkId !== deviceLinkIdFromStore) {
+      log(`Actual device link id and device link id from store are different. Setting device link id from store to ${deviceLinkId}`)
       setDeviceLinkIdFromStore(deviceLinkId);
     }
   }, [deviceLinkId, error]);
 
   function handleError(error: any) {
+    const handleErrorLog = log.extend(handleError.name);
+    handleErrorLog({ error });
     if (error instanceof Error) {
       toast({
         title: "Failed to get device",
