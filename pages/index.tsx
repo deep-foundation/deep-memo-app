@@ -18,7 +18,7 @@ import NextLink from "next/link";
 import { LinkIcon } from "@chakra-ui/icons";
 import { Page } from "../src/react/components/page";
 import { CapacitorStoreKeys } from "../src/capacitor-store-keys";
-import { useLocalStore } from "@deep-foundation/store/local";
+import { useCapacitorStore } from "@deep-foundation/store/capacitor";
 import { SETTINGS_ROUTES } from "../src/settings-routes";
 import { capitalCase } from "case-anything";
 import debug from "debug";
@@ -53,32 +53,32 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     });
   }, [deep]);
 
-  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore<
+  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled], undefined);
-  const [lastContactsSyncTime, setLastContactsSyncTime] = useLocalStore<
+  const [lastContactsSyncTime, setLastContactsSyncTime] = useCapacitorStore<
     number | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.ContactsLastSyncTime], undefined);
-  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useLocalStore<
+  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsCallHistorySyncEnabled], undefined);
-  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useLocalStore<
+  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useCapacitorStore<
     number | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.CallHistoryLastSyncTime], undefined);
-  const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useLocalStore<
+  const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled], false);
-  const [isVoiceRecorderEnabled, setIsVoiceRecorderEnabled] = useLocalStore<
+  const [isVoiceRecorderEnabled, setIsVoiceRecorderEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsVoiceRecorderEnabled], undefined);
-  const [isLoggerEnabled, setIsLoggerEnabled] = useLocalStore(
+  const [isLoggerEnabled, setIsLoggerEnabled] = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
     undefined
   );
-  const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useLocalStore<
+  const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsMotionSyncEnabled], undefined);
-  const [isGeolocationSyncEnabled, setIsGeolocationSyncEnabled] = useLocalStore<
+  const [isGeolocationSyncEnabled, setIsGeolocationSyncEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsGeolocationSyncEnabled], undefined);
 

@@ -11,7 +11,7 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import { useLocalStore } from "@deep-foundation/store/local";
+import { useCapacitorStore } from "@deep-foundation/store/capacitor";
 import { CapacitorStoreKeys } from "../../capacitor-store-keys";
 import {
   DeepClient,

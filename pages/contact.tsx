@@ -1,16 +1,8 @@
 import React from 'react';
 import {
-  useLocalStore,
-} from '@deep-foundation/store/local';
-import {
   DeepClient,
-  DeepProvider,
-  useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
-import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import { Provider } from '../src/provider';
-import { Device } from '@capacitor/device';
-import { saveAllCallHistory } from '../src/callhistory/callhistory';
+import { Button, Stack } from '@chakra-ui/react';
 import { saveAllContacts } from '../src/contact/contact';
 import { Page } from '../src/react/components/page';
 import { NavBar } from '../src/react/components/navbar';

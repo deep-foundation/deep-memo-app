@@ -1,6 +1,6 @@
 import { useToast, VStack, CircularProgress, Text } from "@chakra-ui/react";
 import { useDeviceLink, WithDeviceSync } from "@deep-foundation/capacitor-device";
-import { useLocalStore } from "@deep-foundation/store/local";
+import { useCapacitorStore } from "@deep-foundation/store/capacitor";
 import { useEffect } from "react";
 import { CapacitorStoreKeys } from "../../capacitor-store-keys";
 import { DecoratedDeep } from "./with-decorated-deep";
@@ -19,7 +19,7 @@ export function WithDeviceLinkId({
   containerLinkId = deep.linkId!,
 }: WithDeviceLinkIdOptions) {
   const log = packageLog.extend(WithDeviceLinkId.name)
-  const [deviceLinkIdFromStore, setDeviceLinkIdFromStore] = useLocalStore<number | undefined>(
+  const [deviceLinkIdFromStore, setDeviceLinkIdFromStore] = useCapacitorStore<number | undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );

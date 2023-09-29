@@ -12,8 +12,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/client';
-import { useLocalStore } from '@deep-foundation/store/local';
-import { Provider } from '../../src/provider';
+import { useCapacitorStore } from '@deep-foundation/store/capacitor';
+
 import { CapacitorStoreKeys } from '../../src/capacitor-store-keys';
 import { Page } from '../../src/react/components/page';
 import { SettingContent } from '../../src/react/components/setting-page';
@@ -24,7 +24,7 @@ import { RequiredPackages } from '../../src/required-packages';
 import { Contacts } from '@capacitor-community/contacts';
 
 function Content() {
-  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useLocalStore(
+  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
     undefined
   );

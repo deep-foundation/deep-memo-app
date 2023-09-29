@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import {
-  useLocalStore,
-} from '@deep-foundation/store/local';
+  useCapacitorStore,
+} from '@deep-foundation/store/capacitor';
 import {
   DeepClient,
   DeepProvider,
   useDeep,
 } from '@deep-foundation/deeplinks/imports/client';
 import { Button, ChakraProvider, Stack, Text } from '@chakra-ui/react';
-import { Provider } from '../src/provider';
+
 import { Device } from '@capacitor/device';
 import { Page } from '../src/react/components/page';
 import { NavBar } from '../src/react/components/navbar';

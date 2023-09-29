@@ -1,7 +1,7 @@
-import { useLocalStore } from "@deep-foundation/store/local";
+import { useCapacitorStore } from "@deep-foundation/store/capacitor";
 import { processEnvs } from "../../process-envs";
 import { CapacitorStoreKeys } from "../../capacitor-store-keys";
 
 export function useGraphQlUrl(defaultValue: string = processEnvs.graphQlUrl) {
-  return useLocalStore(CapacitorStoreKeys[CapacitorStoreKeys.GraphQlUrl], defaultValue)
+  return useCapacitorStore(CapacitorStoreKeys[CapacitorStoreKeys.GraphQlUrl], defaultValue)
 }

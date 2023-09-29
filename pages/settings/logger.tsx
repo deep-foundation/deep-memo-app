@@ -14,7 +14,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
-import { useLocalStore } from '@deep-foundation/store/local';
+import { useCapacitorStore } from '@deep-foundation/store/capacitor';
 import { CapacitorStoreKeys } from '../../src/capacitor-store-keys';
 import { Page } from '../../src/react/components/page';
 import { useState } from 'react';
@@ -30,7 +30,7 @@ export function LoggerSettingsContent(options: ContentOptions) {
   const log = debug(`deep-foundation:pages:settings:logger:content`)
   const toast = useToast();
   const {deep,isInstalled} = options;
-  const [isLoggerEnabled, setIsLoggerEnabled] = useLocalStore(
+  const [isLoggerEnabled, setIsLoggerEnabled] = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
     undefined
   );

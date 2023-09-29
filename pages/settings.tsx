@@ -1,6 +1,5 @@
 import { ChakraProvider, Link, Stack } from "@chakra-ui/react";
 import { DeepClient, DeepProvider } from "@deep-foundation/deeplinks/imports/client";
-import { Provider } from "../src/provider";
 import NextLink from 'next/link';
 import { Page } from "../src/react/components/page";
 import { capitalCase } from "case-anything";
