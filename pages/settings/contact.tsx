@@ -24,7 +24,7 @@ import { RequiredPackages } from '../../src/required-packages';
 import { Contacts } from '@capacitor-community/contacts';
 
 function Content() {
-  const {value: isContactsSyncEnabled, setValue: setIsContactsSyncEnabled} = useCapacitorStore(
+  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
     undefined
   );

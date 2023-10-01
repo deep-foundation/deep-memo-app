@@ -38,7 +38,7 @@ interface ContentParam {
 }
 
 function Content({ deep, deviceLinkId }: ContentParam) {
-  const {value: value, setValue: setValue} = useCapacitorStore("myValue", undefined)
+  const [value, setValue] = useCapacitorStore("myValue", undefined)
   console.log({ value, setValue })
   useEffect(() => {
     self['value'] = value;

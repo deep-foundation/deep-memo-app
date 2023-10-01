@@ -19,7 +19,7 @@ import {Camera} from '@capacitor/camera'
 
 function Content() {
   const toast = useToast();
-  const {value: isCameraSyncEnabled, setValue: setIsCameraSyncEnabled} = useCapacitorStore(
+  const [isCameraSyncEnabled, setIsCameraSyncEnabled] = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsCameraSyncEnabled],
     undefined
   );

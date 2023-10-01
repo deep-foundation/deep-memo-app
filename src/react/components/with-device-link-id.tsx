@@ -19,7 +19,7 @@ export function WithDeviceLinkId({
   containerLinkId = deep.linkId!,
 }: WithDeviceLinkIdOptions) {
   const log = packageLog.extend(WithDeviceLinkId.name)
-  const {value: deviceLinkIdFromStore, setValue: setDeviceLinkIdFromStore} = useCapacitorStore<number | undefined>(
+  const [deviceLinkIdFromStore, setDeviceLinkIdFromStore] = useCapacitorStore<number | undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );

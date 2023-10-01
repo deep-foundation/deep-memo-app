@@ -25,7 +25,7 @@ import { RequiredPackages } from '../../src/required-packages';
 import {WithOperatingSystemChecking} from '@deep-foundation/capacitor-motion'
 
 function Content() {
-  const {value: isMotionSyncEnabled, setValue: setIsMotionSyncEnabled} = useCapacitorStore(
+  const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsMotionSyncEnabled],
     undefined
   );

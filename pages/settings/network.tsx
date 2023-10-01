@@ -18,7 +18,7 @@ import { useEffect } from 'react';
 import { Network } from '@capacitor/network';
 
 function Content() {
-  const {value: isNetworkSyncEnabled, setValue: setIsNetworkSyncEnabled} = useCapacitorStore(
+  const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSyncEnabled],
     undefined
   );
