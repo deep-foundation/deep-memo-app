@@ -13,13 +13,14 @@ export interface WithDeviceLinkIdOptions {
   containerLinkId?: number;
 }
 
+
 export function WithDeviceLinkId({
   deep: deep,
   renderChildren: renderChildren,
   containerLinkId = deep.linkId!,
 }: WithDeviceLinkIdOptions) {
   const log = packageLog.extend(WithDeviceLinkId.name)
-  const [deviceLinkIdFromStore, setDeviceLinkIdFromStore] = useCapacitorStore<number | undefined>(
+  const [deviceLinkIdFromStore, setDeviceLinkIdFromStore, isDeviceFromCapacitorStoreLoading] = useCapacitorStore<number | undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );
@@ -34,9 +35,9 @@ export function WithDeviceLinkId({
     initialDeviceLinkId: deviceLinkIdFromStore,
   });
   log({ useDeviceLinkResult })
-  const { deviceLinkId, error, isLoading } = useDeviceLinkResult
 
   useEffect(() => {
+    const { deviceLinkId, error } = useDeviceLinkResult;
     if (error) {
       log(`Going to handle error`, error)
       handleError(error);
@@ -45,7 +46,7 @@ export function WithDeviceLinkId({
       log(`Actual device link id and device link id from store are different. Setting device link id from store to ${deviceLinkId}`)
       setDeviceLinkIdFromStore(deviceLinkId);
     }
-  }, [deviceLinkId, error]);
+  }, [useDeviceLinkResult]);
 
   function handleError(error: any) {
     const handleErrorLog = log.extend(handleError.name);
@@ -63,7 +64,7 @@ export function WithDeviceLinkId({
     }
   }
 
-  if (isLoading || !deviceLinkIdFromStore) {
+  if (isDeviceFromCapacitorStoreLoading || !deviceLinkIdFromStore) {
     return <Loading description="Initializing device..." />;
   }
 
