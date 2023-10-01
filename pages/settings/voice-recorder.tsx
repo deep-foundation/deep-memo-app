@@ -16,7 +16,7 @@ import { Page } from '../../src/react/components/page';
 import { SettingContent } from '../../src/react/components/setting-page';
 
 function Content() {
-  const [isVoiceRecorderSyncEnabled, setIsVoiceRecorderSyncEnabled] = useCapacitorStore(
+  const {value: isVoiceRecorderSyncEnabled, setValue: setIsVoiceRecorderSyncEnabled} = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsVoiceRecorderSyncEnabled],
     undefined
   );

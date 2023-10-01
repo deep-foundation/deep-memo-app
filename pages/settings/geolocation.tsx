@@ -16,7 +16,7 @@ import { Page } from '../../src/react/components/page';
 import { SettingContent } from '../../src/react/components/setting-page';
 
 function Content() {
-  const [isGeolocationSyncEnabled, setIsGeolocationSyncEnabled] = useCapacitorStore(
+  const {value: isGeolocationSyncEnabled, setValue: setIsGeolocationSyncEnabled} = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsGeolocationSyncEnabled],
     undefined
   );

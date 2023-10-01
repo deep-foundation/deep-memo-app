@@ -30,7 +30,7 @@ export function LoggerSettingsContent(options: ContentOptions) {
   const log = debug(`deep-foundation:pages:settings:logger:content`)
   const toast = useToast();
   const {deep,isInstalled} = options;
-  const [isLoggerEnabled, setIsLoggerEnabled] = useCapacitorStore(
+  const {value: isLoggerEnabled, setValue: setIsLoggerEnabled} = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
     undefined
   );

@@ -53,32 +53,32 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     });
   }, [deep]);
 
-  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useCapacitorStore<
+  const {value: isContactsSyncEnabled, setValue: setIsContactsSyncEnabled} = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled], undefined);
-  const [lastContactsSyncTime, setLastContactsSyncTime] = useCapacitorStore<
+  const {value: lastContactsSyncTime, setValue: setLastContactsSyncTime} = useCapacitorStore<
     number | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.ContactsLastSyncTime], undefined);
-  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useCapacitorStore<
+  const {value: isCallHistorySyncEnabled, setValue: setIsCallHistorySyncEnabled} = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsCallHistorySyncEnabled], undefined);
-  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useCapacitorStore<
+  const {value: lastCallHistorySyncTime, setValue: setLastCallHistorySyncTime} = useCapacitorStore<
     number | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.CallHistoryLastSyncTime], undefined);
-  const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useCapacitorStore<
+  const {value: isNetworkSyncEnabled, setValue: setIsNetworkSyncEnabled} = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled], false);
-  const [isVoiceRecorderEnabled, setIsVoiceRecorderEnabled] = useCapacitorStore<
+  const {value: isVoiceRecorderEnabled, setValue: setIsVoiceRecorderEnabled} = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsVoiceRecorderEnabled], undefined);
-  const [isLoggerEnabled, setIsLoggerEnabled] = useCapacitorStore(
+  const {value: isLoggerEnabled, setValue: setIsLoggerEnabled} = useCapacitorStore(
     CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
     undefined
   );
-  const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useCapacitorStore<
+  const {value: isMotionSyncEnabled, setValue: setIsMotionSyncEnabled} = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsMotionSyncEnabled], undefined);
-  const [isGeolocationSyncEnabled, setIsGeolocationSyncEnabled] = useCapacitorStore<
+  const {value: isGeolocationSyncEnabled, setValue: setIsGeolocationSyncEnabled} = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsGeolocationSyncEnabled], undefined);
 
