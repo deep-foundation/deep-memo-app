@@ -20,11 +20,11 @@ export function WithDeviceLinkId({
   containerLinkId = deep.linkId!,
 }: WithDeviceLinkIdOptions) {
   const log = packageLog.extend(WithDeviceLinkId.name)
-  const [deviceLinkIdFromStore, setDeviceLinkIdFromStore, isDeviceFromCapacitorStoreLoading] = useCapacitorStore<number | undefined>(
+  const [deviceLinkIdFromStore, setDeviceLinkIdFromStore, unsertDeviceLinkIdFromStore,isDeviceFromCapacitorStoreLoading] = useCapacitorStore<number | undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.DeviceLinkId],
     undefined
   );
-  log({ deviceLinkIdFromStore, setDeviceLinkIdFromStore })
+  log({ deviceLinkIdFromStore, setDeviceLinkIdFromStore, unsertDeviceLinkIdFromStore, isDeviceFromCapacitorStoreLoading })
   
   const toast = useToast();
   log({ toast })
