@@ -32,7 +32,7 @@ import { NavBar } from "../src/react/components/navbar";
 import { Monitoring } from "../src/react/components/monitoring";
 import { setAllDataSync } from "../src/set-all-data-sync";
 import { useIsAllDataSyncEnabled } from "../src/react/hooks/use-is-all-data-sync-enabled";
-import {useVoiceRecorderPermissions} from '@deep-foundation/capacitor-voice-recorder'
+import { useVoiceRecorderPermissions } from "@deep-foundation/capacitor-voice-recorder";
 
 interface ContentParam {
   deep: DecoratedDeep;
@@ -61,12 +61,16 @@ function Content({ deep, deviceLinkId }: ContentParam) {
   const [lastContactsSyncTime, setLastContactsSyncTime] = useCapacitorStore<
     number | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.ContactsLastSyncTime], undefined);
-  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useCapacitorStore<
-    boolean | undefined
-  >(CapacitorStoreKeys[CapacitorStoreKeys.IsCallHistorySyncEnabled], undefined);
-  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useCapacitorStore<
-    number | undefined
-  >(CapacitorStoreKeys[CapacitorStoreKeys.CallHistoryLastSyncTime], undefined);
+  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] =
+    useCapacitorStore<boolean | undefined>(
+      CapacitorStoreKeys[CapacitorStoreKeys.IsCallHistorySyncEnabled],
+      undefined
+    );
+  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] =
+    useCapacitorStore<number | undefined>(
+      CapacitorStoreKeys[CapacitorStoreKeys.CallHistoryLastSyncTime],
+      undefined
+    );
   const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled], false);
@@ -80,79 +84,83 @@ function Content({ deep, deviceLinkId }: ContentParam) {
   const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsMotionSyncEnabled], undefined);
-  const [isGeolocationSyncEnabled, setIsGeolocationSyncEnabled] = useCapacitorStore<
-    boolean | undefined
-  >(CapacitorStoreKeys[CapacitorStoreKeys.IsGeolocationSyncEnabled], undefined);
+  const [isGeolocationSyncEnabled, setIsGeolocationSyncEnabled] =
+    useCapacitorStore<boolean | undefined>(
+      CapacitorStoreKeys[CapacitorStoreKeys.IsGeolocationSyncEnabled],
+      undefined
+    );
 
   const isAllDataSyncEnabled = useIsAllDataSyncEnabled();
 
-  const {deviceSupport: voiceRecorderDeviceSupport, recorderPermissions: voiceRecorderPermissions, isLoading: isVoiceRecorderPermissionsLoading,getPermissions: getVoiceRecorderPermissions} = useVoiceRecorderPermissions()
+  const {
+    deviceSupport: voiceRecorderDeviceSupport,
+    recorderPermissions: voiceRecorderPermissions,
+    isLoading: isVoiceRecorderPermissionsLoading,
+    getPermissions: getVoiceRecorderPermissions,
+  } = useVoiceRecorderPermissions();
 
-  const allPermissionsGranted = voiceRecorderPermissions
+  const allPermissionsGranted = voiceRecorderPermissions;
 
-  const arePermissionsLoading = isVoiceRecorderPermissionsLoading
+  const arePermissionsLoading = isVoiceRecorderPermissionsLoading;
 
-
-  return (
-    arePermissionsLoading ? (
-      <VStack height="100vh" justifyContent={"center"}>
+  return arePermissionsLoading ? (
+    <VStack height="100vh" justifyContent={"center"}>
       <CircularProgress isIndeterminate />
       <Text>Checking checking whether permissions granted...</Text>
     </VStack>
-    ) : <Stack alignItems={"center"}>
-    <NavBar />
-    <Heading as={"h1"}>DeepMemo</Heading>
-    <Button
-      onClick={async () => {
-        await deep.updateDevice({
-          deviceLinkId,
-        });
-      }}
-    >
-      Update Device Info
-    </Button>
-    <WithSubscriptions
-      deep={deep}
-      deviceLinkId={deviceLinkId}
-      isContactsSyncEnabled={isContactsSyncEnabled}
-      lastContactsSyncTime={lastContactsSyncTime}
-      onLastContactsSyncTimeChange={setLastContactsSyncTime}
-      isCallHistorySyncEnabled={isCallHistorySyncEnabled}
-      lastCallHistorySyncTime={lastCallHistorySyncTime}
-      onLastCallHistorySyncTimeChange={setLastCallHistorySyncTime}
-      isNetworkSyncEnabled={isNetworkSyncEnabled}
-      isVoiceRecorderEnabled={isVoiceRecorderEnabled}
-      isMotionSyncEnabled={isMotionSyncEnabled}
-      isGeolocationSyncEnabled={isGeolocationSyncEnabled}
-    />
-<Card>
-    <CardHeader>
-      <Heading>Data Synchronization</Heading>
-    </CardHeader>
-    <CardBody>
-      <FormControl display="flex" alignItems="center">
-        <FormLabel htmlFor="sync-call-history-switch" mb="0">
-          Synchronize All Data
-        </FormLabel>
-        <Switch
-          id="sync-call-history-switch"
-          isChecked={isAllDataSyncEnabled}
-          onChange={(event) => {
-            setAllDataSync(event.target.checked)
-          }}
-          isDisabled={!allPermissionsGranted}
-        />
-      </FormControl>
-    </CardBody>
-  </Card>
-  {
-    !voiceRecorderPermissions && <Button
-    onClick={getVoiceRecorderPermissions}
-    >
-      Grant Voice Recorder Permissions
-    </Button>
-  }
-    {/* {isLoggerEnabled ? (
+  ) : (
+    <Stack alignItems={"center"}>
+      <NavBar />
+      <Heading as={"h1"}>DeepMemo</Heading>
+      <Button
+        onClick={async () => {
+          await deep.updateDevice({
+            deviceLinkId,
+          });
+        }}
+      >
+        Update Device Info
+      </Button>
+      <WithSubscriptions
+        deep={deep}
+        deviceLinkId={deviceLinkId}
+        isContactsSyncEnabled={isContactsSyncEnabled}
+        lastContactsSyncTime={lastContactsSyncTime}
+        onLastContactsSyncTimeChange={setLastContactsSyncTime}
+        isCallHistorySyncEnabled={isCallHistorySyncEnabled}
+        lastCallHistorySyncTime={lastCallHistorySyncTime}
+        onLastCallHistorySyncTimeChange={setLastCallHistorySyncTime}
+        isNetworkSyncEnabled={isNetworkSyncEnabled}
+        isVoiceRecorderEnabled={isVoiceRecorderEnabled}
+        isMotionSyncEnabled={isMotionSyncEnabled}
+        isGeolocationSyncEnabled={isGeolocationSyncEnabled}
+      />
+      <Card>
+        <CardHeader>
+          <Heading>Data Synchronization</Heading>
+        </CardHeader>
+        <CardBody>
+          <FormControl display="flex" alignItems="center">
+            <FormLabel htmlFor="sync-call-history-switch" mb="0">
+              Synchronize All Data
+            </FormLabel>
+            <Switch
+              id="sync-call-history-switch"
+              isChecked={isAllDataSyncEnabled}
+              onChange={(event) => {
+                setAllDataSync(event.target.checked);
+              }}
+              isDisabled={!allPermissionsGranted}
+            />
+          </FormControl>
+        </CardBody>
+      </Card>
+      {!voiceRecorderPermissions && (
+        <Button onClick={getVoiceRecorderPermissions}>
+          Grant Voice Recorder Permissions
+        </Button>
+      )}
+      {/* {isLoggerEnabled ? (
       <WithPackagesInstalled
         deep={deep}
         packageNames={[OptionalPackages.Logger]}
@@ -210,7 +218,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
         />
       </VStack>
     )} */}
-  </Stack>
+    </Stack>
   );
 }
 
