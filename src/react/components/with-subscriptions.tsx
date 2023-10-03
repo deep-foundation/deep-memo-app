@@ -3,7 +3,7 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import { useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
-import Recorder from "@deep-foundation/capacitor-voice-recorder";
+import Recorder, { VoiceRecorder } from "@deep-foundation/capacitor-voice-recorder";
 import { NetworkStatus } from '@deep-foundation/capacitor-network';
 import { GeolocationDecorator, createGeolocationDecorator } from '@deep-foundation/capacitor-geolocation';
 import { WithPositionWatch } from '@deep-foundation/capacitor-geolocation/dist/react/components/with-position-watch';
@@ -118,7 +118,10 @@ export function WithSubscriptions({
       // isNetworkSyncEnabled && <NetworkStatus deep={deep} containerLinkId={deviceLinkId} />
     }
     {
-      isGeolocationSyncEnabled && <WithPositionWatch containerLinkId={deviceLinkId} deep={deep}/>
+      // isGeolocationSyncEnabled && <WithPositionWatch containerLinkId={deviceLinkId} deep={deep}/>
+    }
+    {
+      // isVoiceRecorderEnabled && <VoiceRecorder deep={deep} containerLinkId={deviceLinkId} />
     }
     </>
   )
