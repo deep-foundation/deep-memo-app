@@ -8,18 +8,10 @@ export function useIsAllDataSyncEnabled() {
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled], undefined);
   log({ isContactsSyncEnabled, setIsContactsSyncEnabled });
-  const [lastContactsSyncTime, setLastContactsSyncTime] = useCapacitorStore<
-    number | undefined
-  >(CapacitorStoreKeys[CapacitorStoreKeys.ContactsLastSyncTime], undefined);
-  log({ lastContactsSyncTime, setLastContactsSyncTime });
   const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsCallHistorySyncEnabled], undefined);
   log({ isCallHistorySyncEnabled, setIsCallHistorySyncEnabled });
-  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] = useCapacitorStore<
-    number | undefined
-  >(CapacitorStoreKeys[CapacitorStoreKeys.CallHistoryLastSyncTime], undefined);
-  log({ lastCallHistorySyncTime, setLastCallHistorySyncTime });
   const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled], false);
@@ -39,9 +31,7 @@ export function useIsAllDataSyncEnabled() {
 
   const isAllDataSyncEnabled =
     isContactsSyncEnabled &&
-    lastContactsSyncTime &&
     isCallHistorySyncEnabled &&
-    lastCallHistorySyncTime &&
     isNetworkSyncEnabled &&
     isVoiceRecorderEnabled &&
     isMotionSyncEnabled &&
