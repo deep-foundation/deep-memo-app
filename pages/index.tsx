@@ -27,7 +27,7 @@ import { ErrorAlert } from "../src/react/components/error-alert";
 import { WithPackagesInstalled } from "@deep-foundation/react-with-packages-installed";
 import { OptionalPackages } from "../src/optional-packages";
 import { DecoratedDeep } from "../src/react/components/with-decorated-deep";
-import { WithSubscriptions } from "../src/react/components/with-subscriptions";
+import { WithSync } from "../src/react/components/with-sync";
 import { NavBar } from "../src/react/components/navbar";
 import { Monitoring } from "../src/react/components/monitoring";
 import { setAllDataSync } from "../src/set-all-data-sync";
@@ -121,7 +121,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
       >
         Update Device Info
       </Button>
-      <WithSubscriptions
+      <WithSync
         deep={deep}
         deviceLinkId={deviceLinkId}
         isContactsSyncEnabled={isContactsSyncEnabled}

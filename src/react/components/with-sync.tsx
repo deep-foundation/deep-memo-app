@@ -12,7 +12,7 @@ import { saveAllCallHistory } from '../../callhistory/callhistory';
 import { WithMotionSync } from '@deep-foundation/capacitor-motion';
 import { DecoratedDeep } from './with-decorated-deep';
 
-export function WithSubscriptions({
+export function WithSync({
    deep, 
    deviceLinkId ,
     isContactsSyncEnabled,
