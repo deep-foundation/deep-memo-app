@@ -1,6 +1,7 @@
 import { CapacitorStoreKeys } from "./capacitor-store-keys";
+import { Preferences } from "@capacitor/preferences";
 
-export function setAllDataSync(toggle: boolean) {
+export async function setAllDataSync(toggle: boolean) {
   const allKeys = [
     CapacitorStoreKeys.IsContactsSyncEnabled,
     CapacitorStoreKeys.IsCallHistorySyncEnabled,
@@ -10,7 +11,12 @@ export function setAllDataSync(toggle: boolean) {
     CapacitorStoreKeys.IsGeolocationSyncEnabled,
   ];
 
-  allKeys.forEach((key) => {
-    localStorage.setItem(CapacitorStoreKeys[key], JSON.stringify(toggle));
-  });
+  await Promise.all(
+    allKeys.map(async (key) =>
+      Preferences.set({
+        key: CapacitorStoreKeys[key],
+        value: JSON.stringify(toggle),
+      })
+    )
+  );
 }
