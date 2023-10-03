@@ -94,16 +94,16 @@ export function WithSubscriptions({
         // TODO
       }
       if(isVoiceRecorderEnabled) {
-        const startTime = await Recorder.startRecording()
-        const timeout = setTimeout(async () => {
-          await Recorder.stopRecording({
-            deep,
-            containerLinkId: deep.linkId!,
-          })
-        }, 1*60*1000)
-        returnFn = () => {
-          clearTimeout(timeout)
-        }
+        // const startTime = await Recorder.startRecording()
+        // const timeout = setTimeout(async () => {
+        //   await Recorder.stopRecording({
+        //     deep,
+        //     containerLinkId: deep.linkId!,
+        //   })
+        // }, 1*60*1000)
+        // returnFn = () => {
+        //   clearTimeout(timeout)
+        // }
       }
     })
     return returnFn
@@ -112,10 +112,10 @@ export function WithSubscriptions({
   return (
     <>
     {
-      isMotionSyncEnabled && <WithMotionSync deep={deep} containerLinkId={deviceLinkId}/>
+      // isMotionSyncEnabled && <WithMotionSync deep={deep} containerLinkId={deviceLinkId}/>
     }
     {
-      isNetworkSyncEnabled && <NetworkStatus deep={deep} containerLinkId={deviceLinkId} />
+      // isNetworkSyncEnabled && <NetworkStatus deep={deep} containerLinkId={deviceLinkId} />
     }
     {
       isGeolocationSyncEnabled && <WithPositionWatch containerLinkId={deviceLinkId} deep={deep}/>
