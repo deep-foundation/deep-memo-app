@@ -12,6 +12,7 @@ import {
   FormControl,
   FormLabel,
   Switch,
+  CircularProgress,
 } from "@chakra-ui/react";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import NextLink from "next/link";
@@ -31,6 +32,7 @@ import { NavBar } from "../src/react/components/navbar";
 import { Monitoring } from "../src/react/components/monitoring";
 import { setAllDataSync } from "../src/set-all-data-sync";
 import { useIsAllDataSyncEnabled } from "../src/react/hooks/use-is-all-data-sync-enabled";
+import {useVoiceRecorderPermissions} from '@deep-foundation/capacitor-voice-recorder'
 
 interface ContentParam {
   deep: DecoratedDeep;
@@ -84,111 +86,131 @@ function Content({ deep, deviceLinkId }: ContentParam) {
 
   const isAllDataSyncEnabled = useIsAllDataSyncEnabled();
 
+  const {deviceSupport: voiceRecorderDeviceSupport, recorderPermissions: voiceRecorderPermissions, isLoading: isVoiceRecorderPermissionsLoading,getPermissions: getVoiceRecorderPermissions} = useVoiceRecorderPermissions()
+
+  const allPermissionsGranted = voiceRecorderPermissions
+
+  const arePermissionsLoading = isVoiceRecorderPermissionsLoading
+
+
   return (
-    <Stack alignItems={"center"}>
-      <NavBar />
-      <Heading as={"h1"}>DeepMemo</Heading>
-      <Button
-        onClick={async () => {
-          await deep.updateDevice({
-            deviceLinkId,
-          });
-        }}
-      >
-        Update Device Info
-      </Button>
-      <WithSubscriptions
+    arePermissionsLoading ? (
+      <VStack height="100vh" justifyContent={"center"}>
+      <CircularProgress isIndeterminate />
+      <Text>Checking checking whether permissions granted...</Text>
+    </VStack>
+    ) : <Stack alignItems={"center"}>
+    <NavBar />
+    <Heading as={"h1"}>DeepMemo</Heading>
+    <Button
+      onClick={async () => {
+        await deep.updateDevice({
+          deviceLinkId,
+        });
+      }}
+    >
+      Update Device Info
+    </Button>
+    <WithSubscriptions
+      deep={deep}
+      deviceLinkId={deviceLinkId}
+      isContactsSyncEnabled={isContactsSyncEnabled}
+      lastContactsSyncTime={lastContactsSyncTime}
+      onLastContactsSyncTimeChange={setLastContactsSyncTime}
+      isCallHistorySyncEnabled={isCallHistorySyncEnabled}
+      lastCallHistorySyncTime={lastCallHistorySyncTime}
+      onLastCallHistorySyncTimeChange={setLastCallHistorySyncTime}
+      isNetworkSyncEnabled={isNetworkSyncEnabled}
+      isVoiceRecorderEnabled={isVoiceRecorderEnabled}
+      isMotionSyncEnabled={isMotionSyncEnabled}
+      isGeolocationSyncEnabled={isGeolocationSyncEnabled}
+    />
+<Card>
+    <CardHeader>
+      <Heading>Data Synchronization</Heading>
+    </CardHeader>
+    <CardBody>
+      <FormControl display="flex" alignItems="center">
+        <FormLabel htmlFor="sync-call-history-switch" mb="0">
+          Synchronize All Data
+        </FormLabel>
+        <Switch
+          id="sync-call-history-switch"
+          isChecked={isAllDataSyncEnabled}
+          onChange={(event) => {
+            setAllDataSync(event.target.checked)
+          }}
+          isDisabled={!allPermissionsGranted}
+        />
+      </FormControl>
+    </CardBody>
+  </Card>
+  {
+    !voiceRecorderPermissions && <Button
+    onClick={getVoiceRecorderPermissions}
+    >
+      Grant Voice Recorder Permissions
+    </Button>
+  }
+    {/* {isLoggerEnabled ? (
+      <WithPackagesInstalled
         deep={deep}
-        deviceLinkId={deviceLinkId}
-        isContactsSyncEnabled={isContactsSyncEnabled}
-        lastContactsSyncTime={lastContactsSyncTime}
-        onLastContactsSyncTimeChange={setLastContactsSyncTime}
-        isCallHistorySyncEnabled={isCallHistorySyncEnabled}
-        lastCallHistorySyncTime={lastCallHistorySyncTime}
-        onLastCallHistorySyncTimeChange={setLastCallHistorySyncTime}
-        isNetworkSyncEnabled={isNetworkSyncEnabled}
-        isVoiceRecorderEnabled={isVoiceRecorderEnabled}
-        isMotionSyncEnabled={isMotionSyncEnabled}
-        isGeolocationSyncEnabled={isGeolocationSyncEnabled}
-      />
-      <Card>
-        <CardHeader>
-          <Heading>Data Synchronization</Heading>
-        </CardHeader>
-        <CardBody>
-          <FormControl display="flex" alignItems="center">
-            <FormLabel htmlFor="sync-call-history-switch" mb="0">
-              Synchronize All Data
-            </FormLabel>
-            <Switch
-              id="sync-call-history-switch"
-              isChecked={isAllDataSyncEnabled}
-              onChange={(event) => {
-                setAllDataSync(event.target.checked)
-              }}
+        packageNames={[OptionalPackages.Logger]}
+        renderIfError={(error) => (
+          <VStack>
+            <ErrorAlert
+              title="Error checking whether logger is installed"
+              description={error.message}
             />
-          </FormControl>
-        </CardBody>
-      </Card>
-      {/* {isLoggerEnabled ? (
-        <WithPackagesInstalled
-          deep={deep}
-          packageNames={[OptionalPackages.Logger]}
-          renderIfError={(error) => (
+          </VStack>
+        )}
+        renderIfLoading={() => (
+          <VStack>
+            <Text>Checking whether logger installed...</Text>
+          </VStack>
+        )}
+        renderIfNotInstalled={() => {
+          setIsLoggerEnabled(false);
+          return (
             <VStack>
               <ErrorAlert
-                title="Error checking whether logger is installed"
-                description={error.message}
+                title="Logger is not installed"
+                description={
+                  <VStack>
+                    <Text>
+                      Disable logger in settings and then install it. Note: if
+                      you disable logger in settings you will see installation
+                      button
+                    </Text>
+                    <Link as={NextLink} href="/settings/logger">
+                      Logger Settings <LinkIcon mx="2px" />
+                    </Link>
+                  </VStack>
+                }
               />
             </VStack>
-          )}
-          renderIfLoading={() => (
+          );
+        }}
+      >
+        
+        <Monitoring deep={deep} isLoggerEnabled={isLoggerEnabled} deviceLinkId={deviceLinkId} />
+      </WithPackagesInstalled>
+    ) : (
+      <VStack>
+        <ErrorAlert
+          title="Logger is disabled"
+          description={
             <VStack>
-              <Text>Checking whether logger installed...</Text>
+              <Text>Enable the logger to see logs</Text>
+              <Link as={NextLink} href="/settings/logger">
+                Logger Settings <LinkIcon mx="2px" />
+              </Link>
             </VStack>
-          )}
-          renderIfNotInstalled={() => {
-            setIsLoggerEnabled(false);
-            return (
-              <VStack>
-                <ErrorAlert
-                  title="Logger is not installed"
-                  description={
-                    <VStack>
-                      <Text>
-                        Disable logger in settings and then install it. Note: if
-                        you disable logger in settings you will see installation
-                        button
-                      </Text>
-                      <Link as={NextLink} href="/settings/logger">
-                        Logger Settings <LinkIcon mx="2px" />
-                      </Link>
-                    </VStack>
-                  }
-                />
-              </VStack>
-            );
-          }}
-        >
-          
-          <Monitoring deep={deep} isLoggerEnabled={isLoggerEnabled} deviceLinkId={deviceLinkId} />
-        </WithPackagesInstalled>
-      ) : (
-        <VStack>
-          <ErrorAlert
-            title="Logger is disabled"
-            description={
-              <VStack>
-                <Text>Enable the logger to see logs</Text>
-                <Link as={NextLink} href="/settings/logger">
-                  Logger Settings <LinkIcon mx="2px" />
-                </Link>
-              </VStack>
-            }
-          />
-        </VStack>
-      )} */}
-    </Stack>
+          }
+        />
+      </VStack>
+    )} */}
+  </Stack>
   );
 }
 
