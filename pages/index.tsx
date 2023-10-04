@@ -63,9 +63,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     });
   }, [deep]);
   const [containerLinkId, setContainerLinkId] = useCapacitorStore<number>(
-    'containerLinkId',
-    0
-  );
+    CapacitorStoreKeys[CapacitorStoreKeys.ContainerLinkId], 0);
   const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled], undefined);
