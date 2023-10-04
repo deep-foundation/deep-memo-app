@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useCapacitorStore } from "@deep-foundation/store/capacitor";
 import { CapacitorStoreKeys } from "../../capacitor-store-keys";
+import createContainer from '../imports/capacitor-voice-recorder/create-container';
 import {
   DeepClient,
   DeepProvider,
@@ -33,11 +34,15 @@ import {
   useDeviceLink,
 } from "@deep-foundation/capacitor-device";
 import {WithDeviceLinkId,WithDeviceLinkIdOptions} from './with-device-link-id'
-
+const [containerLinkId, setContainerLinkId] = useCapacitorStore<number>(
+  'containerLinkId',
+  0
+);
 export interface PageParam {
   renderChildren: (param: {
-    deep: DecoratedDeep;
+    deep: DeepClient;
     deviceLinkId: number;
+    containerLinkId:number
   }) => JSX.Element;
 }
 
@@ -48,7 +53,7 @@ export function Page({ renderChildren }: PageParam) {
     boolean | undefined
   >(undefined);
   log({ isInstallationLoading, setIsInstallationLoading });
-
+  
   return (
     <WithProviders>
       <WithLogin>
@@ -143,7 +148,7 @@ export function Page({ renderChildren }: PageParam) {
                       <WithDeviceLinkId
                         deep={deep}
                         renderChildren={({ deviceLinkId }) =>
-                          renderChildren({ deep, deviceLinkId })
+                          renderChildren({ deep, deviceLinkId,containerLinkId })
                         }
                       />
                       {process.env.NODE_ENV === "development" && (
@@ -170,6 +175,14 @@ function WithDeep({ renderChildren }: WithDeepProps) {
   useEffect(() => {
     self["deep"] = deep;
   });
+
+  useEffect(() => {
+    if (!containerLinkId) {
+      const initializeContainerLink = async () => {
+        setContainerLinkId(await createContainer(deep));
+      };
+      initializeContainerLink();
+    }
+  }, [])
   return renderChildren({ deep });
 }
-
