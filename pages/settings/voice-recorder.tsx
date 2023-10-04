@@ -46,7 +46,7 @@ function Content() {
 
 export default function VoiceRecorderSettingsPage() {
   return (
-    <Page renderChildren={({deep,deviceLinkId}) => <SettingContent>
+    <Page renderChildren={({deep,deviceLinkId,containerLinkId}) => <SettingContent>
     <Content/>
   </SettingContent>} />
   );
