@@ -28,5 +28,6 @@ AdminLinkId,
    IsGeolocationSyncEnabled,
    IsLoggerEnabled,
    GraphQlUrl,
-   DeepToken
+   DeepToken,
+   ContainerLinkId
 }
