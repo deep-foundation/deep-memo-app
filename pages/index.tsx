@@ -32,7 +32,8 @@ import { NavBar } from "../src/react/components/navbar";
 import { Monitoring } from "../src/react/components/monitoring";
 import { setAllDataSync } from "../src/set-all-data-sync";
 import { useIsAllDataSyncEnabled } from "../src/react/hooks/use-is-all-data-sync-enabled";
-import { useVoiceRecorderPermissions } from "@deep-foundation/capacitor-voice-recorder";
+import { useVoiceRecorderPermissionsStatus } from "@deep-foundation/capacitor-voice-recorder";
+import createContainer from '../imports/capacitor-voice-recorder/create-container';
 
 interface ContentParam {
   deep: DecoratedDeep;
@@ -44,6 +45,13 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     import("@ionic/pwa-elements/loader").then(({ defineCustomElements }) => {
       defineCustomElements(window);
     });
+    
+    if (!containerLinkId) {
+      const initializeContainerLink = async () => {
+        setContainerLinkId(await createContainer(deep));
+      };
+      initializeContainerLink();
+    }
   }, []);
 
   useEffect(() => {
@@ -54,7 +62,10 @@ function Content({ deep, deviceLinkId }: ContentParam) {
       await deep.guest();
     });
   }, [deep]);
-
+  const [containerLinkId, setContainerLinkId] = useCapacitorStore<number>(
+    'containerLinkId',
+    0
+  );
   const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useCapacitorStore<
     boolean | undefined
   >(CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled], undefined);
@@ -93,11 +104,11 @@ function Content({ deep, deviceLinkId }: ContentParam) {
   const isAllDataSyncEnabled = useIsAllDataSyncEnabled();
 
   const {
-    deviceSupport: voiceRecorderDeviceSupport,
-    recorderPermissions: voiceRecorderPermissions,
+    permissionsStatus: voiceRecorderPermissions,
     isLoading: isVoiceRecorderPermissionsLoading,
-    getPermissions: getVoiceRecorderPermissions,
-  } = useVoiceRecorderPermissions();
+    updatePermissionsStatus: getVoiceRecorderPermissions,
+    error: voiceRecorderError
+  } = useVoiceRecorderPermissionsStatus();
 
   const allPermissionsGranted = voiceRecorderPermissions;
 
@@ -225,8 +236,8 @@ function Content({ deep, deviceLinkId }: ContentParam) {
 export default function IndexPage() {
   return (
     <Page
-      renderChildren={({ deep, deviceLinkId }) => (
-        <Content deep={deep} deviceLinkId={deviceLinkId} />
+      renderChildren={({ deep, containerLinkId }) => (
+        <Content deep={deep} containerLinkId={containerLinkId} />
       )}
     />
   );
