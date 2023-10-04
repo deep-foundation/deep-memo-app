@@ -3,7 +3,7 @@ import {
 } from '@deep-foundation/deeplinks/imports/client';
 import { useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
-import Recorder, { VoiceRecorder } from "@deep-foundation/capacitor-voice-recorder";
+import Recorder, { WithRecording } from "@deep-foundation/capacitor-voice-recorder";
 import { NetworkStatus } from '@deep-foundation/capacitor-network';
 import { GeolocationDecorator, createGeolocationDecorator } from '@deep-foundation/capacitor-geolocation';
 import { WithPositionWatch } from '@deep-foundation/capacitor-geolocation/dist/react/components/with-position-watch';
