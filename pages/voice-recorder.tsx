@@ -1,25 +1,26 @@
 import React from 'react';
 import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
 import { Page } from '../src/react/components/page';
-import { VoiceRecorder } from '@deep-foundation/capacitor-voice-recorder';
+import { WithRecording } from '@deep-foundation/capacitor-voice-recorder';
 
 function Content({
   deep,
   deviceLinkId,
+  containerLinkId
 }: {
   deep: DeepClient;
-  deviceLinkId: number;
+  deviceLinkId: number
+  containerLinkId: number;
 }) {
 
-
-  return (<VoiceRecorder deep={deep} />);
+  return <WithRecording deep={deep} containerLinkId={containerLinkId}/>; 
 }
 
 export default function VoiceRecorderPage() {
   return (
     <Page
-      renderChildren={({ deep, deviceLinkId }) => {
-        return <Content deep={deep} deviceLinkId={deviceLinkId} />;
+      renderChildren={({ deep, deviceLinkId, containerLinkId }) => { 
+        return <Content deep={deep} deviceLinkId={deviceLinkId} containerLinkId={containerLinkId} />; 
       }}
     />
   );
