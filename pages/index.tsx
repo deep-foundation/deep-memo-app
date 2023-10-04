@@ -45,7 +45,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
     import("@ionic/pwa-elements/loader").then(({ defineCustomElements }) => {
       defineCustomElements(window);
     });
-    
+
     if (!containerLinkId) {
       const initializeContainerLink = async () => {
         setContainerLinkId(await createContainer(deep));
@@ -236,8 +236,8 @@ function Content({ deep, deviceLinkId }: ContentParam) {
 export default function IndexPage() {
   return (
     <Page
-      renderChildren={({ deep, containerLinkId }) => (
-        <Content deep={deep} containerLinkId={containerLinkId} />
+      renderChildren={({ deep, deviceLinkId, containerLinkId }) => (
+        <Content deep={deep} deviceLinkId={deviceLinkId} containerLinkId={containerLinkId} />
       )}
     />
   );
