@@ -33,13 +33,15 @@ import { Monitoring } from "../src/react/components/monitoring";
 import { setAllDataSync } from "../src/set-all-data-sync";
 import { useIsAllDataSyncEnabled } from "../src/react/hooks/use-is-all-data-sync-enabled";
 import { useVoiceRecorderPermissionsStatus,requestVoiceRecorderPermissions } from "@deep-foundation/capacitor-voice-recorder";
+import { packageLog } from "../src/package-log";
 
 interface ContentParam {
   deep: DecoratedDeep;
   deviceLinkId: number;
 }
 
-function Content({ deep, deviceLinkId }: ContentParam) {
+function IndexContent({ deep, deviceLinkId }: ContentParam) {
+  const log = packageLog.extend(IndexContent.name)
   useEffect(() => {
     import("@ionic/pwa-elements/loader").then(({ defineCustomElements }) => {
       defineCustomElements(window);
@@ -93,6 +95,7 @@ function Content({ deep, deviceLinkId }: ContentParam) {
   const isAllDataSyncEnabled = useIsAllDataSyncEnabled();
 
   const voiceRecorderPermissionsStatus = useVoiceRecorderPermissionsStatus();
+  log({voiceRecorderPermissionsStatus})
 
   const allPermissionsGranted = voiceRecorderPermissionsStatus.permissionsStatus;
 
@@ -221,7 +224,7 @@ export default function IndexPage() {
   return (
     <Page
       renderChildren={({ deep, deviceLinkId }) => (
-        <Content deep={deep} deviceLinkId={deviceLinkId} />
+        <IndexContent deep={deep} deviceLinkId={deviceLinkId} />
       )}
     />
   );
