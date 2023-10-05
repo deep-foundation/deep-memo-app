@@ -23,7 +23,7 @@ import { RequiredPackages } from '../../src/required-packages';
 import { SettingContent } from '../../src/react/components/setting-page';
 
 function Content() {
-  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useCapacitorStore(
+  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] = useCapacitorStore<boolean|undefined>(
     CapacitorStoreKeys[CapacitorStoreKeys.IsCallHistorySyncEnabled],
     undefined
   );
