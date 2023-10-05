@@ -18,7 +18,7 @@ export function useIsPackageInstalled({packageName, shouldIgnoreResultWhenLoadin
     if(error) {
       onError({error})
     }
-    setIsPackageInstalled(data.length > 0);
+    setIsPackageInstalled(data && data.length > 0);
   }, [data, loading, error]);
 
   return {isPackageInstalled , loading, error}
