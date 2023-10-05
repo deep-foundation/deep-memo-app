@@ -172,11 +172,12 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
         </CardBody>
       </Card>
       {!voiceRecorderPermissionsStatus.permissionsStatus && (
-        <Button onClick={async () => {
-          try {
-            await requestVoiceRecorderPermissions();
-          } catch (error) {
-            log({ error });
+        <Button
+          onClick={async () => {
+            try {
+              await requestVoiceRecorderPermissions();
+            } catch (error) {
+              log({ error });
               toast({
                 title: `Failed to request voice recorder permissions`,
                 description: error.message,
@@ -185,8 +186,11 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
                 isClosable: true,
                 position: "top-right",
               });
-          }
-        }}>Grant Voice Recorder Permissions</Button>
+            }
+          }}
+        >
+          Grant Voice Recorder Permissions
+        </Button>
       )}
       {}
       {(geolocationPermissionsStatus.permissionsStatus?.coarseLocation !==
