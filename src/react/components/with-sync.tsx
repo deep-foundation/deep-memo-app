@@ -111,13 +111,13 @@ export function WithSync({
   return (
     <>
       {
-        // isMotionSyncEnabled && <WithMotionSync deep={deep} containerLinkId={deviceLinkId}/>
+        isMotionSyncEnabled && <WithMotionSync deep={deep} containerLinkId={deviceLinkId}/>
       }
       {
-        // isNetworkSyncEnabled && <NetworkStatus deep={deep} containerLinkId={deviceLinkId} />
+        isNetworkSyncEnabled && <NetworkStatus deep={deep} containerLinkId={deviceLinkId} />
       }
       {
-        // isGeolocationSyncEnabled && <WithPositionWatch containerLinkId={deviceLinkId} deep={deep}/>
+        isGeolocationSyncEnabled && <WithPositionWatch containerLinkId={deviceLinkId} deep={deep}/>
       }
       {
         // isVoiceRecorderEnabled && <VoiceRecorder deep={deep} containerLinkId={deviceLinkId} />
