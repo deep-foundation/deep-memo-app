@@ -21,7 +21,7 @@ export async function setAllDataSync(toggle: boolean) {
       arePermissionsGranted: true,
     },
     {
-      storeKey: CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled],
+      storeKey: CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSyncEnabled],
       arePermissionsGranted: true,
     },
     {

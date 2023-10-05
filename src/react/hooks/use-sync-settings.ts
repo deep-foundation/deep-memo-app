@@ -75,7 +75,7 @@ export function useSyncSettings() {
     unsetNetworkSync,
     isNetworkSyncLoading,
   ] = useCapacitorStore<boolean | undefined>(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled],
+    CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSyncEnabled],
     false
   );
   log({

@@ -14,7 +14,7 @@ export function useIsAllDataSyncEnabled() {
   log({ isCallHistorySyncEnabled, setIsCallHistorySyncEnabled });
   const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useCapacitorStore<
     boolean | undefined
-  >(CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled], false);
+  >(CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSyncEnabled], false);
   log({ isNetworkSyncEnabled, setIsNetworkSyncEnabled });
   const [isVoiceRecorderEnabled, setIsVoiceRecorderEnabled] = useCapacitorStore<
     boolean | undefined
