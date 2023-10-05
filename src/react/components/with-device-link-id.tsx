@@ -37,13 +37,16 @@ export function WithDeviceLinkId({
   log({ useDeviceLinkResult })
 
   useEffect(() => {
-    const { deviceLinkId, error } = useDeviceLinkResult;
+    const { deviceLinkId, error, isLoading } = useDeviceLinkResult;
+    if(isLoading) {
+      return;
+    }
     if (error) {
       log(`Going to handle error`, error)
       handleError(error);
     }
     if (deviceLinkId && deviceLinkId !== deviceLinkIdFromStore) {
-      log(`Actual device link id and device link id from store are different. Setting device link id from store to ${deviceLinkId}`)
+      log(`Actual device link id ${deviceLinkId} and device link id from store (${deviceLinkIdFromStore}) are different. Setting device link id from store to ${deviceLinkId}`)
       setDeviceLinkIdFromStore(deviceLinkId);
     }
   }, [useDeviceLinkResult]);
