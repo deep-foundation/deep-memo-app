@@ -33,6 +33,7 @@ import { Monitoring } from "../src/react/components/monitoring";
 import { setAllDataSync } from "../src/set-all-data-sync";
 import { useIsAllDataSyncEnabled } from "../src/react/hooks/use-is-all-data-sync-enabled";
 import { useVoiceRecorderPermissionsStatus,requestVoiceRecorderPermissions } from "@deep-foundation/capacitor-voice-recorder";
+import { usePermissionsStatus as useGeolocationPermissionsStatus, requestPermissions as requestGeolocationPermissions } from "@deep-foundation/capacitor-geolocation";
 import { packageLog } from "../src/package-log";
 
 interface ContentParam {
@@ -97,9 +98,12 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
   const voiceRecorderPermissionsStatus = useVoiceRecorderPermissionsStatus();
   log({voiceRecorderPermissionsStatus})
 
-  const allPermissionsGranted = voiceRecorderPermissionsStatus.permissionsStatus;
+  const geolocationPermissionsStatus = useGeolocationPermissionsStatus() 
+  log({geolocationPermissionsStatus})
 
-  const arePermissionsLoading = voiceRecorderPermissionsStatus.isLoading;
+  const allPermissionsGranted = voiceRecorderPermissionsStatus.permissionsStatus && geolocationPermissionsStatus.permissionsStatus?.coarseLocation === 'granted' && geolocationPermissionsStatus.permissionsStatus?.location === 'granted';
+
+  const arePermissionsLoading = voiceRecorderPermissionsStatus.isLoading && geolocationPermissionsStatus.isLoading;
 
   return arePermissionsLoading ? (
     <VStack height="100vh" justifyContent={"center"}>
@@ -156,6 +160,14 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
       {!voiceRecorderPermissionsStatus.permissionsStatus && (
         <Button onClick={requestVoiceRecorderPermissions}>
           Grant Voice Recorder Permissions
+        </Button>
+      )}
+      {
+        
+      }
+      {(geolocationPermissionsStatus.permissionsStatus?.coarseLocation !== 'granted' || geolocationPermissionsStatus.permissionsStatus?.location !== 'granted') && (
+        <Button onClick={requestGeolocationPermissions}>
+          Grant Geolocation Permissions
         </Button>
       )}
       {/* {isLoggerEnabled ? (
