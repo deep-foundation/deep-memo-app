@@ -7,7 +7,6 @@ import {
   createGeolocationDecorator,
 } from "@deep-foundation/capacitor-geolocation";
 import { WithPositionWatch } from "@deep-foundation/capacitor-geolocation/dist/react/components/with-position-watch";
-import { saveAllContacts } from "../../contact/contact";
 import { saveAllCallHistory } from "../../callhistory/callhistory";
 import { WithMotionSync } from "@deep-foundation/capacitor-motion";
 import { DecoratedDeep } from "./with-decorated-deep";
@@ -49,14 +48,15 @@ export function WithSync({
       if (isContactsSyncEnabled) {
         if (currentTime - lastContactsSyncTime) {
           try {
-            await saveAllContacts({ deep, deviceLinkId });
-            onLastContactsSyncTimeChange(currentTime);
-            toast({
-              title: "Contacts synchronized successfully",
-              status: "success",
-              duration: 5000,
-              isClosable: true,
-            });
+            // TODO
+            // await saveAllContacts({ deep, deviceLinkId });
+            // onLastContactsSyncTimeChange(currentTime);
+            // toast({
+            //   title: "Contacts synchronized successfully",
+            //   status: "success",
+            //   duration: 5000,
+            //   isClosable: true,
+            // });
           } catch (error) {
             toast({
               title: "Failed to synchronize contacts",
