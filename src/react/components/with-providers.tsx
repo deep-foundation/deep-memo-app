@@ -1,4 +1,4 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, CircularProgress, Text, VStack } from "@chakra-ui/react";
 import { DeepProvider } from "@deep-foundation/deeplinks/imports/client";
 import { TokenProvider } from "@deep-foundation/deeplinks/imports/react-token";
 import { ApolloClientTokenizedProvider } from "@deep-foundation/react-hasura/apollo-client-tokenized-provider";
@@ -12,6 +12,12 @@ export function WithProviders({ children }: { children: JSX.Element }) {
       <StoreProvider>
         <TokenProvider>
           <WithGraphQlUrl
+          renderIfLoading={() => (
+            <VStack height="100vh" justifyContent={"center"}>
+              <CircularProgress isIndeterminate />
+              <Text>Loading GraphQL url...</Text>
+            </VStack>
+          )}
             renderChildren={({ graphQlUrl }) => (
               <ApolloClientTokenizedProvider
               options={{
