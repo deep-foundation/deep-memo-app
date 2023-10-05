@@ -45,5 +45,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+		<key>NSLocationAlwaysUsageDescription</key>
+    <string>This app requires access to your location even when it's in the background for saving it to your deep</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>This app requires access to your location when it's in use for saving it to your deep</string>
 </dict>
 </plist>
