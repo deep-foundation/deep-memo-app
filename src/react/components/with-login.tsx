@@ -17,7 +17,8 @@ export function WithLogin({ children }: { children: JSX.Element }) {
     log({ graphQlUrl, deepToken, deep });
     log({ deepLinkId: deep.linkId });
     if(!deep.linkId && graphQlUrl && deepToken) {
-      window.location.reload();
+      // TODO: Remove when https://github.com/deep-foundation/deeplinks/issues/235 is resolved
+      deep.login({ token:deepToken})
     } 
     if(deep.linkId) {
       setIsAuthorized(true);
