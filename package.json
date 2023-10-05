@@ -52,7 +52,7 @@
     "@deep-foundation/capacitor-camera": "^1.1.10",
     "@deep-foundation/capacitor-device": "^18.0.0-dev.23",
     "@deep-foundation/capacitor-geolocation": "^8.0.0-dev.8",
-    "@deep-foundation/capacitor-motion": "^8.0.0-dev.7",
+    "@deep-foundation/capacitor-motion": "^8.0.0-dev.8",
     "@deep-foundation/capacitor-network": "^0.1.10",
     "@deep-foundation/capacitor-voice-recorder": "^1.2.7-dev.6",
     "@deep-foundation/deeplinks": "~0.0.312",
@@ -104,7 +104,7 @@
     "jest": "^29.5.0",
     "next-transpile-modules": "^10.0.0",
     "ts-node": "^10.9.1",
-    "typescript": "5.0.4",
+    "typescript": "^5.2.2",
     "typescript-json-schema": "^0.56.0"
   }
 }
