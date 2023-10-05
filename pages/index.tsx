@@ -32,7 +32,7 @@ import { NavBar } from "../src/react/components/navbar";
 import { Monitoring } from "../src/react/components/monitoring";
 import { setAllDataSync } from "../src/set-all-data-sync";
 import { useIsAllDataSyncEnabled } from "../src/react/hooks/use-is-all-data-sync-enabled";
-import { useVoiceRecorderPermissions } from "@deep-foundation/capacitor-voice-recorder";
+import { useVoiceRecorderPermissionsStatus,requestVoiceRecorderPermissions } from "@deep-foundation/capacitor-voice-recorder";
 
 interface ContentParam {
   deep: DecoratedDeep;
@@ -92,16 +92,11 @@ function Content({ deep, deviceLinkId }: ContentParam) {
 
   const isAllDataSyncEnabled = useIsAllDataSyncEnabled();
 
-  const {
-    deviceSupport: voiceRecorderDeviceSupport,
-    recorderPermissions: voiceRecorderPermissions,
-    isLoading: isVoiceRecorderPermissionsLoading,
-    getPermissions: getVoiceRecorderPermissions,
-  } = useVoiceRecorderPermissions();
+  const voiceRecorderPermissionsStatus = useVoiceRecorderPermissionsStatus();
 
-  const allPermissionsGranted = voiceRecorderPermissions;
+  const allPermissionsGranted = voiceRecorderPermissionsStatus.permissionsStatus;
 
-  const arePermissionsLoading = isVoiceRecorderPermissionsLoading;
+  const arePermissionsLoading = voiceRecorderPermissionsStatus.isLoading;
 
   return arePermissionsLoading ? (
     <VStack height="100vh" justifyContent={"center"}>
@@ -155,8 +150,8 @@ function Content({ deep, deviceLinkId }: ContentParam) {
           </FormControl>
         </CardBody>
       </Card>
-      {!voiceRecorderPermissions && (
-        <Button onClick={getVoiceRecorderPermissions}>
+      {!voiceRecorderPermissionsStatus.permissionsStatus && (
+        <Button onClick={requestVoiceRecorderPermissions}>
           Grant Voice Recorder Permissions
         </Button>
       )}
