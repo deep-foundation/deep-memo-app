@@ -51,7 +51,7 @@ export function Monitoring(options: MonitoringOptions) {
                 _id: ["@deep-foundation/core", "Contain"]
               },
               from_id: {
-                _in: [deep.linkId, deviceLinkId]
+                _in: [deep.linkId!, deviceLinkId]
               }
             }
           }
@@ -68,17 +68,30 @@ export function Monitoring(options: MonitoringOptions) {
     <Stack>
       {
         isLoggerEnabled ? (
-          linksDownToLogUpdate.length === 0 ? (
+          !linksDownToLogUpdate || linksDownToLogUpdate.length === 0 ? (
             <Text>
               No logs
             </Text>
             ) : (
               linksDownToLogUpdate.filter(link => link.type_id === deep.idLocal(OptionalPackages.Logger, "LogUpdate")).map(logUpdateLink => {
                 const logIdLink = linksDownToLogUpdate.find(link => link.type_id === deep.idLocal(OptionalPackages.Logger, "LogId") && link.from_id === logUpdateLink.id)
+                if(!logIdLink) {
+                  throw new Error(`Log id link not found`)
+                }
                 const linkBeingLogged = linksDownToLogUpdate.find(link => link.id === logIdLink.to_id)
+                // TODO: Do not just return null. Handle this case the better way
+                if(!linkBeingLogged) {
+                  return null
+                }
                 const nameOfTypeOfLinkBeingLogged = deep.nameLocal(linkBeingLogged.type_id)
                 const logObjectLink = linksDownToLogUpdate.find(link => link.type_id === deep.idLocal(OptionalPackages.Logger, "LogObject") && link.from_id === logUpdateLink.id)
                 const logTimestamp = linksDownToLogUpdate.find(link => link.type_id === deep.idLocal(OptionalPackages.Logger, "LogTimestamp") && link.from_id === logUpdateLink.id)
+                if(!logObjectLink) {
+                  return null
+                }
+                if(!logTimestamp) {
+                  return null
+                }
                 const humanReadableTimestamp = new Date(logTimestamp.value.value).toLocaleString()
                 return (
                   <Card>
