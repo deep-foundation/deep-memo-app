@@ -6,7 +6,7 @@ import { RequiredPackages } from "../../required-packages";
 
 export function WithMinilinksApplied(options: WithMinilinksAppliedOptions) {
   const { deep, children } = options;
-  const [isMinilinksApplied, setIsMinilinksApplied] = useState(undefined);
+  const [isMinilinksApplied, setIsMinilinksApplied] = useState<boolean|undefined>(undefined);
 
   useEffect(() => {
     new Promise(async () => {
