@@ -49,5 +49,7 @@
     <string>This app requires access to your location even when it's in the background for saving it to your deep</string>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>This app requires access to your location when it's in use for saving it to your deep</string>
+		<key>NSContactsUsageDescription</key>
+    <string>This app requires access to your contacts when it's in use for saving it to your deep</string>
 </dict>
 </plist>
