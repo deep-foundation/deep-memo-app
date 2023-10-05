@@ -27,76 +27,77 @@ import { NpmPackagerProxy } from '../../src/npm-packager-proxy';
 import { SettingContent } from '../../src/react/components/setting-page';
 
 export function LoggerSettingsContent(options: ContentOptions) {
-  const log = debug(`deep-foundation:pages:settings:logger:content`)
-  const toast = useToast();
-  const {deep,isInstalled} = options;
-  const [isLoggerEnabled, setIsLoggerEnabled] = useCapacitorStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
-    undefined
-  );
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoggerInstallationLoading, setIsLoggerInstallationLoading] = useState(false);
+  return null
+  // const log = debug(`deep-foundation:pages:settings:logger:content`)
+  // const toast = useToast();
+  // const {deep,isInstalled} = options;
+  // const [isLoggerEnabled, setIsLoggerEnabled, isLogger] = useCapacitorStore<boolean|undefined>(
+  //   CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
+  //   undefined
+  // );
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [isLoggerInstallationLoading, setIsLoggerInstallationLoading] = useState(false);
 
-  return (
-    <Stack>
-      <Card>
-        <CardHeader>
-          <Heading>Logger</Heading>
-        </CardHeader>
-        <CardBody>
-          <FormControl display="flex" alignItems="center">
-            <FormLabel htmlFor="sync-logger-switch" mb="0">
-              Logger
-            </FormLabel>
-            <Switch
-              id="sync-logger-switch"
-              isChecked={isLoggerEnabled}
-              onChange={makeLoggerToggleHandler({
-                deep,
-                isLoggerEnabled,
-                setIsLoading,
-                setIsLoggerEnabled,
-                toast
-              })}
-              isDisabled={isLoading || !isInstalled}
-            />
-          </FormControl>
-        </CardBody>
-      </Card>
-      {
-        !isInstalled && <Stack>
-        <ErrorAlert title={`${OptionalPackages.Logger} is not installed`} description={`Install ${OptionalPackages.Logger}`} />
-        {/* <Button 
-        isLoading={isLoggerInstallationLoading}
-        onClick={async () => {
-          setIsLoggerInstallationLoading(true)
-          try {
-            const npmPackagerProxy = new NpmPackagerProxy(deep)
-            await npmPackagerProxy.install(OptionalPackages.Logger)
-          toast({
-            title: `Successfully installed ${OptionalPackages.Logger}`,
-            status: "success",
-            duration: 5000,
-            isClosable: true
-          })
-          } catch (error) {
-            toast({
-              title: `Failed to install ${OptionalPackages.Logger}`,
-              description: error.message,
-              status: "error",
-              duration: null,
-              isClosable: true
-            })
-          } finally {
-            setIsLoggerInstallationLoading(false)
-          }
-        }}>
-          Install {OptionalPackages.Logger}
-        </Button> */}
-      </Stack>
-      }
-    </Stack>
-  );
+  // return (
+  //   <Stack>
+  //     <Card>
+  //       <CardHeader>
+  //         <Heading>Logger</Heading>
+  //       </CardHeader>
+  //       <CardBody>
+  //         <FormControl display="flex" alignItems="center">
+  //           <FormLabel htmlFor="sync-logger-switch" mb="0">
+  //             Logger
+  //           </FormLabel>
+  //           <Switch
+  //             id="sync-logger-switch"
+  //             isChecked={isLoggerEnabled}
+  //             onChange={makeLoggerToggleHandler({
+  //               deep,
+  //               isLoggerEnabled,
+  //               setIsLoading,
+  //               setIsLoggerEnabled,
+  //               toast
+  //             })}
+  //             isDisabled={isLoading || !isInstalled}
+  //           />
+  //         </FormControl>
+  //       </CardBody>
+  //     </Card>
+  //     {
+  //       !isInstalled && <Stack>
+  //       <ErrorAlert title={`${OptionalPackages.Logger} is not installed`} description={`Install ${OptionalPackages.Logger}`} />
+  //       {/* <Button 
+  //       isLoading={isLoggerInstallationLoading}
+  //       onClick={async () => {
+  //         setIsLoggerInstallationLoading(true)
+  //         try {
+  //           const npmPackagerProxy = new NpmPackagerProxy(deep)
+  //           await npmPackagerProxy.install(OptionalPackages.Logger)
+  //         toast({
+  //           title: `Successfully installed ${OptionalPackages.Logger}`,
+  //           status: "success",
+  //           duration: 5000,
+  //           isClosable: true
+  //         })
+  //         } catch (error) {
+  //           toast({
+  //             title: `Failed to install ${OptionalPackages.Logger}`,
+  //             description: error.message,
+  //             status: "error",
+  //             duration: null,
+  //             isClosable: true
+  //           })
+  //         } finally {
+  //           setIsLoggerInstallationLoading(false)
+  //         }
+  //       }}>
+  //         Install {OptionalPackages.Logger}
+  //       </Button> */}
+  //     </Stack>
+  //     }
+  //   </Stack>
+  // );
 }
 
 
