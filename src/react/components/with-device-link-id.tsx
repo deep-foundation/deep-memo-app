@@ -74,7 +74,7 @@ export function WithDeviceLinkId({
 
   return (
     <WithDeviceSync
-      containerLinkId={deep.linkId}
+      containerLinkId={deep.linkId!}
       deep={deep}
       deviceLinkId={deviceLinkIdFromStore}
       renderIfLoading={() => (

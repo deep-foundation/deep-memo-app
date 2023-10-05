@@ -42,6 +42,7 @@ import {
   requestPermissions as requestGeolocationPermissions,
 } from "@deep-foundation/capacitor-geolocation";
 import { packageLog } from "../src/package-log";
+import { useSyncSettings } from "../src/react/hooks/use-sync-settings";
 
 interface ContentParam {
   deep: DecoratedDeep;
@@ -66,40 +67,19 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
     });
   }, [deep]);
 
-  const [isContactsSyncEnabled, setIsContactsSyncEnabled] = useCapacitorStore<
-    boolean | undefined
-  >(CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled], undefined);
-  const [lastContactsSyncTime, setLastContactsSyncTime] = useCapacitorStore<
-    number | undefined
-  >(CapacitorStoreKeys[CapacitorStoreKeys.ContactsLastSyncTime], undefined);
-  const [isCallHistorySyncEnabled, setIsCallHistorySyncEnabled] =
-    useCapacitorStore<boolean | undefined>(
-      CapacitorStoreKeys[CapacitorStoreKeys.IsCallHistorySyncEnabled],
-      undefined
-    );
-  const [lastCallHistorySyncTime, setLastCallHistorySyncTime] =
-    useCapacitorStore<number | undefined>(
-      CapacitorStoreKeys[CapacitorStoreKeys.CallHistoryLastSyncTime],
-      undefined
-    );
-  const [isNetworkSyncEnabled, setIsNetworkSyncEnabled] = useCapacitorStore<
-    boolean | undefined
-  >(CapacitorStoreKeys[CapacitorStoreKeys.IsNetworkSubscriptionEnabled], false);
-  const [isVoiceRecorderEnabled, setIsVoiceRecorderEnabled] = useCapacitorStore<
-    boolean | undefined
-  >(CapacitorStoreKeys[CapacitorStoreKeys.IsVoiceRecorderEnabled], undefined);
-  const [isLoggerEnabled, setIsLoggerEnabled] = useCapacitorStore(
-    CapacitorStoreKeys[CapacitorStoreKeys.IsLoggerEnabled],
-    undefined
-  );
-  const [isMotionSyncEnabled, setIsMotionSyncEnabled] = useCapacitorStore<
-    boolean | undefined
-  >(CapacitorStoreKeys[CapacitorStoreKeys.IsMotionSyncEnabled], undefined);
-  const [isGeolocationSyncEnabled, setIsGeolocationSyncEnabled] =
-    useCapacitorStore<boolean | undefined>(
-      CapacitorStoreKeys[CapacitorStoreKeys.IsGeolocationSyncEnabled],
-      undefined
-    );
+  const {
+    isCallHistorySyncEnabled,
+    isContactsSyncEnabled,
+    isGeolocationSyncEnabled,
+    isMotionSyncEnabled,
+    isNetworkSyncEnabled,
+    isVoiceRecorderEnabled,
+    lastCallHistorySyncTime,
+    lastContactsSyncTime,
+    isLoading: isSyncSettingsLoading,
+    setLastCallHistorySyncTime,
+    setLastContactsSyncTime
+  } = useSyncSettings()
 
   const isAllDataSyncEnabled = useIsAllDataSyncEnabled();
 
@@ -137,20 +117,23 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
       >
         Update Device Info
       </Button>
-      <WithSync
+      {
+        !isSyncSettingsLoading && <WithSync
         deep={deep}
         deviceLinkId={deviceLinkId}
-        isContactsSyncEnabled={isContactsSyncEnabled}
-        lastContactsSyncTime={lastContactsSyncTime}
+        isContactsSyncEnabled={isContactsSyncEnabled!}
+        lastContactsSyncTime={lastContactsSyncTime!}
         onLastContactsSyncTimeChange={setLastContactsSyncTime}
-        isCallHistorySyncEnabled={isCallHistorySyncEnabled}
-        lastCallHistorySyncTime={lastCallHistorySyncTime}
+        isCallHistorySyncEnabled={isCallHistorySyncEnabled!}
+        lastCallHistorySyncTime={lastCallHistorySyncTime!}
         onLastCallHistorySyncTimeChange={setLastCallHistorySyncTime}
-        isNetworkSyncEnabled={isNetworkSyncEnabled}
-        isVoiceRecorderEnabled={isVoiceRecorderEnabled}
-        isMotionSyncEnabled={isMotionSyncEnabled}
-        isGeolocationSyncEnabled={isGeolocationSyncEnabled}
+        isNetworkSyncEnabled={isNetworkSyncEnabled!}
+        isVoiceRecorderEnabled={isVoiceRecorderEnabled!}
+        isMotionSyncEnabled={isMotionSyncEnabled!}
+        isGeolocationSyncEnabled={isGeolocationSyncEnabled!}
       />
+      }
+      
       <Card>
         <CardHeader>
           <Heading>Data Synchronization</Heading>
