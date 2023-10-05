@@ -10,5 +10,5 @@ export function WithDeepToken(options: WithDeepTokenOptions) {
 }
 
 export interface WithDeepTokenOptions {
-  renderChildren: (param: { deepToken: string, setDeepToken: (newDeepToken: string) => void }) => JSX.Element;
+  renderChildren: (param: { deepToken: string|undefined, setDeepToken: (newDeepToken: string) => void }) => JSX.Element;
 }
