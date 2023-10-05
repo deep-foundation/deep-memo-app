@@ -51,5 +51,7 @@
     <string>This app requires access to your location when it's in use for saving it to your deep</string>
 		<key>NSContactsUsageDescription</key>
     <string>This app requires access to your contacts when it's in use for saving it to your deep</string>
+		<key>NSMicrophoneUsageDescription</key>
+    <string>This app requires access to your microphone when it's in use for saving it to your deep</string>
 </dict>
 </plist>
