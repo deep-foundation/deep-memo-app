@@ -6,8 +6,8 @@ export function useAreAllPermissionsGranted() {
   const motionStatus = useMotionPermissionsStatus();
 
   return (
-    geolocationStatus.coarseLocation === "granted" &&
-    geolocationStatus.location === "granted" &&
+    geolocationStatus.permissionsStatus?.coarseLocation === "granted" &&
+    geolocationStatus.permissionsStatus?.location === "granted" &&
     motionStatus === "granted"
   );
 }
