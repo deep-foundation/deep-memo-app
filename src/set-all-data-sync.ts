@@ -8,14 +8,16 @@ export async function setAllDataSync(toggle: boolean) {
   const packages = [
     {
       storeKey: CapacitorStoreKeys[CapacitorStoreKeys.IsContactsSyncEnabled],
+      // TODO: Check permissions
       arePermissionsGranted: true,
     },
     {
       storeKey: CapacitorStoreKeys[CapacitorStoreKeys.IsGeolocationSyncEnabled],
       arePermissionsGranted: await checkGeolocationPermissions(),
     },
-    {
+    { 
       storeKey: CapacitorStoreKeys[CapacitorStoreKeys.IsCallHistorySyncEnabled],
+      // TODO: Check permissions
       arePermissionsGranted: true,
     },
     {
