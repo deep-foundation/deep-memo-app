@@ -13,6 +13,7 @@ import {
   FormLabel,
   Switch,
   CircularProgress,
+  useToast,
 } from "@chakra-ui/react";
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import NextLink from "next/link";
@@ -32,8 +33,14 @@ import { NavBar } from "../src/react/components/navbar";
 import { Monitoring } from "../src/react/components/monitoring";
 import { setAllDataSync } from "../src/set-all-data-sync";
 import { useIsAllDataSyncEnabled } from "../src/react/hooks/use-is-all-data-sync-enabled";
-import { useVoiceRecorderPermissionsStatus,requestVoiceRecorderPermissions } from "@deep-foundation/capacitor-voice-recorder";
-import { usePermissionsStatus as useGeolocationPermissionsStatus, requestPermissions as requestGeolocationPermissions } from "@deep-foundation/capacitor-geolocation";
+import {
+  useVoiceRecorderPermissionsStatus,
+  requestVoiceRecorderPermissions,
+} from "@deep-foundation/capacitor-voice-recorder";
+import {
+  usePermissionsStatus as useGeolocationPermissionsStatus,
+  requestPermissions as requestGeolocationPermissions,
+} from "@deep-foundation/capacitor-geolocation";
 import { packageLog } from "../src/package-log";
 
 interface ContentParam {
@@ -42,7 +49,8 @@ interface ContentParam {
 }
 
 function IndexContent({ deep, deviceLinkId }: ContentParam) {
-  const log = packageLog.extend(IndexContent.name)
+  const log = packageLog.extend(IndexContent.name);
+  const toast = useToast();
   useEffect(() => {
     import("@ionic/pwa-elements/loader").then(({ defineCustomElements }) => {
       defineCustomElements(window);
@@ -96,14 +104,20 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
   const isAllDataSyncEnabled = useIsAllDataSyncEnabled();
 
   const voiceRecorderPermissionsStatus = useVoiceRecorderPermissionsStatus();
-  log({voiceRecorderPermissionsStatus})
+  log({ voiceRecorderPermissionsStatus });
 
-  const geolocationPermissionsStatus = useGeolocationPermissionsStatus() 
-  log({geolocationPermissionsStatus})
+  const geolocationPermissionsStatus = useGeolocationPermissionsStatus();
+  log({ geolocationPermissionsStatus });
 
-  const allPermissionsGranted = voiceRecorderPermissionsStatus.permissionsStatus && geolocationPermissionsStatus.permissionsStatus?.coarseLocation === 'granted' && geolocationPermissionsStatus.permissionsStatus?.location === 'granted';
+  const allPermissionsGranted =
+    voiceRecorderPermissionsStatus.permissionsStatus &&
+    geolocationPermissionsStatus.permissionsStatus?.coarseLocation ===
+      "granted" &&
+    geolocationPermissionsStatus.permissionsStatus?.location === "granted";
 
-  const arePermissionsLoading = voiceRecorderPermissionsStatus.isLoading && geolocationPermissionsStatus.isLoading;
+  const arePermissionsLoading =
+    voiceRecorderPermissionsStatus.isLoading &&
+    geolocationPermissionsStatus.isLoading;
 
   return arePermissionsLoading ? (
     <VStack height="100vh" justifyContent={"center"}>
@@ -158,15 +172,44 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
         </CardBody>
       </Card>
       {!voiceRecorderPermissionsStatus.permissionsStatus && (
-        <Button onClick={requestVoiceRecorderPermissions}>
-          Grant Voice Recorder Permissions
-        </Button>
+        <Button onClick={async () => {
+          try {
+            await requestVoiceRecorderPermissions();
+          } catch (error) {
+            log({ error });
+              toast({
+                title: `Failed to request voice recorder permissions`,
+                description: error.message,
+                status: "error",
+                duration: null,
+                isClosable: true,
+                position: "top-right",
+              });
+          }
+        }}>Grant Voice Recorder Permissions</Button>
       )}
-      {
-        
-      }
-      {(geolocationPermissionsStatus.permissionsStatus?.coarseLocation !== 'granted' || geolocationPermissionsStatus.permissionsStatus?.location !== 'granted') && (
-        <Button onClick={requestGeolocationPermissions}>
+      {}
+      {(geolocationPermissionsStatus.permissionsStatus?.coarseLocation !==
+        "granted" ||
+        geolocationPermissionsStatus.permissionsStatus?.location !==
+          "granted") && (
+        <Button
+          onClick={async () => {
+            try {
+              await requestGeolocationPermissions();
+            } catch (error) {
+              log({ error });
+              toast({
+                title: `Failed to request geolocation permissions`,
+                description: error.message,
+                status: "error",
+                duration: null,
+                isClosable: true,
+                position: "top-right",
+              });
+            }
+          }}
+        >
           Grant Geolocation Permissions
         </Button>
       )}
