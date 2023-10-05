@@ -33,6 +33,7 @@ export function WithDeviceLinkId({
     deep: deep,
     containerLinkId,
     initialDeviceLinkId: deviceLinkIdFromStore,
+    shouldAct: !isDeviceFromCapacitorStoreLoading
   });
   log({ useDeviceLinkResult })
 
