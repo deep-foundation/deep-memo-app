@@ -1,9 +1,10 @@
-import { Card, CardHeader, Heading, CardBody, FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
+import { Card, CardHeader, Heading, CardBody, FormControl, FormLabel, Input, Button, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 
 export function Login(arg: { onSubmit: (arg: { gqlPath: string, token: string }) => void }) {
-  const [gqlPath, setGqlPath] = useState(undefined);
-  const [token, setToken] = useState(undefined);
+  const toast = useToast();
+  const [gqlPath, setGqlPath] = useState<string|undefined>(undefined);
+  const [token, setToken] = useState<string|undefined>(undefined);
   return <Card>
     <CardHeader>
       <Heading>
@@ -24,6 +25,16 @@ export function Login(arg: { onSubmit: (arg: { gqlPath: string, token: string })
         }} />
       </FormControl>
       <Button onClick={() => {
+        if(!gqlPath || !token) {
+          toast({
+            title: "Invalid Input",
+            description: "Please fill out all fields",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          })
+          return
+        }
         arg.onSubmit({
           gqlPath,
           token
