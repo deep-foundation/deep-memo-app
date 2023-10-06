@@ -6,7 +6,7 @@ import {
   GeolocationDecorator,
   createGeolocationDecorator,
 } from "@deep-foundation/capacitor-geolocation";
-import { WithPositionWatch } from "@deep-foundation/capacitor-geolocation/dist/react/components/with-position-watch";
+import { WithPositionSync } from "@deep-foundation/capacitor-geolocation/dist/react/components/with-position-sync";
 import { saveAllCallHistory } from "../../callhistory/callhistory";
 import { WithMotionSync } from "@deep-foundation/capacitor-motion";
 import { DecoratedDeep } from "./with-decorated-deep";
@@ -111,13 +111,13 @@ export function WithSync({
   return (
     <>
       {
-        isMotionSyncEnabled && <WithMotionSync deep={deep} containerLinkId={deviceLinkId}/>
+        // isMotionSyncEnabled && <WithMotionSync deep={deep} containerLinkId={deviceLinkId}/>
       }
       {
-        isNetworkSyncEnabled && <NetworkStatus deep={deep} containerLinkId={deviceLinkId} />
+        // isNetworkSyncEnabled && <NetworkStatus deep={deep} containerLinkId={deviceLinkId} />
       }
       {
-        isGeolocationSyncEnabled && <WithPositionWatch containerLinkId={deviceLinkId} deep={deep}/>
+        isGeolocationSyncEnabled && <WithPositionSync containerLinkId={deviceLinkId} deep={deep}/>
       }
       {
         // isVoiceRecorderEnabled && <VoiceRecorder deep={deep} containerLinkId={deviceLinkId} />
