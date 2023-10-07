@@ -78,7 +78,9 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
     lastContactsSyncTime,
     isLoading: isSyncSettingsLoading,
     setLastCallHistorySyncTime,
-    setLastContactsSyncTime
+    setLastContactsSyncTime,
+    setIsSyncEnabled,
+    isSyncEnabled
   } = useSyncSettings()
 
   const isAllDataSyncEnabled = useIsAllDataSyncEnabled();
@@ -145,11 +147,12 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
             </FormLabel>
             <Switch
               id="sync-call-history-switch"
-              isChecked={isAllDataSyncEnabled}
+              isChecked={isSyncEnabled}
               onChange={(event) => {
-                setAllDataSync(event.target.checked);
+                const {checked} = event.target;
+                setAllDataSync(checked);
+                setIsSyncEnabled(checked);
               }}
-              isDisabled={!allPermissionsGranted}
             />
           </FormControl>
         </CardBody>

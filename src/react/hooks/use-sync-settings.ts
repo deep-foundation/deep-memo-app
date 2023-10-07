@@ -140,6 +140,22 @@ export function useSyncSettings() {
     isGeolocationSyncLoading,
   });
 
+  const [
+    isSyncEnabled,
+    setIsSyncEnabled,
+    unsetSync,
+    isSyncLoading,
+  ] = useCapacitorStore<boolean | undefined>(
+    CapacitorStoreKeys[CapacitorStoreKeys.IsSyncEnabled],
+    undefined
+  );
+  log({
+    isSyncEnabled,
+    setIsSyncEnabled,
+    unsetSync,
+    isSyncLoading,
+  });
+
   const isLoading = isContactsSyncLoading ||
     isLastContactsSyncLoading ||
     isCallHistorySyncLoading ||
@@ -148,7 +164,8 @@ export function useSyncSettings() {
     isVoiceRecorderLoading ||
     isLoggerLoading ||
     isMotionSyncLoading ||
-    isGeolocationSyncLoading;
+    isGeolocationSyncLoading || 
+    isSyncLoading;
     log({isLoading})
 
   return {
@@ -170,6 +187,8 @@ export function useSyncSettings() {
     setIsMotionSyncEnabled,
     isGeolocationSyncEnabled,
     setIsGeolocationSyncEnabled,
-    isLoading
+    isLoading,
+    isSyncEnabled,
+    setIsSyncEnabled,
   };
 }

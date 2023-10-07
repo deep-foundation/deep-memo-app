@@ -27,5 +27,6 @@ AdminLinkId,
    IsGeolocationSyncEnabled,
    IsLoggerEnabled,
    GraphQlUrl,
-   DeepToken
+   DeepToken,
+   IsSyncEnabled
 }
