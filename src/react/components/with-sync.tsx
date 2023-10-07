@@ -115,7 +115,7 @@ export function WithSync(options: {
   return (
     <>
       {
-        // isMotionSyncEnabled && <WithMotionSync deep={deep} containerLinkId={deviceLinkId}/>
+        isMotionSyncEnabled && <WithMotionSync deep={deep} containerLinkId={deviceLinkId}/>
       }
       {
         // isNetworkSyncEnabled && <NetworkStatus deep={deep} containerLinkId={deviceLinkId} />
