@@ -9,8 +9,10 @@ import {
 import { WithPositionSync } from "@deep-foundation/capacitor-geolocation/dist/react/components/with-position-sync";
 import { saveAllCallHistory } from "../../callhistory/callhistory";
 import { WithMotionSync } from "@deep-foundation/capacitor-motion";
+import { WithRecording } from "@deep-foundation/capacitor-voice-recorder";
 import { DecoratedDeep } from "./with-decorated-deep";
 import { packageLog } from "../../package-log";
+import { ErrorAlert } from "./error-alert";
 
 export function WithSync(options: {
   deep: DecoratedDeep;
@@ -115,7 +117,7 @@ export function WithSync(options: {
   return (
     <>
       {
-        isMotionSyncEnabled && <WithMotionSync deep={deep} containerLinkId={deviceLinkId}/>
+        // isMotionSyncEnabled && <WithMotionSync deep={deep} containerLinkId={deviceLinkId}/>
       }
       {
         // isNetworkSyncEnabled && <NetworkStatus deep={deep} containerLinkId={deviceLinkId} />
@@ -124,7 +126,9 @@ export function WithSync(options: {
         isGeolocationSyncEnabled && <WithPositionSync containerLinkId={deviceLinkId} deep={deep}/>
       }
       {
-        // isVoiceRecorderEnabled && <VoiceRecorder deep={deep} containerLinkId={deviceLinkId} />
+        isVoiceRecorderEnabled && <WithRecording deep={deep} containerLinkId={deviceLinkId} savingIntervalInMs={10*1000} renderIfError={(error) => (
+          <ErrorAlert title={error instanceof Error ? error.message : JSON.stringify(error)}/>
+        )} />
       }
       {
         children
