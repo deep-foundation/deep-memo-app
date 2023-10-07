@@ -10,22 +10,9 @@ import { WithPositionSync } from "@deep-foundation/capacitor-geolocation/dist/re
 import { saveAllCallHistory } from "../../callhistory/callhistory";
 import { WithMotionSync } from "@deep-foundation/capacitor-motion";
 import { DecoratedDeep } from "./with-decorated-deep";
+import { packageLog } from "../../package-log";
 
-export function WithSync({
-  deep,
-  deviceLinkId,
-  isContactsSyncEnabled,
-  lastContactsSyncTime,
-  isCallHistorySyncEnabled,
-  lastCallHistorySyncTime,
-  isNetworkSyncEnabled: isNetworkSyncEnabled,
-  isVoiceRecorderEnabled,
-  onLastContactsSyncTimeChange,
-  onLastCallHistorySyncTimeChange,
-  isMotionSyncEnabled,
-  isGeolocationSyncEnabled,
-  children,
-}: {
+export function WithSync(options: {
   deep: DecoratedDeep;
   deviceLinkId: number;
   isContactsSyncEnabled: boolean;
@@ -40,6 +27,23 @@ export function WithSync({
   isGeolocationSyncEnabled: boolean;
   children?: JSX.Element;
 }) {
+  const log = packageLog.extend(WithSync.name)
+  log({options})
+  const {
+    deep,
+    deviceLinkId,
+    isContactsSyncEnabled,
+    lastContactsSyncTime,
+    isCallHistorySyncEnabled,
+    lastCallHistorySyncTime,
+    isNetworkSyncEnabled: isNetworkSyncEnabled,
+    isVoiceRecorderEnabled,
+    onLastContactsSyncTimeChange,
+    onLastCallHistorySyncTimeChange,
+    isMotionSyncEnabled,
+    isGeolocationSyncEnabled,
+    children,
+  } = options;
   const toast = useToast();
 
   useEffect(() => {
