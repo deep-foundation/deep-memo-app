@@ -17,7 +17,7 @@ export function WithMinilinksApplied(options: WithMinilinksAppliedOptions) {
       if (!isMinilinksApplied) {
         const linksToApply = await getLinksToApply({deep});
         log({linksToApply})
-        const applyResult = await deep.minilinks.apply(linksToApply.data);
+        const applyResult = deep.minilinks.apply(linksToApply.data);
         log({applyResult})
         setIsMinilinksApplied(true);
       }
