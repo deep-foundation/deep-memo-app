@@ -103,7 +103,7 @@ export function Page({ renderChildren }: PageParam) {
                             <ErrorAlert
                               title={`${DEEP_MEMO_PACKAGE_NAME} is not installed`}
                             />
-                            {/* <Button
+                            <Button
                             isLoading={isInstallationLoading}
                               onClick={async () => {
                                 setIsInstallationLoading(true)
@@ -125,7 +125,7 @@ export function Page({ renderChildren }: PageParam) {
                               }}
                             >
                               Install {DEEP_MEMO_PACKAGE_NAME}
-                            </Button> */}
+                            </Button>
                           </VStack>
                         )}
                       </VStack>
