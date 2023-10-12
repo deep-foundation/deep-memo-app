@@ -33,6 +33,7 @@ import {
   useDeviceLink,
 } from "@deep-foundation/capacitor-device";
 import {WithDeviceLinkId,WithDeviceLinkIdOptions} from './with-device-link-id'
+import { NpmPackagerProxy } from "../../npm-packager-proxy";
 
 export interface PageParam {
   renderChildren: (param: {
