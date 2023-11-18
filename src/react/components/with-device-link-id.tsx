@@ -68,7 +68,7 @@ export function WithDeviceLinkId({
     }
   }
 
-  if (isDeviceFromCapacitorStoreLoading || !deviceLinkIdFromStore) {
+  if (isDeviceFromCapacitorStoreLoading || !deviceLinkIdFromStore || (useDeviceLinkResult.deviceLinkId !== deviceLinkIdFromStore)) {
     return <Loading description="Initializing device..." />;
   }
 
