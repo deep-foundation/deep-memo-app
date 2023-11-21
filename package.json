@@ -54,7 +54,7 @@
     "@deep-foundation/capacitor-geolocation": "^8.0.0-dev.14",
     "@deep-foundation/capacitor-motion": "^8.0.0-dev.8",
     "@deep-foundation/capacitor-network": "^0.1.10",
-    "@deep-foundation/capacitor-voice-recorder": "^1.2.7-dev.14",
+    "@deep-foundation/capacitor-voice-recorder": "^1.2.7-dev.16",
     "@deep-foundation/deeplinks": "~0.0.312",
     "@deep-foundation/firebase-push-notification": "^18.2.1",
     "@deep-foundation/react-with-packages-installed": "^0.5.3",
