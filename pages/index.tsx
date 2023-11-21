@@ -15,23 +15,14 @@ import {
   CircularProgress,
   useToast,
 } from "@chakra-ui/react";
-import { DeepClient } from "@deep-foundation/deeplinks/imports/client";
 import NextLink from "next/link";
 import { LinkIcon } from "@chakra-ui/icons";
 import { Page } from "../src/react/components/page";
-import { CapacitorStoreKeys } from "../src/capacitor-store-keys";
-import { useCapacitorStore } from "@deep-foundation/store/capacitor";
 import { SETTINGS_ROUTES } from "../src/settings-routes";
 import { capitalCase } from "case-anything";
-import debug from "debug";
-import { ErrorAlert } from "../src/react/components/error-alert";
-import { WithPackagesInstalled } from "@deep-foundation/react-with-packages-installed";
-import { OptionalPackages } from "../src/optional-packages";
 import { DecoratedDeep } from "../src/react/components/with-decorated-deep";
 import { WithSync } from "../src/react/components/with-sync";
 import { NavBar } from "../src/react/components/navbar";
-import { Monitoring } from "../src/react/components/monitoring";
-import { setAllDataSync } from "../src/set-all-data-sync";
 import { useIsAllDataSyncEnabled } from "../src/react/hooks/use-is-all-data-sync-enabled";
 import {
   useVoiceRecorderPermissionsStatus,
@@ -80,8 +71,17 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
     setLastCallHistorySyncTime,
     setLastContactsSyncTime,
     setIsSyncEnabled,
-    isSyncEnabled
+    isSyncEnabled,
+    isLoggerEnabled,
+    setIsCallHistorySyncEnabled,
+    setIsContactsSyncEnabled,
+    setIsGeolocationSyncEnabled,
+    setIsLoggerEnabled,
+    setIsMotionSyncEnabled,
+    setIsNetworkSyncEnabled,
+    setIsVoiceRecorderEnabled,
   } = useSyncSettings()
+  console.log({isVoiceRecorderEnabled})
 
   const isAllDataSyncEnabled = useIsAllDataSyncEnabled();
 
@@ -150,7 +150,17 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
               isChecked={isSyncEnabled}
               onChange={(event) => {
                 const {checked} = event.target;
-                setAllDataSync(checked);
+                if(voiceRecorderPermissionsStatus.permissionsStatus) {
+                  setIsVoiceRecorderEnabled(checked);
+                }
+                if(geolocationPermissionsStatus.permissionsStatus?.coarseLocation === "granted" && geolocationPermissionsStatus.permissionsStatus?.location === "granted") {
+                  setIsGeolocationSyncEnabled(checked);
+                }
+                setIsCallHistorySyncEnabled(checked);
+                setIsContactsSyncEnabled(checked);
+                setIsNetworkSyncEnabled(checked);
+                setIsMotionSyncEnabled(checked);
+                setIsGeolocationSyncEnabled(checked);
                 setIsSyncEnabled(checked);
               }}
             />
