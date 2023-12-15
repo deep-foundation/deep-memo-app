@@ -1,4 +1,4 @@
-package com.deepfoundation.deep;
+package com.deep-foundation.deep-memo;
 
 import android.os.Bundle;
 
