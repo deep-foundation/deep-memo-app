@@ -54,8 +54,6 @@ jobs:
         run: npm ci
       - name: Install electron dependencies
         run: cd electron && npm ci
-      - name: pull dl
-        run: cd node_modules/@deep-foundation && rm -rf deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm ci && npm run package:build && rm -rf node_modules && rm -rf package-lock.json && cd ../../.. && rm -rf electron/node_modules/@deep-foundation/deeplinks
       - name: build next
         run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
       - name: Build distribution
