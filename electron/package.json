@@ -39,7 +39,7 @@
     "electron"
   ],
   "build": {
-    "appId": "your.id",
+    "appId": "com.deep-foundation.deep-memo",
     "linux": {
       "target": [
         "AppImage"
