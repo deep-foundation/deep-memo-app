@@ -58,6 +58,8 @@ jobs:
         run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
       - name: Build distribution
         run: cd electron && npm run electron:make
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create tar.gz file
         run: |
           cd electron/dist
