@@ -44,6 +44,7 @@
   ],
   "exclude": [
     "node_modules",
-    "payments"
+    "payments",
+    "electron"
   ]
 }
