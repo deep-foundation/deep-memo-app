@@ -61,17 +61,17 @@ jobs:
       - name: Create tar.gz file
         run: |
           cd electron/dist
-          mv SDK-1.0.0.AppImage SDK.AppImage
-          tar -czvf SDK.tar.gz SDK.AppImage
+          mv deep-memo-1.0.0.AppImage deep-memo.AppImage
+          tar -czvf deep-memo.tar.gz deep-memo.AppImage
       - name: And a README (to work around GitHub double-zips)
         run: |
           echo "More information: https://deep.foundation" > electron/dist/README.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Linux-SDK
+          name: Linux-deep-memo
           path: |
-            electron/dist/SDK.tar.gz
+            electron/dist/deep-memo.tar.gz
             electron/dist/README.txt
   mac-build:
     name: mac-build
@@ -133,16 +133,16 @@ jobs:
       - name: Create zip file
         run: |
           cd electron/dist/mac
-          ditto -c -k --keepParent SDK.app SDK.app.zip
+          ditto -c -k --keepParent deep-memo.app deep-memo.app.zip
       - name: And a README (to work around GitHub double-zips)
         run: |
           echo "More information: https://deep.foundation" > electron/dist/mac/README.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Mac-SDK
+          name: Mac-deep-memo
           path: |
-            electron/dist/mac/SDK.app.zip
+            electron/dist/mac/deep-memo.app.zip
             electron/dist/mac/README.txt
   windows-build:
     name: windows-build
@@ -205,16 +205,16 @@ jobs:
       - name: Create zip file
         run: |
           cd electron/dist
-          tar.exe -a -c -f SDK.zip "SDK-setup.exe"
+          tar.exe -a -c -f deep-memo.zip "deep-memo-setup.exe"
       - name: And a README (to work around GitHub double-zips)
         run: |
           echo "More information: https://deep.foundation" > electron/dist/README.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Windows-SDK
+          name: Windows-deep-memo
           path: |
-            electron/dist/SDK.zip
+            electron/dist/deep-memo.zip
             electron/dist/README.txt
   release:
     needs: [linux-build, mac-build, windows-build]
@@ -239,15 +239,15 @@ jobs:
           prerelease: false
       - uses: actions/download-artifact@v3
         with:
-          name: Linux-SDK
+          name: Linux-deep-memo
           path: electron/dist
       - uses: actions/download-artifact@v3
         with:
-          name: Windows-SDK
+          name: Windows-deep-memo
           path: electron/dist
       - uses: actions/download-artifact@v3
         with:
-          name: Mac-SDK
+          name: Mac-deep-memo
           path: electron/dist
       - name: upload linux artifact
         uses: actions/upload-release-asset@v1
@@ -255,8 +255,8 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: electron/dist/SDK.tar.gz
-          asset_name: linux-SDK.tar.gz
+          asset_path: electron/dist/deep-memo.tar.gz
+          asset_name: linux-deep-memo.tar.gz
           asset_content_type: application/gzip
       - name: upload windows artifact
         uses: actions/upload-release-asset@v1
@@ -264,8 +264,8 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: electron/dist/SDK.zip
-          asset_name: windows-SDK.zip
+          asset_path: electron/dist/deep-memo.zip
+          asset_name: windows-deep-memo.zip
           asset_content_type: application/zip
       - name: upload windows artifact
         uses: actions/upload-release-asset@v1
@@ -273,6 +273,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: electron/dist/SDK.app.zip
-          asset_name: mac-SDK.zip
+          asset_path: electron/dist/deep-memo.app.zip
+          asset_name: mac-deep-memo.zip
           asset_content_type: application/zip
