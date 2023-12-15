@@ -106,5 +106,9 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
     "typescript-json-schema": "^0.56.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deep-foundation/deep-memo-app.git"
   }
 }
