@@ -22,7 +22,7 @@
     "build-browser-extension-linux": "npm run build && npm run export && mv ./out/_next ./out/next && cd ./out && grep -rl '/_next' * | xargs sed -i 's|/_next|/next|g' && cd ../ && rsync -va --delete-after out/next/ extension/next/ && cp out/*.html extension && rm -rf out",
     "build-browser-extension-mac": "npm run build && npm run export && cp -rf out/_next out/next && sed -i '' -e 's~_next~next~g' out/**.html && mv out/**.html extension && rsync -va --delete-after out/next/ extension/next/ && rm -rf out && rm -rf extension.pem && /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --pack-extension=./extension",
     "build-android": "rm -rf app && rm -rf out && npm run build && npm run export && npx cap sync android",
-    "build-electron": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron",
+    "build-electron": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron && cd electron && npm install",
     "dev-electron": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron && npx cap open electron",
     "add-android": "npm run build && npm run export && rm -rf ./android && npx cap add android",
     "install-next-electron": "npm ci && cd electron && npm ci && cd ..",
