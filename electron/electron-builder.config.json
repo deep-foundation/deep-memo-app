@@ -1,7 +1,5 @@
 {
-  "appId": "sdk.app",
-  "afterSign": "notarize.js",
-  "afterPack": "./recover-after-electron-build.js",
+  "appId": "com.yourdoamnin.yourapp",
   "directories": {
     "buildResources": "resources"
   },
@@ -11,36 +9,20 @@
     "capacitor.config.*",
     "app/**/*"
   ],
-  "publish": null,
+  "publish": {
+    "provider": "github"
+  },
   "nsis": {
     "allowElevation": true,
     "oneClick": false,
-    "allowToChangeInstallationDirectory": true,
-    "artifactName": "${productName}-Setup.${ext}"
+    "allowToChangeInstallationDirectory": true
   },
   "win": {
-    "target": [
-      "nsis"
-    ],
+    "target": "nsis",
     "icon": "assets/appIcon.ico"
   },
   "mac": {
-    "category": "public.app-category.developer-tools",
-    "gatekeeperAssess": false,
-    "hardenedRuntime": true,
-    "icon": "assets/appIcon.icns",
-    "entitlements": "./entitlements.mas.plist",
-    "entitlementsInherit": "./entitlements.mas.plist"
-  },
-  "linux": {
-    "target": [
-      "AppImage"
-    ],
-    "category": "Utility",
-    "icon": "assets/appIcon.icns"
-  },
-  "forceCodeSigning": false,
-  "removePackageScripts": false,
-  "includeSubNodeModules": false,
-  "asar": false
+    "category": "your.app.category.type",
+    "target": "dmg"
+  }
 }

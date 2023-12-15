@@ -1,13 +1,14 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'sdk.app',
-  appName: 'SDK',
-  webDir: 'app',
+  appId: 'com.deepfoundation.deep',
+  appName: 'Deep',
+  webDir: 'out',
   bundledWebRuntime: false,
-  server: {
-    url: "http://localhost:3008",
-    cleartext: true,
+  plugins: {
+    PushNotifications: {
+      presentationOptions: ["badge", "sound", "alert"],
+    },
   },
 };
 
