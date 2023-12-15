@@ -37,13 +37,5 @@
   "keywords": [
     "capacitor",
     "electron"
-  ],
-  "build": {
-    "appId": "com.deep-foundation.deep-memo",
-    "linux": {
-      "target": [
-        "AppImage"
-      ]
-    }
-  }
+  ]
 }
