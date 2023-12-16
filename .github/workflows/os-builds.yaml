@@ -129,6 +129,7 @@ jobs:
           CSC_LINK: ${{ secrets.CSC_LINK }}
           APPLEID: ${{ secrets.APPLEID }}
           APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: cd electron && npm run electron:make
       - name: Create zip file
         run: |
@@ -200,6 +201,8 @@ jobs:
         run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
       - name: Build distribution
         run: cd electron && npm run electron:make
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create zip file
         run: |
           cd electron/dist
