@@ -75,6 +75,7 @@ jobs:
       - name: Create tar.gz file
         run: |
           cd electron/dist
+          ls
           mv deep-memo-${{needs.get-app-version.outputs.app-version}}.AppImage deep-memo.AppImage
           tar -czvf deep-memo.tar.gz deep-memo.AppImage
       - name: And a README (to work around GitHub double-zips)
