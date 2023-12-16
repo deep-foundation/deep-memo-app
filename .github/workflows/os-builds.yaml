@@ -29,7 +29,9 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Sync
-        run: npx ts-node --esm automation/sync-electron-package-version.ts
+        run: |
+          cat ./automation/sync-electron-package-version.ts
+          npx ts-node --esm ./automation/sync-electron-package-version.ts
   linux-build:
     name: Linux Build
     needs: [get-app-version,sync-electron-app-version]
