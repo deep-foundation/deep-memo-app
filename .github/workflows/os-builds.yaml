@@ -243,6 +243,32 @@ jobs:
           path: |
             electron/dist/deep-memo.zip
             electron/dist/README.txt
+  android-build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: Install dependencies
+      run: npm clean-install
+    - name: Build Android
+      run: npm run build-android
+    - name: Set up Android
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'adopt'
+    - name: Build APK
+      run: |
+        cd android
+        ./gradlew assembleRelease
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-release
+        path: android/app/build/outputs/apk/release/app-release.apk
   release:
     needs: [linux-build, mac-build, windows-build, get-app-version]
     name: Create Release
