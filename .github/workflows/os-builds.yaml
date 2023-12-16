@@ -31,7 +31,7 @@ jobs:
       - name: Sync
         run: npx ts-node --esm automation/sync-electron-package-version.ts
   linux-build:
-    name: linux-build
+    name: Linux Build
     needs: [get-app-version,sync-electron-app-version]
     env:
       USE_HARD_LINKS: false
@@ -100,7 +100,7 @@ jobs:
             electron/dist/deep-memo.tar.gz
             electron/dist/README.txt
   mac-build:
-    name: mac-build
+    name: Mac Build
     needs: [sync-electron-app-version]
     env:
       USE_HARD_LINKS: false
@@ -171,7 +171,7 @@ jobs:
             electron/dist/mac/deep-memo.app.zip
             electron/dist/mac/README.txt
   windows-build:
-    name: windows-build
+    name: Windows Build
     needs: [get-app-version,sync-electron-app-version]
     env:
       USE_HARD_LINKS: false
