@@ -32,7 +32,7 @@ jobs:
         run: npx ts-node --esm automation/sync-electron-package-version.ts
   linux-build:
     name: linux-build
-    needs: get-app-version
+    needs: [get-app-version,sync-electron-app-version]
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: /tmp/.migrate
@@ -101,6 +101,7 @@ jobs:
             electron/dist/README.txt
   mac-build:
     name: mac-build
+    needs: [sync-electron-app-version]
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: /tmp/.migrate
@@ -171,7 +172,7 @@ jobs:
             electron/dist/mac/README.txt
   windows-build:
     name: windows-build
-    needs: get-app-version
+    needs: [get-app-version,sync-electron-app-version]
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: .migrate
