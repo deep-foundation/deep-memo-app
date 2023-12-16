@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.deep-foundation.deep-memo',
+  appId: 'com.deepfoundation.deepmemo',
   appName: 'Deep',
   webDir: 'out',
   bundledWebRuntime: false,
