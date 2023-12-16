@@ -264,6 +264,7 @@ jobs:
     - name: Build APK
       run: |
         cd android
+        ./gradlew --version
         ./gradlew assembleRelease
     - name: Upload APK
       uses: actions/upload-artifact@v3
