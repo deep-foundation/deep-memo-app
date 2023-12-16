@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Sync
@@ -61,7 +61,7 @@ jobs:
         run: >
           git config --global url."https://github.com/".insteadOf
           ssh://git@github.com/
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Configure Node caching
@@ -130,7 +130,7 @@ jobs:
         run: >
           git config --global url."https://github.com/".insteadOf
           ssh://git@github.com/
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Configure Node caching
@@ -201,7 +201,7 @@ jobs:
         run: >
           git config --global url."https://github.com/".insteadOf
           ssh://git@github.com/
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Configure Node caching
