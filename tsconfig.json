@@ -21,8 +21,8 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "incremental": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "jsx": "preserve",
 
     "allowSyntheticDefaultImports": true,
