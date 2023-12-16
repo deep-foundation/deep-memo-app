@@ -2,10 +2,6 @@
   "name": "deep-memo",
   "version": "0.0.1-dev.1",
   "description": "Deep Memo",
-  "author": {
-    "name": "",
-    "email": ""
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/deep-foundation/deep-memo-app.git"
