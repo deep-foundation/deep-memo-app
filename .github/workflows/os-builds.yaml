@@ -204,7 +204,6 @@ jobs:
       - name: Create zip file
         run: |
           cd electron/dist
-          ls
           tar.exe -a -c -f deep-memo.zip "deep-memo Setup 1.0.0.exe"
       - name: And a README (to work around GitHub double-zips)
         run: |
