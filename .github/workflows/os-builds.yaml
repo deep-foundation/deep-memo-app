@@ -118,7 +118,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Install dependencies
-        run: npm ci --force
+        run: npm clean-install
       - name: Install electron dependencies
         run: cd electron && npm ci && ls node_modules | grep @
       - name: build next
@@ -193,7 +193,7 @@ jobs:
       - name: Set node config to use python2.7
         run: npm config set python python2.7
       - name: Install dependencies
-        run: npm ci --force
+        run: npm clean-install
       - name: Install electron dependencies
         run: cd electron && npm ci
       - name: build next
