@@ -51,9 +51,9 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Install dc dependencies
-        run: npm ci
+        run: npm clean-install
       - name: Install electron dependencies
-        run: cd electron && npm ci
+        run: cd electron && npm clean-install
       - name: build next
         run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
       - name: Build distribution
@@ -120,7 +120,7 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Install electron dependencies
-        run: cd electron && npm ci && ls node_modules | grep @
+        run: cd electron && npm clean-install && ls node_modules | grep @
       - name: build next
         run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
       - name: Build distribution
@@ -195,7 +195,7 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Install electron dependencies
-        run: cd electron && npm ci
+        run: cd electron && npm clean-install
       - name: build next
         run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
       - name: Build distribution

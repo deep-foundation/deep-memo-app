@@ -25,7 +25,7 @@
     "build-electron": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron",
     "dev-electron": "npm run build && npm run export && npx rimraf electron/app && npx cap copy electron && npx cap open electron",
     "add-android": "npm run build && npm run export && rm -rf ./android && npx cap add android",
-    "install-next-electron": "npm ci && cd electron && npm ci && cd ..",
+    "install-next-electron": "npm clean-install && cd electron && npm clean-install && cd ..",
     "export": "rm -rf out && next export",
     "build": "rm -rf app && next build",
     "start": "next start",

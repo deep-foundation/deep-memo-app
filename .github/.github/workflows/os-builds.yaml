@@ -54,11 +54,11 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Install dc dependencies
-        run: npm ci --force
+        run: npm clean-install --force
       - name: Install electron dependencies
-        run: cd electron && npm ci
+        run: cd electron && npm clean-install
       - name: pull dl
-        run: cd node_modules/@deep-foundation && rm -rf deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm ci && npm run package:build && rm -rf node_modules && rm -rf package-lock.json && cd ../../.. && rm -rf electron/node_modules/@deep-foundation/deeplinks
+        run: cd node_modules/@deep-foundation && rm -rf deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm clean-install && npm run package:build && rm -rf node_modules && rm -rf package-lock.json && cd ../../.. && rm -rf electron/node_modules/@deep-foundation/deeplinks
       - name: build next
         run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
       - name: Build distribution
@@ -121,11 +121,11 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: npm
-        run: npm ci --force
+        run: npm clean-install --force
       - name: Install electron dependencies
-        run: cd electron && npm ci && ls node_modules | grep @
+        run: cd electron && npm clean-install && ls node_modules | grep @
       - name: pull dl
-        run: cd node_modules/@deep-foundation && rm -rf deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm ci && npm run package:build && rm -rf node_modules && rm -rf package-lock.json && cd ../../.. && rm -rf electron/node_modules/@deep-foundation/deeplinks
+        run: cd node_modules/@deep-foundation && rm -rf deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm clean-install && npm run package:build && rm -rf node_modules && rm -rf package-lock.json && cd ../../.. && rm -rf electron/node_modules/@deep-foundation/deeplinks
       - name: build next
         run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
       - name: Build distribution
@@ -198,11 +198,11 @@ jobs:
       - name: Set node config to use python2.7
         run: npm config set python python2.7
       - name: Install dc dependencies
-        run: npm ci --force
+        run: npm clean-install --force
       - name: Install electron dependencies
-        run: cd electron && npm ci
+        run: cd electron && npm clean-install
       - name: pull dl
-        run: cd node_modules/@deep-foundation && rm -r deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm ci && npm run package:build && rm -r node_modules && rm -r package-lock.json && cd ../../..
+        run: cd node_modules/@deep-foundation && rm -r deeplinks && git clone https://github.com/deep-foundation/deeplinks.git && cd deeplinks && npm clean-install && npm run package:build && rm -r node_modules && rm -r package-lock.json && cd ../../..
       - name: build next
         run: npm run build && npm run export && npx rimraf electron/app && npx cap copy electron
       - name: Build distribution
