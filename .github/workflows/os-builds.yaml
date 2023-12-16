@@ -265,7 +265,7 @@ jobs:
       run: |
         cd android
         ./gradlew --version
-        ./gradlew assembleRelease
+        ./gradlew assembleRelease --stacktrace
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
