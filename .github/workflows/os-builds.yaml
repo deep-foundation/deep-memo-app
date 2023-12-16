@@ -8,8 +8,20 @@ defaults:
   run:
     working-directory: ./
 jobs:
+  get-app-version:
+    name: Get App Version
+    runs-on: ubuntu-latest
+    outputs:
+      app-version: ${{steps.get-app-version.outputs.current-version}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Get NPM Version
+        id: get-app-version
+        uses: martinbeentjes/npm-get-version-action@main
   linux-build:
     name: linux-build
+    needs: get-app-version
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: /tmp/.migrate
@@ -63,7 +75,7 @@ jobs:
       - name: Create tar.gz file
         run: |
           cd electron/dist
-          mv deep-memo-1.0.0.AppImage deep-memo.AppImage
+          mv deep-memo-${{needs.get-app-version.outputs.app-version}}.AppImage deep-memo.AppImage
           tar -czvf deep-memo.tar.gz deep-memo.AppImage
       - name: And a README (to work around GitHub double-zips)
         run: |
@@ -147,6 +159,7 @@ jobs:
             electron/dist/mac/README.txt
   windows-build:
     name: windows-build
+    needs: get-app-version
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: .migrate
@@ -204,7 +217,7 @@ jobs:
       - name: Create zip file
         run: |
           cd electron/dist
-          tar.exe -a -c -f deep-memo.zip "deep-memo Setup 1.0.0.exe"
+          tar.exe -a -c -f deep-memo.zip "deep-memo Setup ${{needs.get-app-version.outputs.app-version}}.exe"
       - name: And a README (to work around GitHub double-zips)
         run: |
           echo "More information: https://deep.foundation" > electron/dist/README.txt
@@ -216,24 +229,21 @@ jobs:
             electron/dist/deep-memo.zip
             electron/dist/README.txt
   release:
-    needs: [linux-build, mac-build, windows-build]
+    needs: [linux-build, mac-build, windows-build, get-app-version]
     name: Create Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: get-npm-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@main
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.package-version.outputs.current-version}}
-          release_name: Release ${{ steps.package-version.outputs.current-version}}
-          body: ${{ steps.package-version.outputs.current-version}}
+          tag_name: ${{needs.get-app-version.outputs.app-version}}
+          release_name: Release ${{ needs.get-app-version.outputs.app-version}}
+          body: ${{ needs.get-app-version.outputs.app-version}}
           draft: false
           prerelease: false
       - uses: actions/download-artifact@v3
