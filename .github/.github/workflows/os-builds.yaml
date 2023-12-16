@@ -2,7 +2,7 @@ name: OS Builds on version
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
   workflow_dispatch:
 defaults:
   run:
@@ -13,7 +13,7 @@ jobs:
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: /tmp/.migrate
-      ASSET_PREFIX: '.'
+      ASSET_PREFIX: "."
       npm_config_yes: true
       NEXT_PUBLIC_ENGINES: 1
       MIGRATIONS_ID_TYPE_SQL: bigint
@@ -80,7 +80,7 @@ jobs:
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: /tmp/.migrate
-      ASSET_PREFIX: '.'
+      ASSET_PREFIX: "."
       npm_config_yes: true
       NEXT_PUBLIC_ENGINES: 1
       MIGRATIONS_ID_TYPE_SQL: bigint
@@ -151,7 +151,7 @@ jobs:
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: .migrate
-      ASSET_PREFIX: '.'
+      ASSET_PREFIX: "."
       npm_config_yes: true
       NEXT_PUBLIC_ENGINES: 1
       MIGRATIONS_ID_TYPE_SQL: bigint
