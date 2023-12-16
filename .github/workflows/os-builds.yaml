@@ -190,7 +190,7 @@ jobs:
       - name: install node-gyp
         run: npm install --global node-gyp@10.0.1
       - name: Set Python version for node-gyp
-        run: npm config set python python2.7 -g
+        run: echo "python=python2.7" >> ~/.npmrc
       - name: Install dependencies
         run: npm clean-install
       - name: Install electron dependencies
