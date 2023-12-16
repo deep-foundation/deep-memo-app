@@ -22,27 +22,11 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-plugins {
-    id 'com.android.application'
-}
-
 android {
-    compileSdkVersion 30
-    defaultConfig {
-        applicationId "your.package.name"
-        minSdkVersion 16
-        targetSdkVersion 30
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-}
-
-dependencies {
-    // Your dependencies here
 }
 
 apply from: "variables.gradle"
