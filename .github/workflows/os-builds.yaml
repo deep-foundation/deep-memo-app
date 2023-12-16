@@ -31,8 +31,7 @@ jobs:
           node-version: 18
       - name: Sync
         run: |
-          cat ./automation/sync-electron-package-version.ts
-          npx --yes ts-node --esm ./automation/sync-electron-package-version.ts
+          npx --yes bun run ./automation/sync-electron-package-version.ts
   linux-build:
     name: Linux Build
     needs: [get-app-version,sync-electron-app-version]
