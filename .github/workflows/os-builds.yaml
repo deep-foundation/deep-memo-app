@@ -4,11 +4,6 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
-  workflow_run:
-    workflows:
-      - 'Build and Test'
-    types:
-      - requested
 defaults:
   run:
     working-directory: ./
