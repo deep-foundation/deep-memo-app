@@ -32,6 +32,13 @@ jobs:
       - name: Sync
         run: |
           npx --yes bun run ./automation/sync-electron-package-version.ts
+      - name: Commit and push
+        run: |
+          git config --local user.email "freephoenix888@gmail.com"
+          git config --local user.name "FreePhoenix888"
+          git add electron/package.json
+          git commit -m "Sync electron package version"
+          git push
   linux-build:
     name: Linux Build
     needs: [get-app-version,sync-electron-app-version]
