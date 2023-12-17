@@ -263,11 +263,6 @@ jobs:
         java-version: '21'
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
-    - name: Debug
-      run: |
-        ls -l /opt/hostedtoolcache/Java_Adopt_jdk/
-        ls -l /opt/hostedtoolcache/Java_Adopt_jdk/21.0.1-12.0.LTS/
-        ls -l /opt/hostedtoolcache/Java_Adopt_jdk/21.0.1-12.0.LTS/x64/
     - name: Build APK
       run: |
         cd android
