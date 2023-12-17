@@ -271,7 +271,7 @@ jobs:
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
-        name: app-release
+        name: deep-memo-android.apk
         path: android/app/build/outputs/apk/release/app-release.apk
   release:
     needs: [linux-build, mac-build, windows-build, get-app-version, android-build]
@@ -329,4 +329,13 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: electron/dist/deep-memo.app.zip
           asset_name: mac-deep-memo.zip
+          asset_content_type: application/zip
+      - name: upload android artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: android/app/build/outputs/apk/release/app-release.apk
+          asset_name: deep-memo-android.apk
           asset_content_type: application/zip
