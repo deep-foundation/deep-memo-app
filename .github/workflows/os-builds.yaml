@@ -274,7 +274,7 @@ jobs:
         name: app-release
         path: android/app/build/outputs/apk/release/app-release.apk
   release:
-    needs: [linux-build, mac-build, windows-build, get-app-version]
+    needs: [linux-build, mac-build, windows-build, get-app-version, android-build]
     name: Create Release
     runs-on: ubuntu-latest
     steps:
