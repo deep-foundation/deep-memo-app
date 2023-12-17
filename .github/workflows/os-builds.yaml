@@ -256,7 +256,7 @@ jobs:
       run: npm clean-install
     - name: Build Android
       run: npm run build-android
-    - name: Set up Android
+    - name: Set up Java
       uses: actions/setup-java@v4
       with:
         distribution: 'adopt'
