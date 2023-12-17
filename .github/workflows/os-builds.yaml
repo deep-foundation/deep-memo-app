@@ -68,6 +68,8 @@ jobs:
         run: >
           git config --global url."https://github.com/".insteadOf
           ssh://git@github.com/
+      - name: Git Pull
+        run: git pull
       - uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -137,6 +139,8 @@ jobs:
         run: >
           git config --global url."https://github.com/".insteadOf
           ssh://git@github.com/
+      - name: Git Pull
+        run: git pull
       - uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -208,6 +212,8 @@ jobs:
         run: >
           git config --global url."https://github.com/".insteadOf
           ssh://git@github.com/
+      - name: Git Pull
+        run: git pull
       - uses: actions/setup-node@v4
         with:
           node-version: 18
