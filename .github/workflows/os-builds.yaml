@@ -261,6 +261,8 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: '21'
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
     - name: Debug
       run: |
         ls -l /opt/hostedtoolcache/Java_Adopt_jdk/
