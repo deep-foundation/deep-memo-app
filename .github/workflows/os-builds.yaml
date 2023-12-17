@@ -259,8 +259,8 @@ jobs:
     - name: Set up Java
       uses: actions/setup-java@v4
       with:
-        distribution: 'oracle'
-        java-version: '21'
+        distribution: 'adopt'
+        java-version: '11'
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
     - name: Build APK
