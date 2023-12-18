@@ -315,7 +315,7 @@ jobs:
           xcode-version: "14.2.0"
       - name: Build IPA
         run: |
-          cd ios
+          cd ios/App
           xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -archivePath build/App.xcarchive archive
           xcodebuild -exportArchive -archivePath build/App.xcarchive -exportOptionsPlist exportOptions.plist -exportPath build
       - name: Upload IPA
