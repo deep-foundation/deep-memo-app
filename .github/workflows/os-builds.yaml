@@ -264,6 +264,7 @@ jobs:
             electron/dist/deep-memo.zip
             electron/dist/README.txt
   android-build:
+    name: "Android Build"
     needs: [sync-electron-app-version]
     runs-on: ubuntu-latest
     steps:
