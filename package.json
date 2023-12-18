@@ -33,7 +33,8 @@
     "run-ios": "npx cap run ios",
     "open-ios": "npx cap open ios",
     "build-ios": "rm -rf app && rm -rf out && npm run build && npm run export && npx cap sync ios",
-    "bbel": "npm run build-browser-extension-linux"
+    "bbel": "npm run build-browser-extension-linux",
+    "sync-electron-app-version": "npx --yes bun run ./automation/sync-electron-app-version.ts"
   },
   "dependencies": {
     "@capacitor-community/contacts": "^5.0.4",
