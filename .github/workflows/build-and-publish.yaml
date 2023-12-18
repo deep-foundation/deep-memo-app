@@ -295,6 +295,34 @@ jobs:
       with:
         name: deep-memo-android.apk
         path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+  ios-build:
+    name: "iOS Build"
+    needs: [sync-electron-app-version]
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Build iOS
+        run: npm run build-ios
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: 15
+      - name: Build IPA
+        run: |
+          cd ios
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -archivePath build/App.xcarchive archive
+          xcodebuild -exportArchive -archivePath build/App.xcarchive -exportOptionsPlist exportOptions.plist -exportPath build
+      - name: Upload IPA
+        uses: actions/upload-artifact@v3
+        with:
+          name: deep-memo-ios.ipa
+          path: ios/build/App.ipa
   release:
     needs: [linux-build, mac-build, windows-build, get-app-version, android-build]
     name: Create Release
