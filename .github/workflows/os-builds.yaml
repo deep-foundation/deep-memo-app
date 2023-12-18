@@ -38,7 +38,11 @@ jobs:
           git config --local user.name "FreePhoenix888"
           git add electron/package.json
           git commit -m "Sync electron package version"
-          git push
+          if git diff --exit-code; then
+              echo "No changes to push."
+          else
+              git push
+          fi
   linux-build:
     name: Linux Build
     needs: [get-app-version,sync-electron-app-version]
