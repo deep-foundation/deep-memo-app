@@ -358,6 +358,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: android/app/build/outputs/apk/release/app-release.apk
+          asset_path: android/app/build/outputs/apk/release/app-release-unsigned.apk
           asset_name: deep-memo-android.apk
           asset_content_type: application/zip
