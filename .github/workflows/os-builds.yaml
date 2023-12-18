@@ -34,14 +34,17 @@ jobs:
           npx --yes bun run ./automation/sync-electron-package-version.ts
       - name: Commit and push
         run: |
-          git config --local user.email "freephoenix888@gmail.com"
-          git config --local user.name "FreePhoenix888"
-          git add electron/package.json
-          git commit -m "Sync electron package version"
-          if git diff --exit-code; then
-              echo "No changes to push."
+          if [[ $(git status -s) ]]; then
+              # Changes are present
+              # Stage all changes
+              git config --local user.email "freephoenix888@gmail.com"
+              git config --local user.name "FreePhoenix888"
+              git add electron/package.json
+              git commit -m "Sync electron package version"
+              git push origin main
           else
-              git push
+              # No changes in the working directory
+              echo "No changes in the working directory."
           fi
   linux-build:
     name: Linux Build
