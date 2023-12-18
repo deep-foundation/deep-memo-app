@@ -1,4 +1,4 @@
-name: OS Builds on version
+name: Sync Electron App Version
 on:
   push:
     paths: 
