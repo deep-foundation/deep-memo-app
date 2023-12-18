@@ -304,7 +304,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: deep-memo-android.apk
-        path: android/app/build/outputs/apk/release/app-release.apk
+        path: android/app/build/outputs/apk/release/app-release-unsigned.apk
   release:
     needs: [linux-build, mac-build, windows-build, get-app-version, android-build]
     name: Create Release
