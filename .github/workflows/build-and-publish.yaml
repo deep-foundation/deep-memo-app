@@ -46,8 +46,8 @@ jobs:
               # No changes in the working directory
               echo "No changes in the working directory."
           fi
-  linux-build:
-    name: Linux Build
+  linux:
+    name: Linux
     needs: [get-app-version,sync-electron-app-version]
     env:
       USE_HARD_LINKS: false
@@ -117,8 +117,8 @@ jobs:
           path: |
             electron/dist/deep-memo.tar.gz
             electron/dist/README.txt
-  mac-build:
-    name: Mac Build
+  mac:
+    name: Mac
     needs: [sync-electron-app-version]
     env:
       USE_HARD_LINKS: false
@@ -190,8 +190,8 @@ jobs:
           path: |
             electron/dist/mac/deep-memo.app.zip
             electron/dist/mac/README.txt
-  windows-build:
-    name: Windows Build
+  windows:
+    name: Windows
     needs: [get-app-version,sync-electron-app-version]
     env:
       USE_HARD_LINKS: false
@@ -263,8 +263,8 @@ jobs:
           path: |
             electron/dist/deep-memo.zip
             electron/dist/README.txt
-  android-build:
-    name: "Android Build"
+  android:
+    name: Android
     needs: [sync-electron-app-version]
     runs-on: ubuntu-latest
     steps:
@@ -295,8 +295,8 @@ jobs:
       with:
         name: deep-memo-android.apk
         path: android/app/build/outputs/apk/release/app-release-unsigned.apk
-  ios-build:
-    name: "iOS Build"
+  ios:
+    name: iOS
     needs: [sync-electron-app-version]
     runs-on: macos-latest
     steps:
@@ -324,7 +324,7 @@ jobs:
           name: deep-memo-ios.ipa
           path: ios/build/App.ipa
   release:
-    needs: [linux-build, mac-build, windows-build, get-app-version, android-build]
+    needs: [linux, mac, windows, get-app-version, android]
     name: Create Release
     runs-on: ubuntu-latest
     steps:
