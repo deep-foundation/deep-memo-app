@@ -4,10 +4,6 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to build and publish'
-        required: false
 defaults:
   run:
     working-directory: ./
@@ -16,19 +12,13 @@ jobs:
     name: Get App Version
     runs-on: ubuntu-latest
     outputs:
-      app-version: ${{steps.get-app-version-from-package-json.outputs.current-version || steps.get-app-version-from-inputs.outputs.app-version}}
+      app-version: ${{steps.get-app-version.outputs.current-version}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Get NPM Version from package.json
-        if: inputs.version == ''
-        id: get-app-version-from-package-json
+      - name: Get NPM Version
+        id: get-app-version
         uses: martinbeentjes/npm-get-version-action@main
-      - name: Get NPM Version from inputs
-        if: inputs.version != ''
-        id: get-app-version-from-inputs
-        run: echo "app-version=${{inputs.version}}" >> "$GITHUB_OUTPUT"
-
   sync-electron-app-version:
     name: Sync Electron App Version
     needs: get-app-version
