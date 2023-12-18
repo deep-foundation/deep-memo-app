@@ -312,7 +312,7 @@ jobs:
         run: npm run build-ios
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: 15
+          xcode-version: "14.2.0"
       - name: Build IPA
         run: |
           cd ios
