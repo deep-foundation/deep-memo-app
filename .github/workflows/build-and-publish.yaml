@@ -329,6 +329,7 @@ jobs:
       - mac
       - windows
       - android
+      - get-app-version
       # - ios
     name: Create Release
     runs-on: ubuntu-latest
