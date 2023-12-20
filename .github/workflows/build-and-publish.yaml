@@ -324,7 +324,12 @@ jobs:
           name: deep-memo-ios.ipa
           path: ios/build/App.ipa
   release:
-    needs: [linux, mac, windows, get-app-version, android]
+    needs: 
+      - linux
+      - mac
+      - windows
+      - android
+      - ios
     name: Create Release
     runs-on: ubuntu-latest
     steps:
