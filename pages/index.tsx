@@ -34,7 +34,7 @@ import {
 } from "@deep-foundation/capacitor-geolocation";
 import { packageLog } from "../src/package-log";
 import { useSyncSettings } from "../src/react/hooks/use-sync-settings";
-import { useContactsPermissionsStatus } from "@deep-foundation/capacitor-contacts";
+import { requestContactsPermissions, useContactsPermissionsStatus } from "@deep-foundation/capacitor-contacts";
 
 interface ContentParam {
   deep: DecoratedDeep;
@@ -223,7 +223,7 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
         <Button
           onClick={async () => {
             try {
-              await requestGeolocationPermissions();
+              await requestContactsPermissions();
             } catch (error) {
               log({ error });
               toast({
