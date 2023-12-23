@@ -178,6 +178,7 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
           onClick={async () => {
             try {
               await requestVoiceRecorderPermissions();
+              voiceRecorderPermissionsStatus.updatePermissionsStatus();
             } catch (error) {
               log({ error });
               toast({
@@ -203,6 +204,7 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
           onClick={async () => {
             try {
               await requestGeolocationPermissions();
+              geolocationPermissionsStatus.updatePermissionsStatus()
             } catch (error) {
               log({ error });
               toast({
@@ -224,6 +226,7 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
           onClick={async () => {
             try {
               await requestContactsPermissions();
+              contactsPermissionsStatus.updatePermissionsStatus();
             } catch (error) {
               log({ error });
               toast({
