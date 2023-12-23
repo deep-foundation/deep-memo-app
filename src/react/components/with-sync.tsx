@@ -52,29 +52,29 @@ export function WithSync(options: {
   useEffect(() => {
     new Promise(async () => {
       const currentTime = new Date().getTime();
-      if (isContactsSyncEnabled) {
-        if (currentTime - lastContactsSyncTime) {
-          try {
-            // TODO
-            // await saveAllContacts({ deep, deviceLinkId });
-            // onLastContactsSyncTimeChange(currentTime);
-            // toast({
-            //   title: "Contacts synchronized successfully",
-            //   status: "success",
-            //   duration: 5000,
-            //   isClosable: true,
-            // });
-          } catch (error) {
-            toast({
-              title: "Failed to synchronize contacts",
-              description: error.message,
-              status: "error",
-              duration: null,
-              isClosable: true,
-            });
-          }
-        }
-      }
+      // if (isContactsSyncEnabled) {
+      //   if (currentTime - lastContactsSyncTime) {
+      //     try {
+      //       // TODO
+      //       // await saveAllContacts({ deep, deviceLinkId });
+      //       // onLastContactsSyncTimeChange(currentTime);
+      //       // toast({
+      //       //   title: "Contacts synchronized successfully",
+      //       //   status: "success",
+      //       //   duration: 5000,
+      //       //   isClosable: true,
+      //       // });
+      //     } catch (error) {
+      //       toast({
+      //         title: "Failed to synchronize contacts",
+      //         description: error.message,
+      //         status: "error",
+      //         duration: null,
+      //         isClosable: true,
+      //       });
+      //     }
+      //   }
+      // }
       if (isCallHistorySyncEnabled) {
         if (currentTime - lastCallHistorySyncTime) {
           try {
