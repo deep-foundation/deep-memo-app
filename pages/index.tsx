@@ -160,8 +160,10 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
                 if(geolocationPermissionsStatus.permissionsStatus?.coarseLocation === "granted" && geolocationPermissionsStatus.permissionsStatus?.location === "granted") {
                   setIsGeolocationSyncEnabled(checked);
                 }
+                if(contactsPermissionsStatus.permissionsStatus?.contacts === "granted") {
+                  setIsContactsSyncEnabled(checked);
+                }
                 setIsCallHistorySyncEnabled(checked);
-                setIsContactsSyncEnabled(checked);
                 setIsNetworkSyncEnabled(checked);
                 setIsMotionSyncEnabled(checked);
                 setIsGeolocationSyncEnabled(checked);
