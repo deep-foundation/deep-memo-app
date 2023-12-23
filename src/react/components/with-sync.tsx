@@ -13,7 +13,7 @@ import { WithRecording } from "@deep-foundation/capacitor-voice-recorder";
 import { DecoratedDeep } from "./with-decorated-deep";
 import { packageLog } from "../../package-log";
 import { ErrorAlert } from "./error-alert";
-import {WithContactsSync} from '@deep-foundation/capacitor-contact'
+import {WithContactsSync} from '@deep-foundation/capacitor-contacts'
 
 export function WithSync(options: {
   deep: DecoratedDeep;
