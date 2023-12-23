@@ -34,6 +34,7 @@ import {
 } from "@deep-foundation/capacitor-geolocation";
 import { packageLog } from "../src/package-log";
 import { useSyncSettings } from "../src/react/hooks/use-sync-settings";
+import { useContactsPermissionsStatus } from "@deep-foundation/capacitor-contacts";
 
 interface ContentParam {
   deep: DecoratedDeep;
@@ -90,6 +91,9 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
 
   const geolocationPermissionsStatus = useGeolocationPermissionsStatus();
   log({ geolocationPermissionsStatus });
+
+  const contactsPermissionsStatus = useContactsPermissionsStatus();
+  log({contactsPermissionsStatus})
 
   const allPermissionsGranted =
     voiceRecorderPermissionsStatus.permissionsStatus &&
@@ -211,6 +215,27 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
           }}
         >
           Grant Geolocation Permissions
+        </Button>
+      )}
+      {(contactsPermissionsStatus.permissionsStatus?.contacts !== "granted") && (
+        <Button
+          onClick={async () => {
+            try {
+              await requestGeolocationPermissions();
+            } catch (error) {
+              log({ error });
+              toast({
+                title: `Failed to request Contacts permissions`,
+                description: error.message,
+                status: "error",
+                duration: null,
+                isClosable: true,
+                position: "top-right",
+              });
+            }
+          }}
+        >
+          Grant Contacts Permissions
         </Button>
       )}
       {/* {isLoggerEnabled ? (
