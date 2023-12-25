@@ -132,7 +132,7 @@ export function WithSync(options: {
         // )} />
       }
       {
-        isContactsSyncEnabled && <WithContactsSync deep={deep} containerLinkId={deviceLinkId} />
+        isContactsSyncEnabled && <WithContactsSync deep={deep} containerLinkId={deviceLinkId} intervalInMs={24*60*60*1000} />
       }
       {
         children
