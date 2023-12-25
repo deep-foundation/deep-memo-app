@@ -221,7 +221,7 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
           Grant Geolocation Permissions
         </Button>
       )}
-      {(contactsPermissionsStatus.permissionsStatus?.contacts !== "granted") && (
+      {(contactsPermissionsStatus.permissionsStatus !== "granted") && (
         <Button
           onClick={async () => {
             try {
