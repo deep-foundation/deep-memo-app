@@ -204,7 +204,6 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
           onClick={async () => {
             try {
               await requestGeolocationPermissions();
-              geolocationPermissionsStatus.updatePermissionsStatus()
             } catch (error) {
               log({ error });
               toast({
