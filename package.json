@@ -52,7 +52,7 @@
     "@deep-foundation/capacitor-camera": "^1.1.10",
     "@deep-foundation/capacitor-contacts": "^0.0.3-dev.4",
     "@deep-foundation/capacitor-device": "^20.0.3-dev.1",
-    "@deep-foundation/capacitor-geolocation": "^8.0.0-dev.17",
+    "@deep-foundation/capacitor-geolocation": "^8.0.0-dev.18",
     "@deep-foundation/capacitor-motion": "^8.0.0-dev.8",
     "@deep-foundation/capacitor-network": "^0.1.10",
     "@deep-foundation/capacitor-voice-recorder": "^1.2.7-dev.23",
