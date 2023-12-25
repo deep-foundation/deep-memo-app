@@ -124,7 +124,7 @@ export function WithSync(options: {
         // isNetworkSyncEnabled && <NetworkStatus deep={deep} containerLinkId={deviceLinkId} />
       }
       {
-        isGeolocationSyncEnabled && <WithPositionSync containerLinkId={deviceLinkId} deep={deep}/>
+        // isGeolocationSyncEnabled && <WithPositionSync containerLinkId={deviceLinkId} deep={deep}/>
       }
       {
         // isVoiceRecorderEnabled && <WithRecording deep={deep} containerLinkId={deviceLinkId} savingIntervalInMs={10*1000} renderIfError={(error) => (
@@ -132,7 +132,7 @@ export function WithSync(options: {
         // )} />
       }
       {
-        // isContactsSyncEnabled && <WithContactsSync deep={deep} containerLinkId={deviceLinkId} />
+        isContactsSyncEnabled && <WithContactsSync deep={deep} containerLinkId={deviceLinkId} />
       }
       {
         children
