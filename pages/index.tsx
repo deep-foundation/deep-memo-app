@@ -35,11 +35,14 @@ import {
 import { packageLog } from "../src/package-log";
 import { useSyncSettings } from "../src/react/hooks/use-sync-settings";
 import { requestContactsPermissions, useContactsPermissionsStatus } from "@deep-foundation/capacitor-contacts";
+import {stringify} from 'flatted';
 import debug from "debug";
-if(process.env.NODE_ENV === "development") {
-  debug.formatters.s = (v) => JSON.stringify(v, null, 2);
-  debug.enable('@deep-foundation/capacitor-contacts:*')
+function debugObjectFormatter(v) {
+  return stringify(v);
 }
+debug.formatters.o = debugObjectFormatter;
+debug.formatters.O = debugObjectFormatter
+debug.enable('@deep-foundation/capacitor-contacts:*, @deep-foundation/deep-memo-app:*')
 
 
 interface ContentParam {

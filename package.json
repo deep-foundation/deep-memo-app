@@ -81,6 +81,7 @@
     "dotenv-load": "^2.0.1",
     "events": "^3.3.0",
     "firebase": "^9.19.1",
+    "flatted": "^3.2.9",
     "framer-motion": "^6.5.1",
     "generate-schema": "^2.6.0",
     "hjson": "^3.2.2",
