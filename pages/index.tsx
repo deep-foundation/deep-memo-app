@@ -36,13 +36,13 @@ import { packageLog } from "../src/package-log";
 import { useSyncSettings } from "../src/react/hooks/use-sync-settings";
 import { requestContactsPermissions, useContactsPermissionsStatus } from "@deep-foundation/capacitor-contacts";
 import CircularJSON from 'circular-json';
-import debug from "debug";
-function debugObjectFormatter(v) {
-  return CircularJSON.stringify(v);
-}
-debug.formatters.o = debugObjectFormatter;
-debug.formatters.O = debugObjectFormatter
-debug.enable('@deep-foundation/capacitor-contacts:*, @deep-foundation/deep-memo-app:*')
+// import debug from "debug";
+// function debugObjectFormatter(v) {
+//   return CircularJSON.stringify(v);
+// }
+// debug.formatters.o = debugObjectFormatter;
+// debug.formatters.O = debugObjectFormatter
+// debug.enable('@deep-foundation/capacitor-contacts:*, @deep-foundation/deep-memo-app:*')
 
 
 interface ContentParam {
