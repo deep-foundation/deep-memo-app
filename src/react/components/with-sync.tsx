@@ -100,18 +100,6 @@ export function WithSync(options: {
       if (isNetworkSyncEnabled) {
         // TODO
       }
-      if (isVoiceRecorderEnabled) {
-        // const startTime = await Recorder.startRecording()
-        // const timeout = setTimeout(async () => {
-        //   await Recorder.stopRecording({
-        //     deep,
-        //     containerLinkId: deep.linkId!,
-        //   })
-        // }, 1*60*1000)
-        // returnFn = () => {
-        //   clearTimeout(timeout)
-        // }
-      }
     });
   });
 
