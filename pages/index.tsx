@@ -35,10 +35,10 @@ import {
 import { packageLog } from "../src/package-log";
 import { useSyncSettings } from "../src/react/hooks/use-sync-settings";
 import { requestContactsPermissions, useContactsPermissionsStatus } from "@deep-foundation/capacitor-contacts";
-import {stringify} from 'flatted';
+import CircularJSON from 'circular-json';
 import debug from "debug";
 function debugObjectFormatter(v) {
-  return stringify(v);
+  return CircularJSON.stringify(v);
 }
 debug.formatters.o = debugObjectFormatter;
 debug.formatters.O = debugObjectFormatter
