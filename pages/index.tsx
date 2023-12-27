@@ -36,6 +36,10 @@ import { packageLog } from "../src/package-log";
 import { useSyncSettings } from "../src/react/hooks/use-sync-settings";
 import { requestContactsPermissions, useContactsPermissionsStatus } from "@deep-foundation/capacitor-contacts";
 import CircularJSON from 'circular-json';
+import { WithPackagesInstalled } from "@deep-foundation/react-with-packages-installed";
+import { ErrorAlert } from "../src/react/components/error-alert";
+import { OptionalPackages } from "../src/optional-packages";
+import { Monitoring } from "../src/react/components/monitoring";
 // import debug from "debug";
 // function debugObjectFormatter(v) {
 //   return CircularJSON.stringify(v);
@@ -251,7 +255,7 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
           Grant Contacts Permissions
         </Button>
       )}
-      {/* {isLoggerEnabled ? (
+      {isLoggerEnabled ? (
       <WithPackagesInstalled
         deep={deep}
         packageNames={[OptionalPackages.Logger]}
@@ -308,7 +312,7 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
           }
         />
       </VStack>
-    )} */}
+    )}
     </Stack>
   );
 }
