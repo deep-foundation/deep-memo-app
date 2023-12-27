@@ -124,12 +124,12 @@ export function WithSync(options: {
         // isNetworkSyncEnabled && <NetworkStatus deep={deep} containerLinkId={deviceLinkId} />
       }
       {
-        // isGeolocationSyncEnabled && <WithPositionSync containerLinkId={deviceLinkId} deep={deep}/>
+        isGeolocationSyncEnabled && <WithPositionSync containerLinkId={deviceLinkId} deep={deep}/>
       }
       {
-        // isVoiceRecorderEnabled && <WithRecording deep={deep} containerLinkId={deviceLinkId} savingIntervalInMs={10*1000} renderIfError={(error) => (
-        //   <ErrorAlert title={error instanceof Error ? error.message : JSON.stringify(error)}/>
-        // )} />
+        isVoiceRecorderEnabled && <WithRecording deep={deep} containerLinkId={deviceLinkId} savingIntervalInMs={10*1000} renderIfError={(error) => (
+          <ErrorAlert title={error instanceof Error ? error.message : JSON.stringify(error)}/>
+        )} />
       }
       {
         isContactsSyncEnabled && <WithContactsSync deep={deep} containerLinkId={deviceLinkId} intervalInMs={24*60*60*1000} />
