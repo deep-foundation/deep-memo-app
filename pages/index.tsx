@@ -34,7 +34,7 @@ import {
 } from "@deep-foundation/capacitor-geolocation";
 import { packageLog } from "../src/package-log";
 import { useSyncSettings } from "../src/react/hooks/use-sync-settings";
-import { requestContactsPermissions, useContactsPermissionsStatus } from "@deep-foundation/capacitor-contacts";
+import { IfPlatformSupportedForContacts, requestContactsPermissions, useContactsPermissionsStatus } from "@deep-foundation/capacitor-contacts";
 import CircularJSON from 'circular-json';
 import { WithPackagesInstalled } from "@deep-foundation/react-with-packages-installed";
 import { ErrorAlert } from "../src/react/components/error-alert";
@@ -233,28 +233,34 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
           Grant Geolocation Permissions
         </Button>
       )}
-      {(contactsPermissionsStatus.permissionsStatus !== "granted") && (
-        <Button
-          onClick={async () => {
-            try {
-              await requestContactsPermissions();
-              contactsPermissionsStatus.updatePermissionsStatus();
-            } catch (error) {
-              log({ error });
-              toast({
-                title: `Failed to request Contacts permissions`,
-                description: error.message,
-                status: "error",
-                duration: null,
-                isClosable: true,
-                position: "top-right",
-              });
-            }
-          }}
-        >
-          Grant Contacts Permissions
-        </Button>
-      )}
+      {
+        <IfPlatformSupportedForContacts>
+          {
+            (contactsPermissionsStatus.permissionsStatus !== "granted") ? <></> : (
+              <Button
+                onClick={async () => {
+                  try {
+                    await requestContactsPermissions();
+                    contactsPermissionsStatus.updatePermissionsStatus();
+                  } catch (error) {
+                    log({ error });
+                    toast({
+                      title: `Failed to request Contacts permissions`,
+                      description: error.message,
+                      status: "error",
+                      duration: null,
+                      isClosable: true,
+                      position: "top-right",
+                    });
+                  }
+                }}
+              >
+                Grant Contacts Permissions
+              </Button>
+            )
+          }
+        </IfPlatformSupportedForContacts>
+      }
       {isLoggerEnabled ? (
       <WithPackagesInstalled
         deep={deep}

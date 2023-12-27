@@ -13,7 +13,7 @@ import { WithRecording } from "@deep-foundation/capacitor-voice-recorder";
 import { DecoratedDeep } from "./with-decorated-deep";
 import { packageLog } from "../../package-log";
 import { ErrorAlert } from "./error-alert";
-import {WithContactsSync} from '@deep-foundation/capacitor-contacts'
+import {IfPlatformSupportedForContacts, WithContactsSync} from '@deep-foundation/capacitor-contacts'
 
 export function WithSync(options: {
   deep: DecoratedDeep;
@@ -96,7 +96,9 @@ export function WithSync(options: {
         )} />
       }
       {
-        isContactsSyncEnabled && <WithContactsSync deep={deep} containerLinkId={deviceLinkId} intervalInMs={24*60*60*1000} />
+        isContactsSyncEnabled && <IfPlatformSupportedForContacts>
+          <WithContactsSync deep={deep} containerLinkId={deviceLinkId} intervalInMs={24*60*60*1000} />
+        </IfPlatformSupportedForContacts>
       }
       {
         children
