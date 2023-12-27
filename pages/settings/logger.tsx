@@ -27,7 +27,6 @@ import { NpmPackagerProxy } from '../../src/npm-packager-proxy';
 import { SettingContent } from '../../src/react/components/setting-page';
 
 export function LoggerSettingsContent(options: ContentOptions) {
-  return null
   const log = debug(`deep-foundation:pages:settings:logger:content`)
   const toast = useToast();
   const {deep,isInstalled} = options;
