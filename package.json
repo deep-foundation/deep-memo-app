@@ -50,7 +50,7 @@
     "@capacitor/preferences": "^5.0.6",
     "@chakra-ui/react": "^2.5.5",
     "@deep-foundation/capacitor-camera": "^1.1.10",
-    "@deep-foundation/capacitor-contacts": "^0.0.3-dev.10",
+    "@deep-foundation/capacitor-contacts": "^0.0.3-dev.11",
     "@deep-foundation/capacitor-device": "^20.0.3-dev.1",
     "@deep-foundation/capacitor-geolocation": "^8.0.0-dev.18",
     "@deep-foundation/capacitor-motion": "^8.0.0-dev.8",
