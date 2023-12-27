@@ -75,28 +75,28 @@ export function WithSync(options: {
       //     }
       //   }
       // }
-      if (isCallHistorySyncEnabled) {
-        if (currentTime - lastCallHistorySyncTime) {
-          try {
-            await saveAllCallHistory({ deep, deviceLinkId });
-            onLastCallHistorySyncTimeChange(currentTime);
-            toast({
-              title: "Call history synchronized successfully",
-              status: "success",
-              duration: 5000,
-              isClosable: true,
-            });
-          } catch (error) {
-            toast({
-              title: "Failed to synchronize call history",
-              description: error.message,
-              status: "error",
-              duration: null,
-              isClosable: true,
-            });
-          }
-        }
-      }
+      // if (isCallHistorySyncEnabled) {
+      //   if (currentTime - lastCallHistorySyncTime) {
+      //     try {
+      //       await saveAllCallHistory({ deep, deviceLinkId });
+      //       onLastCallHistorySyncTimeChange(currentTime);
+      //       toast({
+      //         title: "Call history synchronized successfully",
+      //         status: "success",
+      //         duration: 5000,
+      //         isClosable: true,
+      //       });
+      //     } catch (error) {
+      //       toast({
+      //         title: "Failed to synchronize call history",
+      //         description: error.message,
+      //         status: "error",
+      //         duration: null,
+      //         isClosable: true,
+      //       });
+      //     }
+      //   }
+      // }
       if (isNetworkSyncEnabled) {
         // TODO
       }
