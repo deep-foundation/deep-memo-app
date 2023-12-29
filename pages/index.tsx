@@ -34,7 +34,7 @@ import {
 } from "@deep-foundation/capacitor-geolocation";
 import { packageLog } from "../src/package-log";
 import { useSyncSettings } from "../src/react/hooks/use-sync-settings";
-import { IfPlatformSupportedForContacts, requestContactsPermissions, useContactsPermissionsStatus } from "@deep-foundation/capacitor-contacts";
+import { IfPlatformSupportedForContacts, requestContactsPermissions, useContactsPermissionStatus, useIsPlatformSupportedForContacts } from "@deep-foundation/capacitor-contacts";
 import CircularJSON from 'circular-json';
 import { WithPackagesInstalled } from "@deep-foundation/react-with-packages-installed";
 import { ErrorAlert } from "../src/react/components/error-alert";
@@ -105,8 +105,10 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
   const geolocationPermissionsStatus = useGeolocationPermissionsStatus();
   log({ geolocationPermissionsStatus });
 
-  const contactsPermissionsStatus = useContactsPermissionsStatus();
-  log({contactsPermissionsStatus})
+  const isPlatformSupportedForContact = useIsPlatformSupportedForContacts();
+
+  const contactPermissionsStatus = useContactsPermissionStatus();
+  log({contactPermissionsStatus})
 
   const allPermissionsGranted =
     voiceRecorderPermissionsStatus.permissionsStatus &&
@@ -116,7 +118,8 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
 
   const arePermissionsLoading =
     voiceRecorderPermissionsStatus.isLoading &&
-    geolocationPermissionsStatus.isLoading;
+    geolocationPermissionsStatus.isLoading && 
+    contactPermissionsStatus.isLoading;
 
   return arePermissionsLoading ? (
     <VStack height="100vh" justifyContent={"center"}>
@@ -173,7 +176,7 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
                 if(geolocationPermissionsStatus.permissionsStatus?.coarseLocation === "granted" && geolocationPermissionsStatus.permissionsStatus?.location === "granted") {
                   setIsGeolocationSyncEnabled(checked);
                 }
-                if(contactsPermissionsStatus.permissionsStatus === "granted") {
+                if(contactPermissionsStatus.permissionStatus === "granted") {
                   setIsContactsSyncEnabled(checked);
                 }
                 setIsCallHistorySyncEnabled(checked);
@@ -191,7 +194,6 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
           onClick={async () => {
             try {
               await requestVoiceRecorderPermissions();
-              voiceRecorderPermissionsStatus.updatePermissionsStatus();
             } catch (error) {
               log({ error });
               toast({
@@ -236,12 +238,13 @@ function IndexContent({ deep, deviceLinkId }: ContentParam) {
       {
         <IfPlatformSupportedForContacts>
           {
-            (contactsPermissionsStatus.permissionsStatus !== "granted") ? <></> : (
+            (contactPermissionsStatus.permissionStatus !== "granted" || 
+            (contactPermissionsStatus.error instanceof Error && contactPermissionsStatus.error.message !== "Not implemented on web.")
+            ) ? <></> : (
               <Button
                 onClick={async () => {
                   try {
                     await requestContactsPermissions();
-                    contactsPermissionsStatus.updatePermissionsStatus();
                   } catch (error) {
                     log({ error });
                     toast({
