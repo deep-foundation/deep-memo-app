@@ -1,35 +1,63 @@
 {
-  "name": "deep-memo",
-  "version": "0.0.1-dev.3",
-  "description": "Deep Memo",
+  "name": "sdk",
+  "version": "0.0.0-dev.1",
+  "description": "Data-oriented operating space of associative data representation. Wellcome to the deep universe",
+  "homepage": "https://deep.foundation/",
+  "author": {
+    "name": "Deep Foundation",
+    "email": "admin@deep.foundation"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/deep-foundation/deep-memo-app.git"
+    "url": "https://github.com/deep-foundation"
   },
   "license": "MIT",
   "main": "build/src/index.js",
   "scripts": {
-    "build": "tsc && electron-rebuild",
+    "build": "tsc",
+    "test": "jest",
     "electron:start-live": "node ./live-runner.js",
     "electron:start": "npm run build && electron --inspect=5858 ./",
-    "electron:pack": "npm run build && electron-builder build --dir --config ./electron-builder.config.json",
+    "electron:debug": "APP_DEV=true electron .",
+    "electron:pack": "npm run build && node patch-electron-builder.cjs && electron-builder --publish never -c ./electron-builder.config.json",
+    "electron:pack-demo": "npm run build  && node patch-electron-builder.cjs && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --publish never -c ./electron-builder.config.demo.json",
+    "electron:sign": "npm run electron:sign-prod && npm run electron:sign-dev",
+    "electron:sign-prod": "electron-osx-sign dist/mas/sdk.app --entitlements=./entitlements.mas.plist --entitlements-inherit=./entitlements.mas.inherit.plist --identity='Developer ID Application: ABRAKAR, OOO (8ZG6TUT4AY)' --platform=mas --type=distribution --provisioning-profile=developer-id-sdk.provisionprofile",
+    "electron:sign-dev": "electron-osx-sign dist/mas-dev/sdk.app --identity='Developer ID Application: ABRAKAR, OOO (8ZG6TUT4AY)' --platform=mas --type=development --entitlements=./entitlements.mas.plist --entitlements-inherit=./entitlements.mas.inherit.plist --provisioning-profile=./sdkdevelopment.provisionprofile",
+    "electron:notarize": "node notarize.cjs",
     "electron:make": "npm run build && electron-builder build --config ./electron-builder.config.json",
     "electron:make-and-publish": "npm run build && electron-builder build --config ./electron-builder.config.json --publish always"
   },
   "dependencies": {
-    "@capacitor-community/electron": "^5.0.0",
-    "chokidar": "~3.5.3",
+    "@capacitor-community/electron": "^4.0.1",
+    "@deep-foundation/deepcase": "^0.0.41",
+    "chokidar": "~3.5.2",
     "electron-is-dev": "~2.0.0",
     "electron-serve": "~1.1.0",
-    "electron-unhandled": "~4.0.1",
-    "electron-updater": "^5.3.0",
-    "electron-window-state": "^5.0.3"
+    "electron-unhandled": "~3.0.2",
+    "electron-updater": "~4.3.9",
+    "electron-window-state": "~5.0.3",
+    "express": "^4.17.1",
+    "fix-path": "^3.0.0",
+    "fkill": "^7.2.1",
+    "internal-ip": "^6.2.0",
+    "microtime": "^3.0.0",
+    "rimraf": "^5.0.1",
+    "socket.io": "^4.2.0",
+    "typescript": "^5.0.4"
   },
   "devDependencies": {
-    "electron": "^26.2.2",
-    "electron-builder": "~23.6.0",
-    "electron-rebuild": "^3.2.9",
-    "typescript": "^5.0.4"
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.2.5",
+    "electron": "^15.5.7",
+    "electron-builder": "^23.0.2",
+    "electron-notarize": "^1.2.2",
+    "electron-rebuild": "~2.3.5",
+    "jest": "^29.6.1",
+    "jest-environment-jsdom": "^29.6.1",
+    "node-gyp": "^8.4.1",
+    "puppeteer": "^20.9.0",
+    "ts-jest": "^29.1.1"
   },
   "keywords": [
     "capacitor",
