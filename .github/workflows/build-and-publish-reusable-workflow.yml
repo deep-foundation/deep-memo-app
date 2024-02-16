@@ -49,6 +49,10 @@ on:
         type: string
         required: false
         default: http://host.docker.internal:3006
+      should-build-mac:
+        type: string
+        required: false
+        default: 'false'
     secrets:
       csc-key-password:
         required: true
@@ -171,6 +175,7 @@ jobs:
   mac:
     name: Mac
     needs: [sync-electron-app-version]
+    if: inputs.should-build-mac == 'true'
     env:
       USE_HARD_LINKS: false
       MIGRATIONS_DIR: /tmp/.migrate
@@ -384,6 +389,7 @@ jobs:
       - android
       - get-app-version
       # - ios
+    if: ${{ always() && needs.mac.result == 'skipped' }}
     name: Create Release
     runs-on: ubuntu-latest
     steps:
@@ -409,6 +415,7 @@ jobs:
           name: Windows
           path: electron/dist
       - uses: actions/download-artifact@v3
+        if: ${{needs.mac.result == 'success'}}
         with:
           name: Mac
           path: electron/dist
@@ -434,7 +441,8 @@ jobs:
           asset_path: electron/dist/${{inputs.app-name}}.zip
           asset_name: windows-${{inputs.app-name}}.zip
           asset_content_type: application/zip
-      - name: upload windows artifact
+      - name: upload mac artifact
+        if: ${{needs.mac.result == 'success'}}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
