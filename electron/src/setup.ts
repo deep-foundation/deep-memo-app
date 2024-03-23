@@ -204,7 +204,7 @@ export class ElectronCapacitorApp {
       app.quit();
     });
 
-    // If the splashscreen is enabled, show it first while the main window loads then switch it out for the main window, or just load the main window from the start.
+    // If the splashscreen is enabled, show it first while the main window loads then dwitch it out for the main window, or just load the main window from the start.
     if (this.CapacitorFileConfig.electron?.splashScreenEnabled) {
       this.SplashScreen = new CapacitorSplashScreen({
         imageFilePath: join(
