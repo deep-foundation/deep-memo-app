@@ -24,14 +24,13 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "jsx": "preserve",
-
     "allowSyntheticDefaultImports": true,
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "strictNullChecks": true,
+    "strictNullChecks": true
   },
   "types": [
     "chrome"
