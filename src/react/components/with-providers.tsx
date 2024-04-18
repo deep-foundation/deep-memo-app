@@ -21,7 +21,7 @@ export function WithProviders({ children }: { children: JSX.Element }) {
             renderChildren={({ graphQlUrl }) => (
               <ApolloClientTokenizedProvider
               options={{
-                client: "@deep-foundation/sdk",
+                client: "@deep-foundation/deepmemo",
                 ...(graphQlUrl && {
                   path:
                     new URL(graphQlUrl).host +
