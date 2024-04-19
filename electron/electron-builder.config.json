@@ -1,5 +1,5 @@
 {
-  "appId": "deep.deepmemo.app",
+  "appId": "com.deepfoundation.deepmemo",
   "afterSign": "notarize.cjs",
   "afterPack": "./recover-after-electron-build.cjs",
   "directories": {
